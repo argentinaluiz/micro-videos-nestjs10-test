@@ -28,13 +28,9 @@ const config: Config = {
   coverageDirectory: '../coverage',
 
   // An array of regexp pattern strings used to skip coverage collection
-  coveragePathIgnorePatterns: [
-    '/node_modules/',
-    '.interface.ts',
-    'shared/testing',
-    'validator-rules.ts',
-    'fixtures.ts',
-  ],
+  // coveragePathIgnorePatterns: [
+  //   "/node_modules/"
+  // ],
 
   // Indicates which provider should be used to instrument code for coverage
   coverageProvider: 'v8',
@@ -127,7 +123,7 @@ const config: Config = {
   // restoreMocks: false,
 
   // The root directory that Jest should scan for tests and modules within
-  rootDir: 'src',
+  rootDir: '.',
 
   // A list of paths to directories that Jest should use to search for files in
   // roots: [
@@ -141,10 +137,7 @@ const config: Config = {
   // setupFiles: [],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
-  setupFilesAfterEnv: [
-    './core/shared/infra/testing/expect-helpers.ts',
-    './core/shared/infra/testing/global-helpers.ts',
-  ],
+  setupFilesAfterEnv: ['./jest-setup.ts'],
 
   // The number of seconds after which a test is considered as slow and reported as such in the results.
   // slowTestThreshold: 5,
@@ -173,7 +166,7 @@ const config: Config = {
   // ],
 
   // The regexp pattern or array of patterns that Jest uses to detect test files
-  testRegex: '.*\\..*spec\\.ts$',
+  testRegex: '.e2e-spec.ts$',
 
   // This option allows the use of a custom results processor
   // testResultsProcessor: undefined,
