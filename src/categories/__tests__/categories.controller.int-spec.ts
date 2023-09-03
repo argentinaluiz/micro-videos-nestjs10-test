@@ -80,7 +80,7 @@ describe('CategoriesController Integration Tests', () => {
       'with request $send_data',
       async ({ send_data, expected }) => {
         const presenter = await controller.update(
-          category.category_id.value,
+          category.category_id.id,
           send_data,
         );
         const entity = await repository.findById(category.category_id);
@@ -98,7 +98,7 @@ describe('CategoriesController Integration Tests', () => {
   it('should delete a category', async () => {
     const category = Category.fake().aCategory().build();
     await repository.insert(category);
-    const response = await controller.remove(category.category_id.value);
+    const response = await controller.remove(category.category_id.id);
     expect(response).not.toBeDefined();
     await expect(repository.findById(category.category_id)).resolves.toBeNull();
   });
@@ -106,9 +106,9 @@ describe('CategoriesController Integration Tests', () => {
   it('should get a category', async () => {
     const category = Category.fake().aCategory().build();
     await repository.insert(category);
-    const presenter = await controller.findOne(category.category_id.value);
+    const presenter = await controller.findOne(category.category_id.id);
 
-    expect(presenter.id).toBe(category.category_id.value);
+    expect(presenter.id).toBe(category.category_id.id);
     expect(presenter.name).toBe(category.name);
     expect(presenter.description).toBe(category.description);
     expect(presenter.is_active).toBe(category.is_active);

@@ -7,4 +7,3 @@ export interface IValidatorFields<PropsValidated> {
   validatedData: PropsValidated | null;
   validate(data: any): boolean;
 }
-

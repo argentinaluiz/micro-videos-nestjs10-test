@@ -21,8 +21,8 @@ describe('DeleteCategoryUseCase Integration Tests', () => {
 
   it('should throws error when entity not found', async () => {
     const uuid = new Uuid();
-    await expect(() => useCase.execute({ id: uuid.value })).rejects.toThrow(
-      new NotFoundError(uuid.value, Category),
+    await expect(() => useCase.execute({ id: uuid.id })).rejects.toThrow(
+      new NotFoundError(uuid.id, Category),
     );
   });
 
@@ -30,9 +30,9 @@ describe('DeleteCategoryUseCase Integration Tests', () => {
     const category = Category.fake().aCategory().build();
     await repository.insert(category);
     await useCase.execute({
-      id: category.category_id.value,
+      id: category.category_id.id,
     });
-    const noHasModel = await CategoryModel.findByPk(category.category_id.value);
+    const noHasModel = await CategoryModel.findByPk(category.category_id.id);
     expect(noHasModel).toBeNull();
   });
 });

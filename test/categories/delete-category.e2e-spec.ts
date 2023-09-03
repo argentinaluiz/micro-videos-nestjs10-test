@@ -44,7 +44,7 @@ describe('CategoriesController (e2e)', () => {
       await categoryRepo.insert(category);
 
       await request(nestApp.app.getHttpServer())
-        .delete(`/categories/${category.category_id.value}`)
+        .delete(`/categories/${category.category_id.id}`)
         .expect(204);
 
       await expect(

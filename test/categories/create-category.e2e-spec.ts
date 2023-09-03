@@ -6,6 +6,7 @@ import { CategoryRepository } from '../../src/core/category/domain/category.repo
 import { CategoryOutputMapper } from '../../src/core/category/application/dto/category-output';
 import { startApp } from '../../src/shared/testing/helpers';
 import * as CategoryProviders from '../../src/categories/categories.providers';
+import { Uuid } from '../../src/core/shared/domain/value-objects/uuid.vo';
 
 describe('CategoriesController (e2e)', () => {
   describe('/categories (POST)', () => {
@@ -66,7 +67,7 @@ describe('CategoriesController (e2e)', () => {
           expect(Object.keys(res.body)).toStrictEqual(['data']);
           expect(Object.keys(res.body.data)).toStrictEqual(keyInResponse);
           const id = res.body.data.id;
-          const categoryCreated = await categoryRepo.findById(id);
+          const categoryCreated = await categoryRepo.findById(new Uuid(id));
           const presenter = CategoriesController.serialize(
             CategoryOutputMapper.toOutput(categoryCreated),
           );

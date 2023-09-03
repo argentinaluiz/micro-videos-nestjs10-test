@@ -6,7 +6,7 @@ import { CategoryOutput, CategoryOutputMapper } from '../dto/category-output';
 export class CreateCategoryUseCase
   implements IUseCase<CreateCategoryInput, CreateCategoryOutput>
 {
-  constructor(private categoryRepo: CategoryRepository.Repository) {}
+  constructor(private categoryRepo: CategoryRepository) {}
 
   async execute(input: CreateCategoryInput): Promise<CategoryOutput> {
     const entity = Category.create(input);

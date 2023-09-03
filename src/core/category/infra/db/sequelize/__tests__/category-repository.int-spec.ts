@@ -57,7 +57,7 @@ describe('CategorySequelizeRepository Unit Tests', () => {
   it('should throw error on update when a entity not found', async () => {
     const entity = Category.create({ name: 'Movie' });
     await expect(repository.update(entity)).rejects.toThrow(
-      new NotFoundError(entity.category_id.value, Category),
+      new NotFoundError(entity.category_id.id, Category),
     );
   });
 
@@ -68,14 +68,14 @@ describe('CategorySequelizeRepository Unit Tests', () => {
     entity.changeName('Movie updated');
     await repository.update(entity);
 
-    let entityFound = await repository.findById(entity.category_id.value);
+    const entityFound = await repository.findById(entity.category_id);
     expect(entity.toJSON()).toStrictEqual(entityFound.toJSON());
   });
 
   it('should throw error on delete when a entity not found', async () => {
     const uuid = new Uuid();
     await expect(repository.delete(uuid)).rejects.toThrow(
-      new NotFoundError(uuid.value, Category),
+      new NotFoundError(uuid.id, Category),
     );
   });
 
@@ -289,7 +289,7 @@ describe('CategorySequelizeRepository Unit Tests', () => {
       ];
 
       for (const i of arrange) {
-        let result = await repository.search(i.params);
+        const result = await repository.search(i.params);
         expect(result.toJSON(true)).toMatchObject(i.result.toJSON(true));
       }
     });
@@ -303,7 +303,7 @@ describe('CategorySequelizeRepository Unit Tests', () => {
         Category.fake().aCategory().withName('TeSt').build(),
       ];
 
-      let arrange = [
+      const arrange = [
         {
           search_params: new CategorySearchParams({
             page: 1,

@@ -48,7 +48,7 @@ describe('CategoriesController (e2e)', () => {
       categoryRepo.insert(category);
 
       const res = await request(nestApp.app.getHttpServer())
-        .get(`/categories/${category.category_id.value}`)
+        .get(`/categories/${category.category_id.id}`)
         .expect(200);
       const keyInResponse = CategoryFixture.keysInResponse();
       expect(Object.keys(res.body)).toStrictEqual(['data']);

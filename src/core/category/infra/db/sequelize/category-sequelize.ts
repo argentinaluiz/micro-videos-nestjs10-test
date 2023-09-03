@@ -65,9 +65,8 @@ export class CategorySequelizeRepository implements CategoryRepository {
     await this.categoryModel.bulkCreate(entities.map((e) => e.toJSON()));
   }
 
-  async findById(id: string | Uuid): Promise<Category> {
-    const _id = `${id}`;
-    const model = await this._get(_id);
+  async findById(entity_id: Uuid): Promise<Category> {
+    const model = await this._get(entity_id.id);
     return model ? CategoryModelMapper.toEntity(model) : null;
   }
 
@@ -77,19 +76,19 @@ export class CategorySequelizeRepository implements CategoryRepository {
   }
 
   async update(entity: Category): Promise<void> {
-    const model = await this._get(entity.category_id.value);
+    const model = await this._get(entity.category_id.id);
     if (!model) {
-      throw new NotFoundError(entity.category_id.value, this.getEntity());
+      throw new NotFoundError(entity.category_id.id, this.getEntity());
     }
     await this.categoryModel.update(entity.toJSON(), {
-      where: { category_id: entity.category_id.value },
+      where: { category_id: entity.category_id.id },
     });
   }
-  async delete(id: Uuid): Promise<void> {
-    const _id = `${id}`;
+  async delete(entity_id: Uuid): Promise<void> {
+    const _id = `${entity_id}`;
     const model = await this._get(_id);
     if (!model) {
-      throw new NotFoundError(id.value, this.getEntity());
+      throw new NotFoundError(entity_id.id, this.getEntity());
     }
     this.categoryModel.destroy({ where: { category_id: _id } });
   }
@@ -124,9 +123,7 @@ export class CategorySequelizeRepository implements CategoryRepository {
 
   private formatSort(sort: string, sort_dir: SortDirection) {
     const dialect = this.categoryModel.sequelize.getDialect() as 'mysql';
-    //@ts-expect-error
     if (this.orderBy[dialect] && this.orderBy[dialect][sort]) {
-      //@ts-expect-error
       return this.orderBy[dialect][sort](sort_dir);
     }
     return [[sort, sort_dir]];

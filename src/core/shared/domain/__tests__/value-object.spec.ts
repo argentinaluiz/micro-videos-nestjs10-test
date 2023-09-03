@@ -1,60 +1,49 @@
-import { ValueObject } from "../value-object";
+import { ValueObject } from '../value-object';
 
-class StubValueObject extends ValueObject {}
+class StringValueObject extends ValueObject {
+  constructor(readonly value: string) {
+    super();
+  }
+}
+class ComplexValueObject extends ValueObject {
+  constructor(
+    readonly prop1: string,
+    readonly prop2: number,
+  ) {
+    super();
+  }
+}
 
-describe("ValueObject Unit Tests", () => {
-  test("should set value", () => {
-    let vo = new StubValueObject("string value");
-    expect(vo.value).toBe("string value");
+describe('ValueObject Unit Tests', () => {
+  test('should be equals', () => {
+    const valueObject1 = new StringValueObject('test');
+    const valueObject2 = new StringValueObject('test');
+    expect(valueObject1.equals(valueObject2)).toBeTruthy();
 
-    vo = new StubValueObject({ prop1: "value1" });
-    expect(vo.value).toEqual({ prop1: "value1" });
+    const complexValueObject1 = new ComplexValueObject('test', 1);
+    const complexValueObject2 = new ComplexValueObject('test', 1);
+    expect(complexValueObject1.equals(complexValueObject2)).toBeTruthy();
   });
 
-  describe("should convert to a string", () => {
-    const date = new Date();
-    let arrange = [
-      { received: "", expected: "" },
-      { received: "fake test", expected: "fake test" },
-      { received: 0, expected: "0" },
-      { received: 1, expected: "1" },
-      { received: 5, expected: "5" },
-      { received: true, expected: "true" },
-      { received: false, expected: "false" },
-      { received: date, expected: date.toString() },
-      {
-        received: { prop1: "value1" },
-        expected: JSON.stringify({ prop1: "value1" }),
-      },
-    ];
+  test('should not be equals', () => {
+    const valueObject1 = new StringValueObject('test');
+    const valueObject2 = new StringValueObject('test2');
+    expect(valueObject1.equals(valueObject2)).toBeFalsy();
+    expect(valueObject1.equals(null)).toBeFalsy();
+    expect(valueObject1.equals(undefined)).toBeFalsy();
 
-    test.each(arrange)(
-      "from $received to $expected",
-      ({ received, expected }) => {
-        const vo = new StubValueObject(received);
-        expect(vo + "").toBe(expected);
-      }
-    );
-  });
+    const complexValueObject1 = new ComplexValueObject('test', 1);
+    const complexValueObject2 = new ComplexValueObject('test', 2);
+    expect(complexValueObject1.equals(complexValueObject2)).toBeFalsy();
+    expect(complexValueObject1.equals(null)).toBeFalsy();
+    expect(complexValueObject2.equals(undefined)).toBeFalsy();
 
-  test("should be a immutable object", () => {
-    const obj = {
-      prop1: "value1",
-      deep: { prop2: "value2", prop3: new Date() },
-    };
-    const vo = new StubValueObject(obj);
+    const fakeStringValueObject = { value: 'test' };
+    expect(valueObject1.equals(fakeStringValueObject as any)).toBeFalsy();
 
-    expect(() => {
-      (vo as any).value.prop1 = "test";
-    }).toThrow(
-      "Cannot assign to read only property 'prop1' of object '#<Object>'"
-    );
-
-    expect(() => {
-      (vo as any).value.deep.prop2 = "test";
-    }).toThrow(
-      "Cannot assign to read only property 'prop2' of object '#<Object>'"
-    );
-
+    const fakeComplexValueObject = { prop1: 'test', prop2: 1 };
+    expect(
+      complexValueObject1.equals(fakeComplexValueObject as any),
+    ).toBeFalsy();
   });
 });

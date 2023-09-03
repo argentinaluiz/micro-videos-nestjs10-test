@@ -1,4 +1,4 @@
-import { SearchResult } from "../domain/repository/search-params";
+import { SearchResult } from '../domain/repository/search-params';
 
 export type PaginationOutputDto<Item = any> = {
   items: Item[];
@@ -11,7 +11,7 @@ export type PaginationOutputDto<Item = any> = {
 export class PaginationOutputMapper {
   static toOutput<Item = any, Filter = any>(
     items: Item[],
-    props: SearchResult<any, Filter>
+    props: SearchResult<any, Filter>,
   ): PaginationOutputDto<Item> {
     return {
       items,

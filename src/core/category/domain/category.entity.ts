@@ -1,9 +1,9 @@
-import { CategoryFakeBuilder } from "./testing/category-fake.builder";
-import { Uuid } from "../../shared/domain/value-objects/uuid.vo";
-import Entity from "../../shared/domain/entity";
+import { CategoryFakeBuilder } from './testing/category-fake.builder';
+import { Uuid } from '../../shared/domain/value-objects/uuid.vo';
+import { Entity } from '../../shared/domain/entity';
 //import ValidatorRules from "../../shared/domain/validators/validator-rules";
-import CategoryValidatorFactory from "./category.validator";
-import { EntityValidationError } from "../../shared/domain/validators/validation.error";
+import CategoryValidatorFactory from './category.validator';
+import { EntityValidationError } from '../../shared/domain/validators/validation.error';
 
 export type CategoryConstructorProps = {
   category_id?: Uuid;
@@ -77,13 +77,13 @@ export class Category extends Entity {
     return CategoryFakeBuilder;
   }
 
-  get entity_id(){
+  get entity_id() {
     return this.category_id;
   }
 
   toJSON() {
     return {
-      category_id: this.category_id.toString(),
+      category_id: this.category_id.id,
       name: this.name,
       description: this.description,
       is_active: this.is_active,

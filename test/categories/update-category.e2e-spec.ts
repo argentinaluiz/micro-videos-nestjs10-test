@@ -7,6 +7,7 @@ import { UpdateCategoryFixture } from '../../src/categories/testing/category-fix
 import { CategoryRepository } from '../../src/core/category/domain/category.repository';
 import * as CategoryProviders from '../../src/categories/categories.providers';
 import { CategoryOutputMapper } from '../../src/core/category/application/dto/category-output';
+import { Uuid } from '../../src/core/shared/domain/value-objects/uuid.vo';
 
 describe('CategoriesController (e2e)', () => {
   const uuid = '9366b7dc-2d71-4799-b91c-c64adb205104';
@@ -88,7 +89,7 @@ describe('CategoriesController (e2e)', () => {
         const category = Category.fake().aCategory().build();
         await categoryRepo.insert(category);
         return request(app.app.getHttpServer())
-          .patch(`/categories/${category.category_id.value}`)
+          .patch(`/categories/${category.category_id.id}`)
           .send(value.send_data)
           .expect(422)
           .expect(value.expected);
@@ -112,14 +113,14 @@ describe('CategoriesController (e2e)', () => {
           await categoryRepo.insert(categoryCreated);
 
           const res = await request(app.app.getHttpServer())
-            .patch(`/categories/${categoryCreated.category_id.value}`)
+            .patch(`/categories/${categoryCreated.category_id.id}`)
             .send(send_data)
             .expect(200);
           const keyInResponse = UpdateCategoryFixture.keysInResponse();
           expect(Object.keys(res.body)).toStrictEqual(['data']);
           expect(Object.keys(res.body.data)).toStrictEqual(keyInResponse);
           const id = res.body.data.id;
-          const categoryUpdated = await categoryRepo.findById(id);
+          const categoryUpdated = await categoryRepo.findById(new Uuid(id));
           const presenter = CategoriesController.serialize(
             CategoryOutputMapper.toOutput(categoryUpdated),
           );

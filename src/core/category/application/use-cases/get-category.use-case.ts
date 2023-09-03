@@ -8,7 +8,7 @@ import { CategoryOutput, CategoryOutputMapper } from '../dto/category-output';
 export class GetCategoryUseCase
   implements IUseCase<GetCategoryInput, GetCategoryOutput>
 {
-  constructor(private categoryRepo: CategoryRepository.Repository) {}
+  constructor(private categoryRepo: CategoryRepository) {}
 
   async execute(input: GetCategoryInput): Promise<GetCategoryOutput> {
     const uuid = new Uuid(input.id);
@@ -26,4 +26,3 @@ export type GetCategoryInput = {
 };
 
 export type GetCategoryOutput = CategoryOutput;
-

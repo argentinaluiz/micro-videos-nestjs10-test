@@ -1,15 +1,15 @@
-import Entity from "../entity";
-import { NotFoundError } from "../errors/not-found.error";
-import { ValueObject } from "../value-object";
+import { Entity } from '../entity';
+import { NotFoundError } from '../errors/not-found.error';
+import { ValueObject } from '../value-object';
 import {
   RepositoryInterface,
   SearchableRepositoryInterface,
-} from "./repository-interface";
-import { SearchParams, SearchResult, SortDirection } from "./search-params";
+} from './repository-interface';
+import { SearchParams, SearchResult, SortDirection } from './search-params';
 
 export abstract class InMemoryRepository<
   E extends Entity,
-  EntityId extends ValueObject
+  EntityId extends ValueObject,
 > implements RepositoryInterface<E, EntityId>
 {
   items: E[] = [];
@@ -33,24 +33,28 @@ export abstract class InMemoryRepository<
   async update(entity: E): Promise<void> {
     const hasFound = await this._get(entity.entity_id as EntityId);
     if (!hasFound) {
-        throw new NotFoundError(entity.entity_id.value, this.getEntity())
+      throw new NotFoundError(entity.entity_id, this.getEntity());
     }
-    const indexFound = this.items.findIndex((i) => i.entity_id.equals(entity.entity_id));
+    const indexFound = this.items.findIndex((i) =>
+      i.entity_id.equals(entity.entity_id),
+    );
     this.items[indexFound] = entity;
   }
 
-  async delete(id: EntityId): Promise<void> {
-    await this._get(id);
-    const indexFound = this.items.findIndex((i) => i.entity_id.equals(id));
-    if(indexFound < 0){
-        throw new NotFoundError(id.value, this.getEntity())
+  async delete(entity_id: EntityId): Promise<void> {
+    await this._get(entity_id);
+    const indexFound = this.items.findIndex((i) =>
+      i.entity_id.equals(entity_id),
+    );
+    if (indexFound < 0) {
+      throw new NotFoundError(entity_id, this.getEntity());
     }
     this.items.splice(indexFound, 1);
   }
 
-  protected async _get(id: EntityId): Promise<E> {
-    const item = this.items.find((i) => i.entity_id.equals(id));
-    return typeof item === "undefined" ? null : item;
+  protected async _get(entity_id: EntityId): Promise<E> {
+    const item = this.items.find((i) => i.entity_id.equals(entity_id));
+    return typeof item === 'undefined' ? null : item;
   }
 
   abstract getEntity(): new (...args: any[]) => E;
@@ -59,7 +63,7 @@ export abstract class InMemoryRepository<
 export abstract class InMemorySearchableRepository<
     E extends Entity,
     EntityId extends ValueObject,
-    Filter = string
+    Filter = string,
   >
   extends InMemoryRepository<E, EntityId>
   implements SearchableRepositoryInterface<E, EntityId, Filter>
@@ -71,12 +75,12 @@ export abstract class InMemorySearchableRepository<
     const itemsSorted = await this.applySort(
       itemsFiltered,
       props.sort,
-      props.sort_dir
+      props.sort_dir,
     );
     const itemsPaginated = await this.applyPaginate(
       itemsSorted,
       props.page,
-      props.per_page
+      props.per_page,
     );
     return new SearchResult({
       items: itemsPaginated,
@@ -91,30 +95,28 @@ export abstract class InMemorySearchableRepository<
 
   protected abstract applyFilter(
     items: E[],
-    filter: Filter | null
+    filter: Filter | null,
   ): Promise<E[]>;
 
   protected async applySort(
     items: E[],
     sort: string | null,
     sort_dir: SortDirection | null,
-    custom_getter?: (sort: string, item: E) => any
+    custom_getter?: (sort: string, item: E) => any,
   ): Promise<E[]> {
     if (!sort || !this.sortableFields.includes(sort)) {
       return items;
     }
 
     return [...items].sort((a, b) => {
-      //@ts-expect-error - ignore
       const aValue = custom_getter ? custom_getter(sort, a) : a[sort];
-      //@ts-expect-error - ignore
       const bValue = custom_getter ? custom_getter(sort, b) : b[sort];
       if (aValue < bValue) {
-        return sort_dir === "asc" ? -1 : 1;
+        return sort_dir === 'asc' ? -1 : 1;
       }
 
       if (aValue > bValue) {
-        return sort_dir === "asc" ? 1 : -1;
+        return sort_dir === 'asc' ? 1 : -1;
       }
 
       return 0;
@@ -123,8 +125,8 @@ export abstract class InMemorySearchableRepository<
 
   protected async applyPaginate(
     items: E[],
-    page: SearchParams["page"],
-    per_page: SearchParams["per_page"]
+    page: SearchParams['page'],
+    per_page: SearchParams['per_page'],
   ): Promise<E[]> {
     const start = (page - 1) * per_page; // 1 * 15 = 15
     const limit = start + per_page; // 15 + 15 = 30

@@ -1,20 +1,19 @@
-import { config as readEnv } from "dotenv";
-import { join } from "path";
+import { config as readEnv } from 'dotenv';
+import { join } from 'path';
 
 export class Config {
   static env: any = {};
   static db() {
     Config.readEnv();
 
-      return {
-        dialect: 'sqlite' as any,
-        host: Config.env.DB_HOST,
-        logging: Config.env.DB_LOGGING === 'true',
-      };
+    return {
+      dialect: 'sqlite' as any,
+      host: Config.env.DB_HOST,
+      logging: Config.env.DB_LOGGING === 'true',
+    };
   }
 
   static readEnv() {
-
     if (Config.env) {
       return;
     }

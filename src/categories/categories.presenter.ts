@@ -1,4 +1,3 @@
-
 import { Transform } from 'class-transformer';
 import { CategoryOutput } from '../core/category/application/dto/category-output';
 import { ListCategoriesOutput } from '../core/category/application/use-cases/list-categories.use-case';

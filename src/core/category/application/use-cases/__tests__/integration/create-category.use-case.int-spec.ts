@@ -4,6 +4,7 @@ import {
   CategoryModel,
   CategorySequelizeRepository,
 } from '../../../../infra/db/sequelize/category-sequelize';
+import { Uuid } from '../../../../../shared/domain/value-objects/uuid.vo';
 
 describe('CreateCategoryUseCase Integration Tests', () => {
   let useCase: CreateCategoryUseCase;
@@ -18,9 +19,9 @@ describe('CreateCategoryUseCase Integration Tests', () => {
 
   it('should create a category', async () => {
     let output = await useCase.execute({ name: 'test' });
-    let entity = await repository.findById(output.id);
+    let entity = await repository.findById(new Uuid(output.id));
     expect(output).toStrictEqual({
-      id: entity.category_id.value,
+      id: entity.category_id.id,
       name: 'test',
       description: null,
       is_active: true,
@@ -31,9 +32,9 @@ describe('CreateCategoryUseCase Integration Tests', () => {
       name: 'test',
       description: 'some description',
     });
-    entity = await repository.findById(output.id);
+    entity = await repository.findById(new Uuid(output.id));
     expect(output).toStrictEqual({
-      id: entity.category_id.value,
+      id: entity.category_id.id,
       name: 'test',
       description: 'some description',
       is_active: true,
@@ -45,9 +46,9 @@ describe('CreateCategoryUseCase Integration Tests', () => {
       description: 'some description',
       is_active: true,
     });
-    entity = await repository.findById(output.id);
+    entity = await repository.findById(new Uuid(output.id));
     expect(output).toStrictEqual({
-      id: entity.category_id.value,
+      id: entity.category_id.id,
       name: 'test',
       description: 'some description',
       is_active: true,
@@ -59,9 +60,9 @@ describe('CreateCategoryUseCase Integration Tests', () => {
       description: 'some description',
       is_active: false,
     });
-    entity = await repository.findById(output.id);
+    entity = await repository.findById(new Uuid(output.id));
     expect(output).toStrictEqual({
-      id: entity.category_id.value,
+      id: entity.category_id.id,
       name: 'test',
       description: 'some description',
       is_active: false,

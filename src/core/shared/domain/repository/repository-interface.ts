@@ -1,4 +1,4 @@
-import Entity from '../entity';
+import { Entity } from '../entity';
 import { ValueObject } from '../value-object';
 import { SearchParams, SearchResult } from './search-params';
 

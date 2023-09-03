@@ -21,17 +21,17 @@ describe('GetCategoryUseCase Integration Tests', () => {
 
   it('should throws error when entity not found', async () => {
     const uuid = new Uuid();
-    await expect(() => useCase.execute({ id: uuid.value })).rejects.toThrow(
-      new NotFoundError(uuid.value, Category),
+    await expect(() => useCase.execute({ id: uuid.id })).rejects.toThrow(
+      new NotFoundError(uuid.id, Category),
     );
   });
 
   it('should returns a category', async () => {
     const category = Category.fake().aCategory().build();
     await repository.insert(category);
-    const output = await useCase.execute({ id: category.category_id.value });
+    const output = await useCase.execute({ id: category.category_id.id });
     expect(output).toStrictEqual({
-      id: category.category_id.value,
+      id: category.category_id.id,
       name: category.name,
       description: category.description,
       is_active: category.is_active,
