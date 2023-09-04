@@ -115,9 +115,6 @@ export class CategorySequelizeRepository implements CategoryRepository {
       current_page: props.page,
       per_page: props.per_page,
       total: count,
-      filter: props.filter,
-      sort: props.sort,
-      sort_dir: props.sort_dir,
     });
   }
 
@@ -139,8 +136,8 @@ export class CategoryModelMapper {
     const { category_id: id, ...otherData } = model.toJSON();
     try {
       const category = new Category({
-        category_id: new Uuid(id),
         ...otherData,
+        category_id: new Uuid(id),
       });
       Category.validate(category);
       return category;

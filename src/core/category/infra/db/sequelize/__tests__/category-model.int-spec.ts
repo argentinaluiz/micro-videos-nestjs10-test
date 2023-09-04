@@ -4,7 +4,7 @@ import { setupSequelize } from '../../../../../shared/infra/testing/helpers';
 
 const { CategoryModel } = CategorySequelize;
 
-describe('CategoryModel Unit Tests', () => {
+describe('CategoryModel Integration Tests', () => {
   setupSequelize({ models: [CategoryModel] });
 
   test('mapping props', () => {

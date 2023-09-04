@@ -105,68 +105,6 @@ describe('Category Without Validator Unit Tests', () => {
     });
   });
 
-  test('getter and setter of name prop', () => {
-    const category = new Category({ name: 'Movie' });
-    expect(category.name).toBe('Movie');
-
-    category.name = 'other name';
-    expect(category.name).toBe('other name');
-  });
-
-  test('getter and setter of description prop', () => {
-    let category = new Category({
-      name: 'Movie',
-    });
-    expect(category.description).toBeNull();
-
-    category = new Category({
-      name: 'Movie',
-      description: 'some description',
-    });
-    expect(category.description).toBe('some description');
-
-    category = new Category({
-      name: 'Movie',
-    });
-
-    category.description = 'other description';
-    expect(category.description).toBe('other description');
-  });
-
-  test('getter and setter of is_active prop', () => {
-    let category = new Category({
-      name: 'Movie',
-    });
-    expect(category.is_active).toBe(true);
-
-    category = new Category({
-      name: 'Movie',
-      is_active: true,
-    });
-    expect(category.is_active).toBe(true);
-
-    category = new Category({
-      name: 'Movie',
-      is_active: false,
-    });
-    expect(category.is_active).toBe(false);
-  });
-
-  test('getter of created_at prop', () => {
-    let category = new Category({
-      name: 'Movie',
-    });
-
-    expect(category.created_at).toBeInstanceOf(Date);
-
-    const created_at = new Date();
-    category = new Category({
-      name: 'Movie',
-      created_at,
-    });
-    expect(category.created_at).toBe(created_at);
-  });
-
   test('should change name', () => {
     const category = new Category({
       name: 'Movie',

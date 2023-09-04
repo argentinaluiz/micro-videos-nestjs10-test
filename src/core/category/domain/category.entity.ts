@@ -1,4 +1,4 @@
-import { CategoryFakeBuilder } from './testing/category-fake.builder';
+import { CategoryFakeBuilder } from './category-fake.builder';
 import { Uuid } from '../../shared/domain/value-objects/uuid.vo';
 import { Entity } from '../../shared/domain/entity';
 //import ValidatorRules from "../../shared/domain/validators/validator-rules";

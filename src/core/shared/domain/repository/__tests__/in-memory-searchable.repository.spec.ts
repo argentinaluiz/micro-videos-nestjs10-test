@@ -159,9 +159,6 @@ describe('InMemorySearchableRepository Unit Tests', () => {
           total: 16,
           current_page: 1,
           per_page: 15,
-          sort: null,
-          sort_dir: null,
-          filter: null,
         }),
       );
     });
@@ -184,9 +181,6 @@ describe('InMemorySearchableRepository Unit Tests', () => {
           total: 3,
           current_page: 1,
           per_page: 2,
-          sort: null,
-          sort_dir: null,
-          filter: 'TEST',
         }),
       );
 
@@ -199,9 +193,6 @@ describe('InMemorySearchableRepository Unit Tests', () => {
           total: 3,
           current_page: 2,
           per_page: 2,
-          sort: null,
-          sort_dir: null,
-          filter: 'TEST',
         }),
       );
     });
@@ -226,9 +217,6 @@ describe('InMemorySearchableRepository Unit Tests', () => {
             total: 5,
             current_page: 1,
             per_page: 2,
-            sort: 'name',
-            sort_dir: 'asc',
-            filter: null,
           }),
         },
         {
@@ -242,9 +230,6 @@ describe('InMemorySearchableRepository Unit Tests', () => {
             total: 5,
             current_page: 2,
             per_page: 2,
-            sort: 'name',
-            sort_dir: 'asc',
-            filter: null,
           }),
         },
         {
@@ -259,9 +244,6 @@ describe('InMemorySearchableRepository Unit Tests', () => {
             total: 5,
             current_page: 1,
             per_page: 2,
-            sort: 'name',
-            sort_dir: 'desc',
-            filter: null,
           }),
         },
         {
@@ -276,9 +258,6 @@ describe('InMemorySearchableRepository Unit Tests', () => {
             total: 5,
             current_page: 2,
             per_page: 2,
-            sort: 'name',
-            sort_dir: 'desc',
-            filter: null,
           }),
         },
       ];
@@ -319,9 +298,6 @@ describe('InMemorySearchableRepository Unit Tests', () => {
             total: 3,
             current_page: 1,
             per_page: 2,
-            sort: 'name',
-            sort_dir: 'asc',
-            filter: 'TEST',
           }),
         },
         {
@@ -336,9 +312,6 @@ describe('InMemorySearchableRepository Unit Tests', () => {
             total: 3,
             current_page: 2,
             per_page: 2,
-            sort: 'name',
-            sort_dir: 'asc',
-            filter: 'TEST',
           }),
         },
       ];

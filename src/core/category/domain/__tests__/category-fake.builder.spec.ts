@@ -1,6 +1,6 @@
 import { Chance } from 'chance';
 import { CategoryFakeBuilder } from '../category-fake.builder';
-import { Uuid } from '../../../../shared/domain/value-objects/uuid.vo';
+import { Uuid } from '../../../shared/domain/value-objects/uuid.vo';
 
 describe('CategoryFakerBuilder Unit Tests', () => {
   describe('category_id prop', () => {
@@ -18,7 +18,7 @@ describe('CategoryFakerBuilder Unit Tests', () => {
       expect(faker['_category_id']).toBeUndefined();
     });
 
-    test('withEntityId', () => {
+    test('withCategoryId', () => {
       const category_id = new Uuid();
       const $this = faker.withCategoryId(category_id);
       expect($this).toBeInstanceOf(CategoryFakeBuilder);

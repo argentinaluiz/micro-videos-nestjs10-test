@@ -148,9 +148,6 @@ describe('Search Unit Tests', () => {
         total: 4,
         current_page: 1,
         per_page: 2,
-        sort: null,
-        sort_dir: null,
-        filter: null,
       });
 
       expect(result.toJSON()).toStrictEqual({
@@ -159,9 +156,6 @@ describe('Search Unit Tests', () => {
         current_page: 1,
         per_page: 2,
         last_page: 2,
-        sort: null,
-        sort_dir: null,
-        filter: null,
       });
 
       result = new SearchResult({
@@ -169,9 +163,6 @@ describe('Search Unit Tests', () => {
         total: 4,
         current_page: 1,
         per_page: 2,
-        sort: 'name',
-        sort_dir: 'asc',
-        filter: 'test',
       });
 
       expect(result.toJSON()).toStrictEqual({
@@ -180,9 +171,6 @@ describe('Search Unit Tests', () => {
         current_page: 1,
         per_page: 2,
         last_page: 2,
-        sort: 'name',
-        sort_dir: 'asc',
-        filter: 'test',
       });
     });
 
@@ -192,9 +180,6 @@ describe('Search Unit Tests', () => {
         total: 4,
         current_page: 1,
         per_page: 15,
-        sort: 'name',
-        sort_dir: 'asc',
-        filter: 'test',
       });
 
       expect(result.last_page).toBe(1);
@@ -206,9 +191,6 @@ describe('Search Unit Tests', () => {
         total: 101,
         current_page: 1,
         per_page: 20,
-        sort: 'name',
-        sort_dir: 'asc',
-        filter: 'test',
       });
 
       expect(result.last_page).toBe(6);

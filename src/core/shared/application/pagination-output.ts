@@ -9,9 +9,9 @@ export type PaginationOutputDto<Item = any> = {
 };
 
 export class PaginationOutputMapper {
-  static toOutput<Item = any, Filter = any>(
+  static toOutput<Item = any>(
     items: Item[],
-    props: SearchResult<any, Filter>,
+    props: SearchResult,
   ): PaginationOutputDto<Item> {
     return {
       items,

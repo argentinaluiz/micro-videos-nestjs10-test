@@ -12,7 +12,7 @@ import {
   CategorySearchResult,
 } from '../../../../domain/category.repository';
 
-describe('CategorySequelizeRepository Unit Tests', () => {
+describe('CategorySequelizeRepository Integration Tests', () => {
   setupSequelize({ models: [CategoryModel] });
   let repository: CategorySequelizeRepository;
 
@@ -108,9 +108,6 @@ describe('CategorySequelizeRepository Unit Tests', () => {
         current_page: 1,
         last_page: 2,
         per_page: 15,
-        sort: null,
-        sort_dir: null,
-        filter: null,
       });
       searchOutput.items.forEach((item) => {
         expect(item).toBeInstanceOf(Category);
@@ -181,9 +178,6 @@ describe('CategorySequelizeRepository Unit Tests', () => {
           total: 3,
           current_page: 1,
           per_page: 2,
-          sort: null,
-          sort_dir: null,
-          filter: 'TEST',
         }).toJSON(true),
       );
 
@@ -200,9 +194,6 @@ describe('CategorySequelizeRepository Unit Tests', () => {
           total: 3,
           current_page: 2,
           per_page: 2,
-          sort: null,
-          sort_dir: null,
-          filter: 'TEST',
         }).toJSON(true),
       );
     });
@@ -231,9 +222,6 @@ describe('CategorySequelizeRepository Unit Tests', () => {
             total: 5,
             current_page: 1,
             per_page: 2,
-            sort: 'name',
-            sort_dir: 'asc',
-            filter: null,
           }),
         },
         {
@@ -247,9 +235,6 @@ describe('CategorySequelizeRepository Unit Tests', () => {
             total: 5,
             current_page: 2,
             per_page: 2,
-            sort: 'name',
-            sort_dir: 'asc',
-            filter: null,
           }),
         },
         {
@@ -264,9 +249,6 @@ describe('CategorySequelizeRepository Unit Tests', () => {
             total: 5,
             current_page: 1,
             per_page: 2,
-            sort: 'name',
-            sort_dir: 'desc',
-            filter: null,
           }),
         },
         {
@@ -281,9 +263,6 @@ describe('CategorySequelizeRepository Unit Tests', () => {
             total: 5,
             current_page: 2,
             per_page: 2,
-            sort: 'name',
-            sort_dir: 'desc',
-            filter: null,
           }),
         },
       ];
@@ -316,9 +295,6 @@ describe('CategorySequelizeRepository Unit Tests', () => {
             total: 3,
             current_page: 1,
             per_page: 2,
-            sort: 'name',
-            sort_dir: 'asc',
-            filter: 'TEST',
           }),
         },
         {
@@ -333,9 +309,6 @@ describe('CategorySequelizeRepository Unit Tests', () => {
             total: 3,
             current_page: 2,
             per_page: 2,
-            sort: 'name',
-            sort_dir: 'asc',
-            filter: 'TEST',
           }),
         },
       ];

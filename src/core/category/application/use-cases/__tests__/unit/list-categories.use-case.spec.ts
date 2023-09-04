@@ -19,9 +19,6 @@ describe('ListCategoriesUseCase Unit Tests', () => {
       total: 1,
       current_page: 1,
       per_page: 2,
-      sort: null,
-      sort_dir: null,
-      filter: null,
     });
     let output = useCase['toOutput'](result);
     expect(output).toStrictEqual({
@@ -38,9 +35,6 @@ describe('ListCategoriesUseCase Unit Tests', () => {
       total: 1,
       current_page: 1,
       per_page: 2,
-      sort: null,
-      sort_dir: null,
-      filter: null,
     });
 
     output = useCase['toOutput'](result);

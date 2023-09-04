@@ -70,7 +70,7 @@ export abstract class InMemorySearchableRepository<
 {
   sortableFields: string[] = [];
 
-  async search(props: SearchParams<Filter>): Promise<SearchResult<E, Filter>> {
+  async search(props: SearchParams<Filter>): Promise<SearchResult<E>> {
     const itemsFiltered = await this.applyFilter(this.items, props.filter);
     const itemsSorted = await this.applySort(
       itemsFiltered,
@@ -87,9 +87,6 @@ export abstract class InMemorySearchableRepository<
       total: itemsFiltered.length,
       current_page: props.page,
       per_page: props.per_page,
-      sort: props.sort,
-      sort_dir: props.sort_dir,
-      filter: props.filter,
     });
   }
 

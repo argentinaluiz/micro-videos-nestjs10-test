@@ -6,7 +6,7 @@ import * as CategorySequelize from '../category-sequelize';
 
 const { CategoryModel, CategoryModelMapper } = CategorySequelize;
 
-describe('CategoryModelMapper Unit Tests', () => {
+describe('CategoryModelMapper Integration Tests', () => {
   setupSequelize({ models: [CategoryModel] });
 
   it('should throws error when category is invalid', () => {

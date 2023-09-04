@@ -10,10 +10,7 @@ export type CategoryFilter = string;
 
 export class CategorySearchParams extends DefaultSearchParams<CategoryFilter> {}
 
-export class CategorySearchResult extends DefaultSearchResult<
-  Category,
-  CategoryFilter
-> {}
+export class CategorySearchResult extends DefaultSearchResult<Category> {}
 
 export interface CategoryRepository
   extends SearchableRepositoryInterface<
