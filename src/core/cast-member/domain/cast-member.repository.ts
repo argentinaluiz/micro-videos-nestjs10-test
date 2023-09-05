@@ -35,8 +35,9 @@ export class CastMemberSearchParams extends DefaultSearchParams<CastMemberFilter
       .chain((type) => (type ? CastMemberType.create(type) : Either.of(null)));
 
     if (errorCastMemberType) {
-      const error = new SearchValidationError();
-      error.setFromError('type', errorCastMemberType);
+      const error = new SearchValidationError([
+        { type: [errorCastMemberType.message] },
+      ]);
       throw error;
     }
 

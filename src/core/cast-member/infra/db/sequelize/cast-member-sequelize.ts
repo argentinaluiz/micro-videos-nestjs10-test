@@ -10,10 +10,7 @@ import { literal, Op } from 'sequelize';
 import { CastMember } from '../../../domain/cast-member.entity';
 import { SortDirection } from '../../../../shared/domain/repository/search-params';
 import { Uuid } from '../../../../shared/domain/value-objects/uuid.vo';
-import {
-  EntityValidationError,
-  LoadEntityError,
-} from '../../../../shared/domain/validators/validation.error';
+import { LoadEntityError } from '../../../../shared/domain/validators/validation.error';
 import { NotFoundError } from '../../../../shared/domain/errors/not-found.error';
 import {
   CastMemberRepository,
@@ -153,21 +150,24 @@ export class CastMemberModelMapper {
     const [type, errorCastMemberType] = CastMemberType.create(
       otherData.type as any,
     ).asArray();
-    try {
-      const castMember = new CastMember({
-        ...otherData,
-        cast_member_id: new Uuid(id),
-        type,
-      });
-      CastMember.validate(castMember);
-      return castMember;
-    } catch (e) {
-      if (e instanceof EntityValidationError) {
-        e.setFromError('type', errorCastMemberType);
-        throw new LoadEntityError(e.error);
-      }
 
-      throw e;
+    const castMember = new CastMember({
+      ...otherData,
+      cast_member_id: new Uuid(id),
+      type,
+    });
+
+    castMember.validate();
+
+    const notification = castMember.notification;
+    if (errorCastMemberType) {
+      notification.setError(errorCastMemberType.message, 'type');
     }
+
+    if (notification.hasErrors()) {
+      throw new LoadEntityError(notification.toJSON());
+    }
+
+    return castMember;
   }
 }

@@ -107,7 +107,7 @@ export class CastMemberFakeBuilder<TBuild = any> {
             created_at: this.callFactory(this._created_at, index),
           }),
         });
-        CastMember.validate(castMember);
+        castMember.validate();
         return castMember;
       });
     return this.countObjs === 1 ? (castMembers[0] as any) : castMembers;

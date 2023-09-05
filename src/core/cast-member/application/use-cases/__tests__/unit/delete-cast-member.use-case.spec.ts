@@ -1,10 +1,10 @@
+import { NotFoundError } from '../../../../../shared/domain/errors/not-found.error';
 import InvalidUuidError, {
   Uuid,
-} from '../../../../shared/domain/value-objects/uuid.vo';
-import { CastMemberInMemoryRepository } from '../../../infra/db/in-memory/cast-member-in-memory.repository';
-import { DeleteCastMemberUseCase } from '../delete-category.use-case';
-import { CastMember } from '../../../domain/cast-member.entity';
-import { NotFoundError } from '../../../../shared/domain/errors/not-found.error';
+} from '../../../../../shared/domain/value-objects/uuid.vo';
+import { CastMember } from '../../../../domain/cast-member.entity';
+import { CastMemberInMemoryRepository } from '../../../../infra/db/in-memory/cast-member-in-memory.repository';
+import { DeleteCastMemberUseCase } from '../../delete-cast-member.use-case';
 
 describe('DeleteCastMemberUseCase Unit Tests', () => {
   let useCase: DeleteCastMemberUseCase;
@@ -27,7 +27,7 @@ describe('DeleteCastMemberUseCase Unit Tests', () => {
     );
   });
 
-  it('should delete a category', async () => {
+  it('should delete a cast member', async () => {
     const items = [CastMember.fake().anActor().build()];
     repository.items = items;
     await useCase.execute({

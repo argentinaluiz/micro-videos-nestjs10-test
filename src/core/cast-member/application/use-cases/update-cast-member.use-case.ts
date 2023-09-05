@@ -1,5 +1,6 @@
 import { IUseCase } from '../../../shared/application/use-case-interface';
 import { NotFoundError } from '../../../shared/domain/errors/not-found.error';
+import { EntityValidationError } from '../../../shared/domain/validators/validation.error';
 import { Uuid } from '../../../shared/domain/value-objects/uuid.vo';
 import {
   CastMemberType,
@@ -15,23 +16,34 @@ import {
 export class UpdateCastMemberUseCase
   implements IUseCase<UpdateCastMemberInput, UpdateCastMemberOutput>
 {
-  constructor(private categoryRepo: CastMemberRepository) {}
+  constructor(private castMemberRepo: CastMemberRepository) {}
 
   async execute(input: UpdateCastMemberInput): Promise<UpdateCastMemberOutput> {
     const uuid = new Uuid(input.id);
-    const castMember = await this.categoryRepo.findById(uuid);
+    const castMember = await this.castMemberRepo.findById(uuid);
 
     if (!castMember) {
       throw new NotFoundError(input.id, CastMember);
     }
 
     input.name && castMember.changeName(input.name);
+
     if ('type' in input) {
-      const [type, errorCastMemberType] = CastMemberType.create(input.type).asArray();
+      const [type, errorCastMemberType] = CastMemberType.create(
+        input.type,
+      ).asArray();
+
       castMember.changeType(type);
+
+      errorCastMemberType &&
+        castMember.notification.setError(errorCastMemberType.message, 'type');
     }
 
-    await this.categoryRepo.update(castMember);
+    if (castMember.notification.hasErrors()) {
+      throw new EntityValidationError(castMember.notification.toJSON());
+    }
+
+    await this.castMemberRepo.update(castMember);
 
     return CastMemberOutputMapper.toOutput(castMember);
   }

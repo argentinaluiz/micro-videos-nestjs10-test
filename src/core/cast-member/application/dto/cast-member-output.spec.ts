@@ -2,8 +2,8 @@ import { CastMemberType } from '../../domain/cast-member-type.vo';
 import { CastMember } from '../../domain/cast-member.entity';
 import { CastMemberOutputMapper } from './cast-member-output';
 
-describe('CategoryOutputMapper Unit Tests', () => {
-  it('should convert a category in output', () => {
+describe('CastMemberOutputMapper Unit Tests', () => {
+  it('should convert a cast member in output', () => {
     const entity = CastMember.create({
       name: 'Movie',
       type: CastMemberType.createAnActor(),

@@ -20,24 +20,21 @@ export class CreateCastMemberUseCase
     const [type, errorCastMemberType] = CastMemberType.create(
       input.type,
     ).asArray();
-    try {
-      const entity = CastMember.create({
-        ...input,
-        type,
-      });
-      await this.castMemberRepo.insert(entity);
-      return CastMemberOutputMapper.toOutput(entity);
-    } catch (e) {
-      this.handleError(e, errorCastMemberType);
-    }
-  }
-
-  private handleError(e: Error, errorCastMemberType: Error | undefined) {
-    if (e instanceof EntityValidationError) {
-      e.setFromError('type', errorCastMemberType);
+    const entity = CastMember.create({
+      ...input,
+      type,
+    });
+    const notification = entity.notification;
+    if (errorCastMemberType) {
+      notification.setError(errorCastMemberType.message, 'type');
     }
 
-    throw e;
+    if (notification.hasErrors()) {
+      throw new EntityValidationError(notification.toJSON());
+    }
+
+    await this.castMemberRepo.insert(entity);
+    return CastMemberOutputMapper.toOutput(entity);
   }
 }
 

@@ -27,6 +27,14 @@ describe('UpdateCategoryUseCase Unit Tests', () => {
     ).rejects.toThrow(new NotFoundError(uuid.id, Category));
   });
 
+  it('should throw an error when entity is not valid', async () => {
+    const entity = new Category({ name: 'Movie' });
+    repository.items = [entity];
+    await expect(() =>
+      useCase.execute({ id: entity.category_id.id, name: 5 as any }),
+    ).rejects.toThrowError('Entity Validation Error');
+  });
+
   it('should update a category', async () => {
     const spyUpdate = jest.spyOn(repository, 'update');
     const entity = new Category({ name: 'Movie' });

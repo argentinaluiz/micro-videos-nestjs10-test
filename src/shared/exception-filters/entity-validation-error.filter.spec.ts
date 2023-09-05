@@ -8,10 +8,14 @@ import { EntityValidationError } from '../../core/shared/domain/validators/valid
 class StubController {
   @Get()
   index() {
-    throw new EntityValidationError({
-      field1: ['field1 is required'],
-      field2: ['field2 is required'],
-    });
+    throw new EntityValidationError([
+      {
+        field1: ['field1 is required'],
+      },
+      {
+        field2: ['field2 is required'],
+      },
+    ]);
   }
 }
 

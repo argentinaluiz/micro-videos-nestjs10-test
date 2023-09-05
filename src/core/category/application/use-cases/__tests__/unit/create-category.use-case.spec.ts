@@ -10,6 +10,12 @@ describe('CreateCategoryUseCase Unit Tests', () => {
     useCase = new CreateCategoryUseCase(repository);
   });
 
+  it('should throw an error when entity is not valid', async () => {
+    await expect(() => useCase.execute({ name: '' })).rejects.toThrowError(
+      'Entity Validation Error',
+    );
+  });
+
   it('should create a category', async () => {
     const spyInsert = jest.spyOn(repository, 'insert');
     let output = await useCase.execute({ name: 'test' });

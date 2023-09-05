@@ -1,7 +1,6 @@
 import { Uuid } from '../../shared/domain/value-objects/uuid.vo';
 import { Entity } from '../../shared/domain/entity';
 import CastMemberValidatorFactory from './cast-member.validator';
-import { EntityValidationError } from '../../shared/domain/validators/validation.error';
 import { CastMemberType } from './cast-member-type.vo';
 import { CastMemberFakeBuilder } from './cast-member-fake.builder';
 
@@ -33,26 +32,23 @@ export class CastMember extends Entity {
 
   static create(props: CastMemberCreateCommand) {
     const castMember = new CastMember(props);
-    CastMember.validate(castMember);
+    castMember.validate(['name', 'type']);
     return castMember;
   }
 
   changeName(name: string): void {
     this.name = name;
-    CastMember.validate(this);
+    this.validate(['name']);
   }
 
   changeType(type: CastMemberType): void {
     this.type = type;
-    CastMember.validate(this);
+    this.validate(['type']);
   }
 
-  static validate(entity: CastMember) {
+  validate(fields?: string[]) {
     const validator = CastMemberValidatorFactory.create();
-    const isValid = validator.validate(entity);
-    if (!isValid) {
-      throw new EntityValidationError(validator.errors);
-    }
+    return validator.validate(this.notification, this, fields);
   }
 
   static fake() {

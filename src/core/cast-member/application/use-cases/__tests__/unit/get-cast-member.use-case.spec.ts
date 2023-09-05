@@ -1,11 +1,10 @@
-import { NotFoundError } from '../../../../shared/domain/errors/not-found.error';
-import InvalidUuidError, {
-  Uuid,
-} from '../../../../shared/domain/value-objects/uuid.vo';
-import { CastMemberTypes } from '../../../domain/cast-member-type.vo';
-import { CastMember } from '../../../domain/cast-member.entity';
-import { CastMemberInMemoryRepository } from '../../../infra/db/in-memory/cast-member-in-memory.repository';
-import { GetCastMemberUseCase } from '../get-cast-member.use-case';
+import { NotFoundError } from "../../../../../shared/domain/errors/not-found.error";
+import InvalidUuidError, { Uuid } from "../../../../../shared/domain/value-objects/uuid.vo";
+import { CastMemberTypes } from "../../../../domain/cast-member-type.vo";
+import { CastMember } from "../../../../domain/cast-member.entity";
+import { CastMemberInMemoryRepository } from "../../../../infra/db/in-memory/cast-member-in-memory.repository";
+import { GetCastMemberUseCase } from "../../get-cast-member.use-case";
+
 
 describe('GetCastMemberUseCase Unit Tests', () => {
   let useCase: GetCastMemberUseCase;
@@ -27,7 +26,7 @@ describe('GetCastMemberUseCase Unit Tests', () => {
     );
   });
 
-  it('should returns a category', async () => {
+  it('should returns a cast member', async () => {
     const items = [CastMember.fake().anActor().build()];
     repository.items = items;
     const spyFindById = jest.spyOn(repository, 'findById');

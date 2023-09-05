@@ -134,19 +134,14 @@ export class CategorySequelizeRepository implements CategoryRepository {
 export class CategoryModelMapper {
   static toEntity(model: CategoryModel) {
     const { category_id: id, ...otherData } = model.toJSON();
-    try {
-      const category = new Category({
-        ...otherData,
-        category_id: new Uuid(id),
-      });
-      Category.validate(category);
-      return category;
-    } catch (e) {
-      if (e instanceof EntityValidationError) {
-        throw new LoadEntityError(e.error);
-      }
-
-      throw e;
+    const category = new Category({
+      ...otherData,
+      category_id: new Uuid(id),
+    });
+    category.validate();
+    if (category.notification.hasErrors()) {
+      throw new LoadEntityError(category.notification.toJSON());
     }
+    return category;
   }
 }

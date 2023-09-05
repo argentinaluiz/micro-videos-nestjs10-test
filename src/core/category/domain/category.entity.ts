@@ -3,7 +3,6 @@ import { Uuid } from '../../shared/domain/value-objects/uuid.vo';
 import { Entity } from '../../shared/domain/entity';
 //import ValidatorRules from "../../shared/domain/validators/validator-rules";
 import CategoryValidatorFactory from './category.validator';
-import { EntityValidationError } from '../../shared/domain/validators/validation.error';
 
 export type CategoryConstructorProps = {
   category_id?: Uuid;
@@ -37,18 +36,18 @@ export class Category extends Entity {
 
   static create(props: CategoryCreateCommand) {
     const category = new Category(props);
-    Category.validate(category);
+    category.validate(['name', 'description', 'is_active']);
     return category;
   }
 
   changeName(name: string): void {
     this.name = name;
-    Category.validate(this);
+    this.validate(['name']);
   }
 
   changeDescription(description: string | null): void {
     this.description = description;
-    Category.validate(this);
+    this.validate(['description']);
   }
 
   // static validate(entity: Category) {
@@ -57,12 +56,9 @@ export class Category extends Entity {
   //   ValidatorRules.values(entity.is_active, "is_active").boolean();
   // }
 
-  static validate(entity: Category) {
+  validate(fields?: string[]) {
     const validator = CategoryValidatorFactory.create();
-    const isValid = validator.validate(entity);
-    if (!isValid) {
-      throw new EntityValidationError(validator.errors);
-    }
+    return validator.validate(this.notification, this, fields);
   }
 
   activate() {
