@@ -6,9 +6,8 @@ import {
   SearchParamsConstructorProps,
 } from '../../shared/domain/repository/search-params';
 import { SearchValidationError } from '../../shared/domain/validators/validation.error';
-import { Uuid } from '../../shared/domain/value-objects/uuid.vo';
 import { CastMemberType, CastMemberTypes } from './cast-member-type.vo';
-import { CastMember } from './cast-member.entity';
+import { CastMember, CastMemberId } from './cast-member.entity';
 
 export type CastMemberFilter = {
   name?: string;
@@ -74,7 +73,7 @@ export class CastMemberSearchResult extends DefaultSearchResult<CastMember> {}
 export interface CastMemberRepository
   extends SearchableRepositoryInterface<
     CastMember,
-    Uuid,
+    CastMemberId,
     CastMemberFilter,
     CastMemberSearchParams,
     CastMemberSearchResult

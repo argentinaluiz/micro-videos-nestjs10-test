@@ -7,9 +7,8 @@ import {
 } from 'sequelize-typescript';
 
 import { literal, Op } from 'sequelize';
-import { CastMember } from '../../../domain/cast-member.entity';
+import { CastMember, CastMemberId } from '../../../domain/cast-member.entity';
 import { SortDirection } from '../../../../shared/domain/repository/search-params';
-import { Uuid } from '../../../../shared/domain/value-objects/uuid.vo';
 import { LoadEntityError } from '../../../../shared/domain/validators/validation.error';
 import { NotFoundError } from '../../../../shared/domain/errors/not-found.error';
 import {
@@ -65,7 +64,7 @@ export class CastMemberSequelizeRepository implements CastMemberRepository {
     await this.castMemberModel.bulkCreate(entities.map((e) => e.toJSON()));
   }
 
-  async findById(entity_id: Uuid): Promise<CastMember> {
+  async findById(entity_id: CastMemberId): Promise<CastMember> {
     const model = await this._get(entity_id.id);
     return model ? CastMemberModelMapper.toEntity(model) : null;
   }
@@ -84,7 +83,7 @@ export class CastMemberSequelizeRepository implements CastMemberRepository {
       where: { cast_member_id: entity.cast_member_id.id },
     });
   }
-  async delete(entity_id: Uuid): Promise<void> {
+  async delete(entity_id: CastMemberId): Promise<void> {
     const _id = `${entity_id}`;
     const model = await this._get(_id);
     if (!model) {
@@ -153,7 +152,7 @@ export class CastMemberModelMapper {
 
     const castMember = new CastMember({
       ...otherData,
-      cast_member_id: new Uuid(id),
+      cast_member_id: new CastMemberId(id),
       type,
     });
 

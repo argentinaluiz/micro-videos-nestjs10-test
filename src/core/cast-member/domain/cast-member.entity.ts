@@ -5,7 +5,7 @@ import { CastMemberType } from './cast-member-type.vo';
 import { CastMemberFakeBuilder } from './cast-member-fake.builder';
 
 export type CastMemberConstructorProps = {
-  cast_member_id?: Uuid;
+  cast_member_id?: CastMemberId;
   name: string;
   type: CastMemberType;
   created_at?: Date;
@@ -16,15 +16,17 @@ export type CastMemberCreateCommand = {
   type: CastMemberType;
 };
 
+export class CastMemberId extends Uuid {}
+
 export class CastMember extends Entity {
-  cast_member_id: Uuid;
+  cast_member_id: CastMemberId;
   name: string;
   type: CastMemberType;
   created_at: Date;
 
   constructor(props: CastMemberConstructorProps) {
     super();
-    this.cast_member_id = props.cast_member_id ?? new Uuid();
+    this.cast_member_id = props.cast_member_id ?? new CastMemberId();
     this.name = props.name;
     this.type = props.type;
     this.created_at = props.created_at ?? new Date();

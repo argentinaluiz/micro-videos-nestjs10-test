@@ -1,14 +1,17 @@
 import { InMemorySearchableRepository } from '../../../../shared/domain/repository/in-memory.repository';
 import { SortDirection } from '../../../../shared/domain/repository/search-params';
-import { Uuid } from '../../../../shared/domain/value-objects/uuid.vo';
-import { CastMember } from '../../../domain/cast-member.entity';
+import { CastMember, CastMemberId } from '../../../domain/cast-member.entity';
 import {
   CastMemberRepository,
   CastMemberFilter,
 } from '../../../domain/cast-member.repository';
 
 export class CastMemberInMemoryRepository
-  extends InMemorySearchableRepository<CastMember, Uuid, CastMemberFilter>
+  extends InMemorySearchableRepository<
+    CastMember,
+    CastMemberId,
+    CastMemberFilter
+  >
   implements CastMemberRepository
 {
   sortableFields: string[] = ['name', 'created_at'];

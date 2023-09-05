@@ -1,7 +1,9 @@
 import { GetCastMemberUseCase } from '../../get-cast-member.use-case';
 import { setupSequelize } from '../../../../../shared/infra/testing/helpers';
-import { Uuid } from '../../../../../shared/domain/value-objects/uuid.vo';
-import { CastMember } from '../../../../domain/cast-member.entity';
+import {
+  CastMember,
+  CastMemberId,
+} from '../../../../domain/cast-member.entity';
 import { NotFoundError } from '../../../../../shared/domain/errors/not-found.error';
 import {
   CastMemberModel,
@@ -20,10 +22,10 @@ describe('GetCastMemberUseCase Integration Tests', () => {
   });
 
   it('should throws error when entity not found', async () => {
-    const uuid = new Uuid();
-    await expect(() => useCase.execute({ id: uuid.id })).rejects.toThrow(
-      new NotFoundError(uuid.id, CastMember),
-    );
+    const castMemberId = new CastMemberId();
+    await expect(() =>
+      useCase.execute({ id: castMemberId.id }),
+    ).rejects.toThrow(new NotFoundError(castMemberId.id, CastMember));
   });
 
   it('should returns a cast member', async () => {

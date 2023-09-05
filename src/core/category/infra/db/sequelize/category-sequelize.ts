@@ -7,13 +7,9 @@ import {
 } from 'sequelize-typescript';
 
 import { literal, Op } from 'sequelize';
-import { Category } from '../../../domain/category.entity';
+import { Category, CategoryId } from '../../../domain/category.entity';
 import { SortDirection } from '../../../../shared/domain/repository/search-params';
-import { Uuid } from '../../../../shared/domain/value-objects/uuid.vo';
-import {
-  EntityValidationError,
-  LoadEntityError,
-} from '../../../../shared/domain/validators/validation.error';
+import { LoadEntityError } from '../../../../shared/domain/validators/validation.error';
 import { NotFoundError } from '../../../../shared/domain/errors/not-found.error';
 import {
   CategoryRepository,
@@ -65,7 +61,7 @@ export class CategorySequelizeRepository implements CategoryRepository {
     await this.categoryModel.bulkCreate(entities.map((e) => e.toJSON()));
   }
 
-  async findById(entity_id: Uuid): Promise<Category> {
+  async findById(entity_id: CategoryId): Promise<Category> {
     const model = await this._get(entity_id.id);
     return model ? CategoryModelMapper.toEntity(model) : null;
   }
@@ -84,7 +80,7 @@ export class CategorySequelizeRepository implements CategoryRepository {
       where: { category_id: entity.category_id.id },
     });
   }
-  async delete(entity_id: Uuid): Promise<void> {
+  async delete(entity_id: CategoryId): Promise<void> {
     const _id = `${entity_id}`;
     const model = await this._get(_id);
     if (!model) {
@@ -136,7 +132,7 @@ export class CategoryModelMapper {
     const { category_id: id, ...otherData } = model.toJSON();
     const category = new Category({
       ...otherData,
-      category_id: new Uuid(id),
+      category_id: new CategoryId(id),
     });
     category.validate();
     if (category.notification.hasErrors()) {

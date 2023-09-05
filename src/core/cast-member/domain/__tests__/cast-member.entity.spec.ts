@@ -1,6 +1,5 @@
-import { Uuid } from '../../../shared/domain/value-objects/uuid.vo';
 import { CastMemberType } from '../cast-member-type.vo';
-import { CastMember } from '../cast-member.entity';
+import { CastMember, CastMemberId } from '../cast-member.entity';
 
 describe('CastMember Unit Tests', () => {
   beforeEach(() => {
@@ -14,7 +13,7 @@ describe('CastMember Unit Tests', () => {
       name: 'test',
       type: director,
     });
-    expect(castMember.cast_member_id).toBeInstanceOf(Uuid);
+    expect(castMember.cast_member_id).toBeInstanceOf(CastMemberId);
     expect(castMember.name).toBe('test');
     expect(castMember.type).toEqual(director);
     expect(castMember.created_at).toBeInstanceOf(Date);
@@ -25,7 +24,7 @@ describe('CastMember Unit Tests', () => {
       type: director,
       created_at,
     });
-    expect(castMember.cast_member_id).toBeInstanceOf(Uuid);
+    expect(castMember.cast_member_id).toBeInstanceOf(CastMemberId);
     expect(castMember.name).toBe('test');
     expect(castMember.type).toEqual(director);
     expect(castMember.created_at).toBe(created_at);
@@ -37,12 +36,12 @@ describe('CastMember Unit Tests', () => {
       { name: 'Movie', type: actor },
       { name: 'Movie', type: actor, id: null },
       { name: 'Movie', type: actor, id: undefined },
-      { name: 'Movie', type: actor, id: new Uuid() },
+      { name: 'Movie', type: actor, id: new CastMemberId() },
     ];
 
     test.each(arrange)('when props is %j', (item) => {
       const castMember = new CastMember(item);
-      expect(castMember.cast_member_id).toBeInstanceOf(Uuid);
+      expect(castMember.cast_member_id).toBeInstanceOf(CastMemberId);
     });
   });
 
@@ -53,7 +52,7 @@ describe('CastMember Unit Tests', () => {
         name: 'test',
         type: actor,
       });
-      expect(castMember.cast_member_id).toBeInstanceOf(Uuid);
+      expect(castMember.cast_member_id).toBeInstanceOf(CastMemberId);
       expect(castMember.name).toBe('test');
       expect(castMember.type).toEqual(actor);
       expect(castMember.created_at).toBeInstanceOf(Date);
@@ -62,11 +61,15 @@ describe('CastMember Unit Tests', () => {
   });
 
   describe('cast_member_id field', () => {
-    const arrange = [{ id: null }, { id: undefined }, { id: new Uuid() }];
+    const arrange = [
+      { id: null },
+      { id: undefined },
+      { id: new CastMemberId() },
+    ];
 
     test.each(arrange)('should be is %j', (props) => {
       const castMember = new CastMember(props as any);
-      expect(castMember.cast_member_id).toBeInstanceOf(Uuid);
+      expect(castMember.cast_member_id).toBeInstanceOf(CastMemberId);
     });
   });
 

@@ -1,11 +1,10 @@
 import { LoadEntityError } from '../../../../../shared/domain/validators/validation.error';
-import { Uuid } from '../../../../../shared/domain/value-objects/uuid.vo';
 import { setupSequelize } from '../../../../../shared/infra/testing/helpers';
 import {
   CastMemberType,
   CastMemberTypes,
 } from '../../../../domain/cast-member-type.vo';
-import { CastMember } from '../../../../domain/cast-member.entity';
+import { CastMember, CastMemberId } from '../../../../domain/cast-member.entity';
 import * as CastMemberSequelize from '../cast-member-sequelize';
 
 const { CastMemberModel, CastMemberModelMapper } = CastMemberSequelize;
@@ -46,7 +45,9 @@ describe('CastMemberModelMapper Integration Tests', () => {
     const entity = CastMemberModelMapper.toEntity(model);
     expect(entity.toJSON()).toStrictEqual(
       new CastMember({
-        cast_member_id: new Uuid('5490020a-e866-4229-9adc-aa44b83234c4'),
+        cast_member_id: new CastMemberId(
+          '5490020a-e866-4229-9adc-aa44b83234c4',
+        ),
         name: 'some value',
         type: CastMemberType.createAnActor(),
         created_at,

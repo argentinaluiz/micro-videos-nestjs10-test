@@ -1,7 +1,6 @@
 import { IUseCase } from '../../../shared/application/use-case-interface';
 import { NotFoundError } from '../../../shared/domain/errors/not-found.error';
-import { Uuid } from '../../../shared/domain/value-objects/uuid.vo';
-import { CastMember } from '../../domain/cast-member.entity';
+import { CastMember, CastMemberId } from '../../domain/cast-member.entity';
 import { CastMemberRepository } from '../../domain/cast-member.repository';
 import {
   CastMemberOutput,
@@ -14,8 +13,8 @@ export class GetCastMemberUseCase
   constructor(private castMemberRepo: CastMemberRepository) {}
 
   async execute(input: GetCastMemberInput): Promise<GetCastMemberOutput> {
-    const uuid = new Uuid(input.id);
-    const castMember = await this.castMemberRepo.findById(uuid);
+    const castMemberId = new CastMemberId(input.id);
+    const castMember = await this.castMemberRepo.findById(castMemberId);
     if (!castMember) {
       throw new NotFoundError(input.id, CastMember);
     }

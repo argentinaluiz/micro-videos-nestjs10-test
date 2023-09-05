@@ -1,10 +1,12 @@
-import { NotFoundError } from "../../../../../shared/domain/errors/not-found.error";
-import InvalidUuidError, { Uuid } from "../../../../../shared/domain/value-objects/uuid.vo";
-import { CastMemberTypes } from "../../../../domain/cast-member-type.vo";
-import { CastMember } from "../../../../domain/cast-member.entity";
-import { CastMemberInMemoryRepository } from "../../../../infra/db/in-memory/cast-member-in-memory.repository";
-import { GetCastMemberUseCase } from "../../get-cast-member.use-case";
-
+import { NotFoundError } from '../../../../../shared/domain/errors/not-found.error';
+import InvalidUuidError from '../../../../../shared/domain/value-objects/uuid.vo';
+import { CastMemberTypes } from '../../../../domain/cast-member-type.vo';
+import {
+  CastMember,
+  CastMemberId,
+} from '../../../../domain/cast-member.entity';
+import { CastMemberInMemoryRepository } from '../../../../infra/db/in-memory/cast-member-in-memory.repository';
+import { GetCastMemberUseCase } from '../../get-cast-member.use-case';
 
 describe('GetCastMemberUseCase Unit Tests', () => {
   let useCase: GetCastMemberUseCase;
@@ -20,10 +22,10 @@ describe('GetCastMemberUseCase Unit Tests', () => {
       new InvalidUuidError(),
     );
 
-    const uuid = new Uuid();
-    await expect(() => useCase.execute({ id: uuid.id })).rejects.toThrow(
-      new NotFoundError(uuid.id, CastMember),
-    );
+    const castMemberId = new CastMemberId();
+    await expect(() =>
+      useCase.execute({ id: castMemberId.id }),
+    ).rejects.toThrow(new NotFoundError(castMemberId.id, CastMember));
   });
 
   it('should returns a cast member', async () => {

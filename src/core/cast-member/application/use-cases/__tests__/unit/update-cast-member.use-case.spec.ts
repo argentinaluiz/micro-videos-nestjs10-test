@@ -1,9 +1,7 @@
 import { NotFoundError } from '../../../../../shared/domain/errors/not-found.error';
-import InvalidUuidError, {
-  Uuid,
-} from '../../../../../shared/domain/value-objects/uuid.vo';
+import InvalidUuidError from '../../../../../shared/domain/value-objects/uuid.vo';
 import { CastMemberTypes } from '../../../../domain/cast-member-type.vo';
-import { CastMember } from '../../../../domain/cast-member.entity';
+import { CastMember, CastMemberId } from '../../../../domain/cast-member.entity';
 import { CastMemberInMemoryRepository } from '../../../../infra/db/in-memory/cast-member-in-memory.repository';
 import { UpdateCastMemberUseCase } from '../../update-cast-member.use-case';
 
@@ -21,11 +19,11 @@ describe('UpdateCastMemberUseCase Unit Tests', () => {
       useCase.execute({ id: 'fake id', name: 'fake' }),
     ).rejects.toThrow(new InvalidUuidError());
 
-    const uuid = new Uuid();
+    const castMemberId = new CastMemberId();
 
     await expect(() =>
-      useCase.execute({ id: uuid.id, name: 'fake' }),
-    ).rejects.toThrow(new NotFoundError(uuid.id, CastMember));
+      useCase.execute({ id: castMemberId.id, name: 'fake' }),
+    ).rejects.toThrow(new NotFoundError(castMemberId.id, CastMember));
   });
 
   it('should update a cast member', async () => {

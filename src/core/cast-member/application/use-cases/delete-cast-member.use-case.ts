@@ -1,5 +1,5 @@
 import { IUseCase } from '../../../shared/application/use-case-interface';
-import { Uuid } from '../../../shared/domain/value-objects/uuid.vo';
+import { CastMemberId } from '../../domain/cast-member.entity';
 import { CastMemberRepository } from '../../domain/cast-member.repository';
 
 export class DeleteCastMemberUseCase
@@ -8,8 +8,8 @@ export class DeleteCastMemberUseCase
   constructor(private castMemberRepository: CastMemberRepository) {}
 
   async execute(input: DeleteCastMemberInput): Promise<DeleteCastMemberOutput> {
-    const uuid = new Uuid(input.id);
-    await this.castMemberRepository.delete(uuid);
+    const castMemberId = new CastMemberId(input.id);
+    await this.castMemberRepository.delete(castMemberId);
   }
 }
 

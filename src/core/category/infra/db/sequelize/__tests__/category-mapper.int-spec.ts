@@ -1,7 +1,6 @@
 import { LoadEntityError } from '../../../../../shared/domain/validators/validation.error';
-import { Uuid } from '../../../../../shared/domain/value-objects/uuid.vo';
 import { setupSequelize } from '../../../../../shared/infra/testing/helpers';
-import { Category } from '../../../../domain/category.entity';
+import { Category, CategoryId } from '../../../../domain/category.entity';
 import * as CategorySequelize from '../category-sequelize';
 
 const { CategoryModel, CategoryModelMapper } = CategorySequelize;
@@ -42,7 +41,7 @@ describe('CategoryModelMapper Integration Tests', () => {
     const entity = CategoryModelMapper.toEntity(model);
     expect(entity.toJSON()).toStrictEqual(
       new Category({
-        category_id: new Uuid('5490020a-e866-4229-9adc-aa44b83234c4'),
+        category_id: new CategoryId('5490020a-e866-4229-9adc-aa44b83234c4'),
         name: 'some value',
         description: 'some description',
         is_active: true,
