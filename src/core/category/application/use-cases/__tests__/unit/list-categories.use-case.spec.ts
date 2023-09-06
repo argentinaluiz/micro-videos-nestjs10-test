@@ -1,4 +1,4 @@
-import { Category } from '../../../../domain/category.entity';
+import { Category } from '../../../../domain/category.aggregate';
 import { CategorySearchResult } from '../../../../domain/category.repository';
 import { CategoryInMemoryRepository } from '../../../../infra/db/in-memory/category-in-memory.repository';
 import { CategoryOutputMapper } from '../../../dto/category-output';
@@ -29,9 +29,9 @@ describe('ListCategoriesUseCase Unit Tests', () => {
       last_page: 1,
     });
 
-    const entity = Category.create({ name: 'Movie' });
+    const aggregate = Category.create({ name: 'Movie' });
     result = new CategorySearchResult({
-      items: [entity],
+      items: [aggregate],
       total: 1,
       current_page: 1,
       per_page: 2,
@@ -39,7 +39,7 @@ describe('ListCategoriesUseCase Unit Tests', () => {
 
     output = useCase['toOutput'](result);
     expect(output).toStrictEqual({
-      items: [entity].map(CategoryOutputMapper.toOutput),
+      items: [aggregate].map(CategoryOutputMapper.toOutput),
       total: 1,
       current_page: 1,
       per_page: 2,

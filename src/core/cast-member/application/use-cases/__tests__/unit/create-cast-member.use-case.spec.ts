@@ -1,4 +1,4 @@
-import { EntityValidationError } from '../../../../../shared/domain/validators/validation.error';
+import { AggregateValidationError } from '../../../../../shared/domain/validators/validation.error';
 import { CastMemberTypes } from '../../../../domain/cast-member-type.vo';
 import { CastMemberInMemoryRepository } from '../../../../infra/db/in-memory/cast-member-in-memory.repository';
 import { CreateCastMemberUseCase } from '../../create-cast-member.use-case';
@@ -25,14 +25,14 @@ describe('CreateCastMemberUseCase Unit Tests', () => {
       ).rejects.toThrowError(expectedError);
     });
 
-    it('should throw an entity validation error', async () => {
+    it('should throw an aggregate validation error', async () => {
       try {
         await useCase.execute({
           name: '',
           type: 'a' as any,
         });
       } catch (e) {
-        expect(e).toBeInstanceOf(EntityValidationError);
+        expect(e).toBeInstanceOf(AggregateValidationError);
         expect(e.error).toStrictEqual([
           {
             name: ['name should not be empty'],

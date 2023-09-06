@@ -11,10 +11,16 @@ export class Notification {
     }
   }
 
-  setError(error: string, field?: string) {
+  setError(error: string | string[], field?: string) {
     if (field) {
-      this.errors.set(field, [error]);
+      this.errors.set(field, Array.isArray(error) ? error : [error]);
     } else {
+      if (Array.isArray(error)) {
+        error.forEach((value) => {
+          this.errors.set(value, value);
+        });
+        return;
+      }
       this.errors.set(error, error);
     }
   }

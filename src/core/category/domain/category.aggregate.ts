@@ -3,6 +3,7 @@ import { Uuid } from '../../shared/domain/value-objects/uuid.vo';
 import { Entity } from '../../shared/domain/entity';
 //import ValidatorRules from "../../shared/domain/validators/validator-rules";
 import CategoryValidatorFactory from './category.validator';
+import { AggregateRoot } from '../../shared/domain/aggregate-root';
 
 export type CategoryConstructorProps = {
   category_id?: CategoryId;
@@ -20,7 +21,7 @@ export type CategoryCreateCommand = {
 
 export class CategoryId extends Uuid {}
 
-export class Category extends Entity {
+export class Category extends AggregateRoot {
   category_id: CategoryId;
   name: string;
   description: string | null;

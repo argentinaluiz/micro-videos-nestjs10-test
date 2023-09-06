@@ -1,4 +1,4 @@
-import { Category } from '../../../domain/category.entity';
+import { Category } from '../../../domain/category.aggregate';
 import { CategoryFakeBuilder } from '../../../domain/category-fake.builder';
 import { CategoryInMemoryRepository } from './category-in-memory.repository';
 

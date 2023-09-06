@@ -2,7 +2,7 @@ import request from 'supertest';
 import { CategoriesController } from '../../src/categories/categories.controller';
 import { instanceToPlain } from 'class-transformer';
 import { CreateCategoryFixture } from '../../src/categories/testing/category-fixtures';
-import { CategoryRepository } from '../../src/core/category/domain/category.repository';
+import { ICategoryRepository } from '../../src/core/category/domain/category.repository';
 import { CategoryOutputMapper } from '../../src/core/category/application/dto/category-output';
 import { startApp } from '../../src/shared/testing/helpers';
 import * as CategoryProviders from '../../src/categories/categories.providers';
@@ -50,9 +50,9 @@ describe('CategoriesController (e2e)', () => {
     describe('should create a category', () => {
       const app = startApp();
       const arrange = CreateCategoryFixture.arrangeForCreate();
-      let categoryRepo: CategoryRepository;
+      let categoryRepo: ICategoryRepository;
       beforeEach(async () => {
-        categoryRepo = app.app.get<CategoryRepository>(
+        categoryRepo = app.app.get<ICategoryRepository>(
           CategoryProviders.REPOSITORIES.CATEGORY_REPOSITORY.provide,
         );
       });

@@ -2,8 +2,8 @@ import request from 'supertest';
 import { CategoriesController } from '../../src/categories/categories.controller';
 import { instanceToPlain } from 'class-transformer';
 import { startApp } from '../../src/shared/testing/helpers';
-import { CategoryRepository } from '../../src/core/category/domain/category.repository';
-import { Category } from '../../src/core/category/domain/category.entity';
+import { ICategoryRepository } from '../../src/core/category/domain/category.repository';
+import { Category } from '../../src/core/category/domain/category.aggregate';
 import { CategoryFixture } from '../../src/categories/testing/category-fixtures';
 import * as CategoryProviders from '../../src/categories/categories.providers';
 import { CategoryOutputMapper } from '../../src/core/category/application/dto/category-output';
@@ -41,7 +41,7 @@ describe('CategoriesController (e2e)', () => {
     });
 
     it('should return a category ', async () => {
-      const categoryRepo = nestApp.app.get<CategoryRepository>(
+      const categoryRepo = nestApp.app.get<ICategoryRepository>(
         CategoryProviders.REPOSITORIES.CATEGORY_REPOSITORY.provide,
       );
       const category = Category.fake().aCategory().build();

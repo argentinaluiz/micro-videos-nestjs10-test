@@ -6,7 +6,7 @@ import {
   MaxLength,
 } from 'class-validator';
 import { ClassValidatorFields } from '../../shared/domain/validators/class-validator-fields';
-import { Category } from './category.entity';
+import { Category } from './category.aggregate';
 import { Notification } from '../../shared/domain/validators/notification';
 
 export class CategoryRules {
@@ -23,8 +23,8 @@ export class CategoryRules {
   @IsOptional({ groups: ['is_active'] })
   is_active: boolean;
 
-  constructor(entity: Category) {
-    Object.assign(this, entity);
+  constructor(aggregate: Category) {
+    Object.assign(this, aggregate);
   }
 }
 

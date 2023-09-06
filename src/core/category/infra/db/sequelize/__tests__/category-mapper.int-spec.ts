@@ -1,6 +1,6 @@
-import { LoadEntityError } from '../../../../../shared/domain/validators/validation.error';
+import { LoadAggregateError } from '../../../../../shared/domain/validators/validation.error';
 import { setupSequelize } from '../../../../../shared/infra/testing/helpers';
-import { Category, CategoryId } from '../../../../domain/category.entity';
+import { Category, CategoryId } from '../../../../domain/category.aggregate';
 import * as CategorySequelize from '../category-sequelize';
 
 const { CategoryModel, CategoryModelMapper } = CategorySequelize;
@@ -13,11 +13,11 @@ describe('CategoryModelMapper Integration Tests', () => {
       category_id: '9366b7dc-2d71-4799-b91c-c64adb205104',
     });
     try {
-      CategoryModelMapper.toEntity(model);
-      fail('The category is valid, but it needs throws a LoadEntityError');
+      CategoryModelMapper.toAggregate(model);
+      fail('The category is valid, but it needs throws a LoadAggregateError');
     } catch (e) {
-      expect(e).toBeInstanceOf(LoadEntityError);
-      expect((e as LoadEntityError).error).toMatchObject([
+      expect(e).toBeInstanceOf(LoadAggregateError);
+      expect((e as LoadAggregateError).error).toMatchObject([
         {
           name: [
             'name should not be empty',
@@ -29,7 +29,7 @@ describe('CategoryModelMapper Integration Tests', () => {
     }
   });
 
-  it('should convert a category model to a category entity', () => {
+  it('should convert a category model to a category aggregate', () => {
     const created_at = new Date();
     const model = CategoryModel.build({
       category_id: '5490020a-e866-4229-9adc-aa44b83234c4',
@@ -38,8 +38,8 @@ describe('CategoryModelMapper Integration Tests', () => {
       is_active: true,
       created_at,
     });
-    const entity = CategoryModelMapper.toEntity(model);
-    expect(entity.toJSON()).toStrictEqual(
+    const aggregate = CategoryModelMapper.toAggregate(model);
+    expect(aggregate.toJSON()).toStrictEqual(
       new Category({
         category_id: new CategoryId('5490020a-e866-4229-9adc-aa44b83234c4'),
         name: 'some value',

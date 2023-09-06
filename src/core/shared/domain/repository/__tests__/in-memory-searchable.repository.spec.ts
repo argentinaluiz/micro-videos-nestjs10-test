@@ -1,26 +1,26 @@
-import { Entity } from '../../entity';
+import { AggregateRoot } from '../../aggregate-root';
 import { Uuid } from '../../value-objects/uuid.vo';
 import { InMemorySearchableRepository } from '../in-memory.repository';
 import { SearchParams, SearchResult } from '../search-params';
 
-type StubEntityConstructorProps = {
+type StubAggregateConstructorProps = {
   entity_id?: Uuid;
   name: string;
   price: number;
 };
 
-class StubEntity extends Entity {
+class StubAggregate extends AggregateRoot {
   entity_id: Uuid;
   name: string;
   price: number;
-  constructor(props: StubEntityConstructorProps) {
+  constructor(props: StubAggregateConstructorProps) {
     super();
     this.entity_id = props.entity_id ?? new Uuid();
     this.name = props.name;
     this.price = +props.price;
   }
 
-  toJSON(): { id: string } & StubEntityConstructorProps {
+  toJSON(): { id: string } & StubAggregateConstructorProps {
     return {
       id: this.entity_id.id,
       name: this.name,
@@ -30,19 +30,19 @@ class StubEntity extends Entity {
 }
 
 class StubInMemorySearchableRepository extends InMemorySearchableRepository<
-  StubEntity,
+  StubAggregate,
   Uuid
 > {
   sortableFields: string[] = ['name'];
 
-  getEntity(): new (...args: any[]) => StubEntity {
-    return StubEntity;
+  getAggregate(): new (...args: any[]) => StubAggregate {
+    return StubAggregate;
   }
 
   protected async applyFilter(
-    items: StubEntity[],
+    items: StubAggregate[],
     filter: string | null,
-  ): Promise<StubEntity[]> {
+  ): Promise<StubAggregate[]> {
     if (!filter) {
       return items;
     }
@@ -63,7 +63,7 @@ describe('InMemorySearchableRepository Unit Tests', () => {
 
   describe('applyFilter method', () => {
     it('should no filter items when filter param is null', async () => {
-      const items = [new StubEntity({ name: 'name value', price: 5 })];
+      const items = [new StubAggregate({ name: 'name value', price: 5 })];
       const spyFilterMethod = jest.spyOn(items, 'filter' as any);
       const itemsFiltered = await repository['applyFilter'](items, null);
       expect(itemsFiltered).toStrictEqual(items);
@@ -72,9 +72,9 @@ describe('InMemorySearchableRepository Unit Tests', () => {
 
     it('should filter using a filter param', async () => {
       const items = [
-        new StubEntity({ name: 'test', price: 5 }),
-        new StubEntity({ name: 'TEST', price: 5 }),
-        new StubEntity({ name: 'fake', price: 0 }),
+        new StubAggregate({ name: 'test', price: 5 }),
+        new StubAggregate({ name: 'TEST', price: 5 }),
+        new StubAggregate({ name: 'fake', price: 0 }),
       ];
 
       const spyFilterMethod = jest.spyOn(items, 'filter' as any);
@@ -96,8 +96,8 @@ describe('InMemorySearchableRepository Unit Tests', () => {
   describe('applySort method', () => {
     it('should no sort items', async () => {
       const items = [
-        new StubEntity({ name: 'b', price: 5 }),
-        new StubEntity({ name: 'a', price: 5 }),
+        new StubAggregate({ name: 'b', price: 5 }),
+        new StubAggregate({ name: 'a', price: 5 }),
       ];
 
       let itemsSorted = await repository['applySort'](items, null, null);
@@ -109,9 +109,9 @@ describe('InMemorySearchableRepository Unit Tests', () => {
 
     it('should sort items', async () => {
       const items = [
-        new StubEntity({ name: 'b', price: 5 }),
-        new StubEntity({ name: 'a', price: 5 }),
-        new StubEntity({ name: 'c', price: 5 }),
+        new StubAggregate({ name: 'b', price: 5 }),
+        new StubAggregate({ name: 'a', price: 5 }),
+        new StubAggregate({ name: 'c', price: 5 }),
       ];
 
       let itemsSorted = await repository['applySort'](items, 'name', 'asc');
@@ -125,11 +125,11 @@ describe('InMemorySearchableRepository Unit Tests', () => {
   describe('applyPaginate method', () => {
     it('should paginate items', async () => {
       const items = [
-        new StubEntity({ name: 'a', price: 5 }),
-        new StubEntity({ name: 'b', price: 5 }),
-        new StubEntity({ name: 'c', price: 5 }),
-        new StubEntity({ name: 'd', price: 5 }),
-        new StubEntity({ name: 'e', price: 5 }),
+        new StubAggregate({ name: 'a', price: 5 }),
+        new StubAggregate({ name: 'b', price: 5 }),
+        new StubAggregate({ name: 'c', price: 5 }),
+        new StubAggregate({ name: 'd', price: 5 }),
+        new StubAggregate({ name: 'e', price: 5 }),
       ];
 
       let itemsPaginated = await repository['applyPaginate'](items, 1, 2);
@@ -148,14 +148,14 @@ describe('InMemorySearchableRepository Unit Tests', () => {
 
   describe('search method', () => {
     it('should apply only paginate when other params are null', async () => {
-      const entity = new StubEntity({ name: 'a', price: 5 });
-      const items = Array(16).fill(entity);
+      const aggregate = new StubAggregate({ name: 'a', price: 5 });
+      const items = Array(16).fill(aggregate);
       repository.items = items;
 
       const result = await repository.search(new SearchParams());
       expect(result).toStrictEqual(
         new SearchResult({
-          items: Array(15).fill(entity),
+          items: Array(15).fill(aggregate),
           total: 16,
           current_page: 1,
           per_page: 15,
@@ -165,10 +165,10 @@ describe('InMemorySearchableRepository Unit Tests', () => {
 
     it('should apply paginate and filter', async () => {
       const items = [
-        new StubEntity({ name: 'test', price: 5 }),
-        new StubEntity({ name: 'a', price: 5 }),
-        new StubEntity({ name: 'TEST', price: 5 }),
-        new StubEntity({ name: 'TeSt', price: 5 }),
+        new StubAggregate({ name: 'test', price: 5 }),
+        new StubAggregate({ name: 'a', price: 5 }),
+        new StubAggregate({ name: 'TEST', price: 5 }),
+        new StubAggregate({ name: 'TeSt', price: 5 }),
       ];
       repository.items = items;
 
@@ -199,11 +199,11 @@ describe('InMemorySearchableRepository Unit Tests', () => {
 
     describe('should apply paginate and sort', () => {
       const items = [
-        new StubEntity({ name: 'b', price: 5 }),
-        new StubEntity({ name: 'a', price: 5 }),
-        new StubEntity({ name: 'd', price: 5 }),
-        new StubEntity({ name: 'e', price: 5 }),
-        new StubEntity({ name: 'c', price: 5 }),
+        new StubAggregate({ name: 'b', price: 5 }),
+        new StubAggregate({ name: 'a', price: 5 }),
+        new StubAggregate({ name: 'd', price: 5 }),
+        new StubAggregate({ name: 'e', price: 5 }),
+        new StubAggregate({ name: 'c', price: 5 }),
       ];
       const arrange = [
         {
@@ -277,11 +277,11 @@ describe('InMemorySearchableRepository Unit Tests', () => {
 
     it('should search using filter, sort and paginate', async () => {
       const items = [
-        new StubEntity({ name: 'test', price: 5 }),
-        new StubEntity({ name: 'a', price: 5 }),
-        new StubEntity({ name: 'TEST', price: 5 }),
-        new StubEntity({ name: 'e', price: 5 }),
-        new StubEntity({ name: 'TeSt', price: 5 }),
+        new StubAggregate({ name: 'test', price: 5 }),
+        new StubAggregate({ name: 'a', price: 5 }),
+        new StubAggregate({ name: 'TEST', price: 5 }),
+        new StubAggregate({ name: 'e', price: 5 }),
+        new StubAggregate({ name: 'TeSt', price: 5 }),
       ];
       repository.items = items;
 

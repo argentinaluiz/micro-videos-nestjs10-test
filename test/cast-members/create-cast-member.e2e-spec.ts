@@ -2,7 +2,7 @@ import request from 'supertest';
 import { CastMembersController } from '../../src/cast-members/cast-members.controller';
 import { instanceToPlain } from 'class-transformer';
 import { CreateCastMemberFixture } from '../../src/cast-members/testing/cast-member-fixtures';
-import { CastMemberRepository } from '../../src/core/cast-member/domain/cast-member.repository';
+import { ICastMemberRepository } from '../../src/core/cast-member/domain/cast-member.repository';
 import { CastMemberOutputMapper } from '../../src/core/cast-member/application/dto/cast-member-output';
 import { startApp } from '../../src/shared/testing/helpers';
 import * as CastMemberProviders from '../../src/cast-members/cast-members.providers';
@@ -50,9 +50,9 @@ describe('CastMembersController (e2e)', () => {
     describe('should create a cast member', () => {
       const app = startApp();
       const arrange = CreateCastMemberFixture.arrangeForCreate();
-      let castMemberRepo: CastMemberRepository;
+      let castMemberRepo: ICastMemberRepository;
       beforeEach(async () => {
-        castMemberRepo = app.app.get<CastMemberRepository>(
+        castMemberRepo = app.app.get<ICastMemberRepository>(
           CastMemberProviders.REPOSITORIES.CAST_MEMBER_REPOSITORY.provide,
         );
       });

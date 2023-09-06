@@ -1,12 +1,12 @@
 import { IUseCase } from '../../../shared/application/use-case-interface';
 import { NotFoundError } from '../../../shared/domain/errors/not-found.error';
-import { EntityValidationError } from '../../../shared/domain/validators/validation.error';
+import { AggregateValidationError } from '../../../shared/domain/validators/validation.error';
 import {
   CastMemberType,
   CastMemberTypes,
 } from '../../domain/cast-member-type.vo';
-import { CastMember, CastMemberId } from '../../domain/cast-member.entity';
-import { CastMemberRepository } from '../../domain/cast-member.repository';
+import { CastMember, CastMemberId } from '../../domain/cast-member.aggregate';
+import { ICastMemberRepository } from '../../domain/cast-member.repository';
 import {
   CastMemberOutput,
   CastMemberOutputMapper,
@@ -15,7 +15,7 @@ import {
 export class UpdateCastMemberUseCase
   implements IUseCase<UpdateCastMemberInput, UpdateCastMemberOutput>
 {
-  constructor(private castMemberRepo: CastMemberRepository) {}
+  constructor(private castMemberRepo: ICastMemberRepository) {}
 
   async execute(input: UpdateCastMemberInput): Promise<UpdateCastMemberOutput> {
     const castMemberId = new CastMemberId(input.id);
@@ -39,7 +39,7 @@ export class UpdateCastMemberUseCase
     }
 
     if (castMember.notification.hasErrors()) {
-      throw new EntityValidationError(castMember.notification.toJSON());
+      throw new AggregateValidationError(castMember.notification.toJSON());
     }
 
     await this.castMemberRepo.update(castMember);

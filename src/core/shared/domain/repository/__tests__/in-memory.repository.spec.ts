@@ -1,19 +1,19 @@
-import { Entity } from '../../entity';
+import { AggregateRoot } from '../../aggregate-root';
 import { NotFoundError } from '../../errors/not-found.error';
 import { Uuid } from '../../value-objects/uuid.vo';
 import { InMemoryRepository } from '../in-memory.repository';
 
-type StubEntityConstructorProps = {
+type StubAggregateConstructorProps = {
   entity_id?: Uuid;
   name: string;
   price: number;
 };
 
-class StubEntity extends Entity {
+class StubAggregate extends AggregateRoot {
   entity_id: Uuid;
   name: string;
   price: number;
-  constructor(props: StubEntityConstructorProps) {
+  constructor(props: StubAggregateConstructorProps) {
     super();
     this.entity_id = props.entity_id ?? new Uuid();
     this.name = props.name;
@@ -29,79 +29,81 @@ class StubEntity extends Entity {
   }
 }
 
-class StubInMemoryRepository extends InMemoryRepository<StubEntity, Uuid> {
-  getEntity(): new (...args: any[]) => StubEntity {
-    return StubEntity;
+class StubInMemoryRepository extends InMemoryRepository<StubAggregate, Uuid> {
+  getAggregate(): new (...args: any[]) => StubAggregate {
+    return StubAggregate;
   }
 }
 
 describe('InMemoryRepository Unit Tests', () => {
   let repository: StubInMemoryRepository;
   beforeEach(() => (repository = new StubInMemoryRepository()));
-  it('should inserts a new entity', async () => {
-    const entity = new StubEntity({ name: 'name value', price: 5 });
-    await repository.insert(entity);
-    expect(entity.toJSON()).toStrictEqual(repository.items[0].toJSON());
+  it('should inserts a new aggregate', async () => {
+    const aggregate = new StubAggregate({ name: 'name value', price: 5 });
+    await repository.insert(aggregate);
+    expect(aggregate.toJSON()).toStrictEqual(repository.items[0].toJSON());
   });
 
-  it('should finds a entity by id', async () => {
-    let entityFound = await repository.findById(new Uuid());
-    expect(entityFound).toBeNull();
+  it('should finds a aggregate by id', async () => {
+    let aggregateFound = await repository.findById(new Uuid());
+    expect(aggregateFound).toBeNull();
 
-    const entity = new StubEntity({ name: 'name value', price: 5 });
-    await repository.insert(entity);
+    const aggregate = new StubAggregate({ name: 'name value', price: 5 });
+    await repository.insert(aggregate);
 
-    entityFound = await repository.findById(entity.entity_id);
-    expect(entity.toJSON()).toStrictEqual(entityFound.toJSON());
+    aggregateFound = await repository.findById(aggregate.entity_id);
+    expect(aggregate.toJSON()).toStrictEqual(aggregateFound.toJSON());
 
-    entityFound = await repository.findById(entity.entity_id);
-    expect(entity.toJSON()).toStrictEqual(entityFound.toJSON());
+    aggregateFound = await repository.findById(aggregate.entity_id);
+    expect(aggregate.toJSON()).toStrictEqual(aggregateFound.toJSON());
   });
 
   it('should returns all entities', async () => {
-    const entity = new StubEntity({ name: 'name value', price: 5 });
-    await repository.insert(entity);
+    const aggregate = new StubAggregate({ name: 'name value', price: 5 });
+    await repository.insert(aggregate);
 
     const entities = await repository.findAll();
 
-    expect(entities).toStrictEqual([entity]);
+    expect(entities).toStrictEqual([aggregate]);
   });
 
-  it('should throws error on update when entity not found', () => {
-    const entity = new StubEntity({ name: 'name value', price: 5 });
-    expect(repository.update(entity)).rejects.toThrow(
-      new NotFoundError(entity.entity_id, StubEntity),
+  it('should throws error on update when aggregate not found', () => {
+    const aggregate = new StubAggregate({ name: 'name value', price: 5 });
+    expect(repository.update(aggregate)).rejects.toThrow(
+      new NotFoundError(aggregate.entity_id, StubAggregate),
     );
   });
 
-  it('should updates an entity', async () => {
-    const entity = new StubEntity({ name: 'name value', price: 5 });
-    await repository.insert(entity);
+  it('should updates an aggregate', async () => {
+    const aggregate = new StubAggregate({ name: 'name value', price: 5 });
+    await repository.insert(aggregate);
 
-    const entityUpdated = new StubEntity({
-      entity_id: entity.entity_id,
+    const aggregateUpdated = new StubAggregate({
+      entity_id: aggregate.entity_id,
       name: 'updated',
       price: 1,
     });
-    await repository.update(entityUpdated);
-    expect(entityUpdated.toJSON()).toStrictEqual(repository.items[0].toJSON());
+    await repository.update(aggregateUpdated);
+    expect(aggregateUpdated.toJSON()).toStrictEqual(
+      repository.items[0].toJSON(),
+    );
   });
 
-  it('should throws error on delete when entity not found', () => {
+  it('should throws error on delete when aggregate not found', () => {
     const uuid = new Uuid();
     expect(repository.delete(uuid)).rejects.toThrow(
-      new NotFoundError(uuid.id, StubEntity),
+      new NotFoundError(uuid.id, StubAggregate),
     );
 
     expect(
       repository.delete(new Uuid('9366b7dc-2d71-4799-b91c-c64adb205104')),
     ).rejects.toThrow(
-      new NotFoundError('9366b7dc-2d71-4799-b91c-c64adb205104', StubEntity),
+      new NotFoundError('9366b7dc-2d71-4799-b91c-c64adb205104', StubAggregate),
     );
   });
 
   it('should deletes an entity', async () => {
-    const entity = new StubEntity({ name: 'name value', price: 5 });
+    const entity = new StubAggregate({ name: 'name value', price: 5 });
     await repository.insert(entity);
 
     await repository.delete(entity.entity_id);

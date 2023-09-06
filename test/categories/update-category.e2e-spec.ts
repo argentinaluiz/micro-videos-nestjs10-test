@@ -2,9 +2,9 @@ import request from 'supertest';
 import { CategoriesController } from '../../src/categories/categories.controller';
 import { instanceToPlain } from 'class-transformer';
 import { startApp } from '../../src/shared/testing/helpers';
-import { Category } from '../../src/core/category/domain/category.entity';
+import { Category } from '../../src/core/category/domain/category.aggregate';
 import { UpdateCategoryFixture } from '../../src/categories/testing/category-fixtures';
-import { CategoryRepository } from '../../src/core/category/domain/category.repository';
+import { ICategoryRepository } from '../../src/core/category/domain/category.repository';
 import * as CategoryProviders from '../../src/categories/categories.providers';
 import { CategoryOutputMapper } from '../../src/core/category/application/dto/category-output';
 import { Uuid } from '../../src/core/shared/domain/value-objects/uuid.vo';
@@ -78,10 +78,10 @@ describe('CategoriesController (e2e)', () => {
         label: key,
         value: validationError[key],
       }));
-      let categoryRepo: CategoryRepository;
+      let categoryRepo: ICategoryRepository;
 
       beforeEach(() => {
-        categoryRepo = app.app.get<CategoryRepository>(
+        categoryRepo = app.app.get<ICategoryRepository>(
           CategoryProviders.REPOSITORIES.CATEGORY_REPOSITORY.provide,
         );
       });
@@ -99,10 +99,10 @@ describe('CategoriesController (e2e)', () => {
     describe('should update a category', () => {
       const app = startApp();
       const arrange = UpdateCategoryFixture.arrangeForUpdate();
-      let categoryRepo: CategoryRepository;
+      let categoryRepo: ICategoryRepository;
 
       beforeEach(async () => {
-        categoryRepo = app.app.get<CategoryRepository>(
+        categoryRepo = app.app.get<ICategoryRepository>(
           CategoryProviders.REPOSITORIES.CATEGORY_REPOSITORY.provide,
         );
       });

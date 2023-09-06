@@ -1,5 +1,5 @@
 import { Chance } from 'chance';
-import { CastMember, CastMemberId } from './cast-member.entity';
+import { CastMember, CastMemberId } from './cast-member.aggregate';
 import { CastMemberType } from './cast-member-type.vo';
 
 type PropOrFactory<T> = T | ((index: number) => T);

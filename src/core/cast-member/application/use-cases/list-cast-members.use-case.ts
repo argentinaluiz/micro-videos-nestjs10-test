@@ -9,7 +9,7 @@ import {
 } from '../../../shared/application/pagination-output';
 import { SearchInputDto } from '../../../shared/application/search-input';
 import {
-  CastMemberRepository,
+  ICastMemberRepository,
   CastMemberSearchParams,
   CastMemberSearchResult,
 } from '../../domain/cast-member.repository';
@@ -18,7 +18,7 @@ import { CastMemberTypes } from '../../domain/cast-member-type.vo';
 export class ListCastMembersUseCase
   implements IUseCase<ListCastMembersInput, ListCastMembersOutput>
 {
-  constructor(private castMemberRepo: CastMemberRepository) {}
+  constructor(private castMemberRepo: ICastMemberRepository) {}
 
   async execute(input: ListCastMembersInput): Promise<ListCastMembersOutput> {
     const params = CastMemberSearchParams.create(input);

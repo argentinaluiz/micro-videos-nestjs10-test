@@ -1,8 +1,8 @@
 import { InMemorySearchableRepository } from '../../../../shared/domain/repository/in-memory.repository';
 import { SortDirection } from '../../../../shared/domain/repository/search-params';
-import { CastMember, CastMemberId } from '../../../domain/cast-member.entity';
+import { CastMember, CastMemberId } from '../../../domain/cast-member.aggregate';
 import {
-  CastMemberRepository,
+  ICastMemberRepository,
   CastMemberFilter,
 } from '../../../domain/cast-member.repository';
 
@@ -12,11 +12,11 @@ export class CastMemberInMemoryRepository
     CastMemberId,
     CastMemberFilter
   >
-  implements CastMemberRepository
+  implements ICastMemberRepository
 {
   sortableFields: string[] = ['name', 'created_at'];
 
-  getEntity(): new (...args: any[]) => CastMember {
+  getAggregate(): new (...args: any[]) => CastMember {
     return CastMember;
   }
 

@@ -1,7 +1,7 @@
 import request from 'supertest';
 import { startApp } from '../../src/shared/testing/helpers';
-import { CastMemberRepository } from '../../src/core/cast-member/domain/cast-member.repository';
-import { CastMember } from '../../src/core/cast-member/domain/cast-member.entity';
+import { ICastMemberRepository } from '../../src/core/cast-member/domain/cast-member.repository';
+import { CastMember } from '../../src/core/cast-member/domain/cast-member.aggregate';
 import * as CastMemberProviders from '../../src/cast-members/cast-members.providers';
 
 describe('CastMembersController (e2e)', () => {
@@ -37,7 +37,7 @@ describe('CastMembersController (e2e)', () => {
     });
 
     it('should delete a category response with status 204', async () => {
-      const castMemberRepo = nestApp.app.get<CastMemberRepository>(
+      const castMemberRepo = nestApp.app.get<ICastMemberRepository>(
         CastMemberProviders.REPOSITORIES.CAST_MEMBER_REPOSITORY.provide,
       );
       const castMember = CastMember.fake().anActor().build();

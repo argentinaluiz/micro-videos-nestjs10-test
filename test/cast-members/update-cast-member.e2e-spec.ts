@@ -2,9 +2,9 @@ import request from 'supertest';
 import { CastMembersController } from '../../src/cast-members/cast-members.controller';
 import { instanceToPlain } from 'class-transformer';
 import { startApp } from '../../src/shared/testing/helpers';
-import { CastMember } from '../../src/core/cast-member/domain/cast-member.entity';
+import { CastMember } from '../../src/core/cast-member/domain/cast-member.aggregate';
 import { UpdateCastMemberFixture } from '../../src/cast-members/testing/cast-member-fixtures';
-import { CastMemberRepository } from '../../src/core/cast-member/domain/cast-member.repository';
+import { ICastMemberRepository } from '../../src/core/cast-member/domain/cast-member.repository';
 import * as CastMemberProviders from '../../src/cast-members/cast-members.providers';
 import { CastMemberOutputMapper } from '../../src/core/cast-member/application/dto/cast-member-output';
 import { Uuid } from '../../src/core/shared/domain/value-objects/uuid.vo';
@@ -78,10 +78,10 @@ describe('CastMembersController (e2e)', () => {
         label: key,
         value: validationError[key],
       }));
-      let categoryRepo: CastMemberRepository;
+      let categoryRepo: ICastMemberRepository;
 
       beforeEach(() => {
-        categoryRepo = app.app.get<CastMemberRepository>(
+        categoryRepo = app.app.get<ICastMemberRepository>(
           CastMemberProviders.REPOSITORIES.CAST_MEMBER_REPOSITORY.provide,
         );
       });
@@ -99,10 +99,10 @@ describe('CastMembersController (e2e)', () => {
     describe('should update a category', () => {
       const app = startApp();
       const arrange = UpdateCastMemberFixture.arrangeForUpdate();
-      let categoryRepo: CastMemberRepository;
+      let categoryRepo: ICastMemberRepository;
 
       beforeEach(async () => {
-        categoryRepo = app.app.get<CastMemberRepository>(
+        categoryRepo = app.app.get<ICastMemberRepository>(
           CastMemberProviders.REPOSITORIES.CAST_MEMBER_REPOSITORY.provide,
         );
       });

@@ -9,7 +9,7 @@ import {
   CategoryModel,
   CategorySequelizeRepository,
 } from '../core/category/infra/db/sequelize/category-sequelize';
-import { CategoryRepository } from '../core/category/domain/category.repository';
+import { ICategoryRepository } from '../core/category/domain/category.repository';
 
 export const REPOSITORIES = {
   CATEGORY_REPOSITORY: {
@@ -32,35 +32,35 @@ export const REPOSITORIES = {
 export const USE_CASES = {
   CREATE_CATEGORY_USE_CASE: {
     provide: CreateCategoryUseCase,
-    useFactory: (categoryRepo: CategoryRepository) => {
+    useFactory: (categoryRepo: ICategoryRepository) => {
       return new CreateCategoryUseCase(categoryRepo);
     },
     inject: [REPOSITORIES.CATEGORY_REPOSITORY.provide],
   },
   UPDATE_CATEGORY_USE_CASE: {
     provide: UpdateCategoryUseCase,
-    useFactory: (categoryRepo: CategoryRepository) => {
+    useFactory: (categoryRepo: ICategoryRepository) => {
       return new UpdateCategoryUseCase(categoryRepo);
     },
     inject: [REPOSITORIES.CATEGORY_REPOSITORY.provide],
   },
   LIST_CATEGORIES_USE_CASE: {
     provide: ListCategoriesUseCase,
-    useFactory: (categoryRepo: CategoryRepository) => {
+    useFactory: (categoryRepo: ICategoryRepository) => {
       return new ListCategoriesUseCase(categoryRepo);
     },
     inject: [REPOSITORIES.CATEGORY_REPOSITORY.provide],
   },
   GET_CATEGORY_USE_CASE: {
     provide: GetCategoryUseCase,
-    useFactory: (categoryRepo: CategoryRepository) => {
+    useFactory: (categoryRepo: ICategoryRepository) => {
       return new GetCategoryUseCase(categoryRepo);
     },
     inject: [REPOSITORIES.CATEGORY_REPOSITORY.provide],
   },
   DELETE_CATEGORY_USE_CASE: {
     provide: DeleteCategoryUseCase,
-    useFactory: (categoryRepo: CategoryRepository) => {
+    useFactory: (categoryRepo: ICategoryRepository) => {
       return new DeleteCategoryUseCase(categoryRepo);
     },
     inject: [REPOSITORIES.CATEGORY_REPOSITORY.provide],

@@ -1,13 +1,13 @@
 import { IUseCase } from '../../../shared/application/use-case-interface';
 import { NotFoundError } from '../../../shared/domain/errors/not-found.error';
-import { Category, CategoryId } from '../../domain/category.entity';
-import { CategoryRepository } from '../../domain/category.repository';
+import { Category, CategoryId } from '../../domain/category.aggregate';
+import { ICategoryRepository } from '../../domain/category.repository';
 import { CategoryOutput, CategoryOutputMapper } from '../dto/category-output';
 
 export class GetCategoryUseCase
   implements IUseCase<GetCategoryInput, GetCategoryOutput>
 {
-  constructor(private categoryRepo: CategoryRepository) {}
+  constructor(private categoryRepo: ICategoryRepository) {}
 
   async execute(input: GetCategoryInput): Promise<GetCategoryOutput> {
     const categorId = new CategoryId(input.id);

@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CastMemberRepository } from '../../core/cast-member/domain/cast-member.repository';
+import { ICastMemberRepository } from '../../core/cast-member/domain/cast-member.repository';
 import { CastMembersController } from '../cast-members.controller';
 import { ConfigModule } from '../../config/config.module';
 import { DatabaseModule } from '../../database/database.module';
@@ -9,7 +9,7 @@ import { UpdateCastMemberUseCase } from '../../core/cast-member/application/use-
 import { ListCastMembersUseCase } from '../../core/cast-member/application/use-cases/list-cast-members.use-case';
 import { GetCastMemberUseCase } from '../../core/cast-member/application/use-cases/get-cast-member.use-case';
 import { DeleteCastMemberUseCase } from '../../core/cast-member/application/use-cases/delete-cast-member.use-case';
-import { CastMember } from '../../core/cast-member/domain/cast-member.entity';
+import { CastMember } from '../../core/cast-member/domain/cast-member.aggregate';
 import { Uuid } from '../../core/shared/domain/value-objects/uuid.vo';
 import { CastMemberOutputMapper } from '../../core/cast-member/application/dto/cast-member-output';
 import { NotFoundError } from '../../core/shared/domain/errors/not-found.error';
@@ -23,7 +23,7 @@ import {
 
 describe('CastMembersController Integration Tests', () => {
   let controller: CastMembersController;
-  let repository: CastMemberRepository;
+  let repository: ICastMemberRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

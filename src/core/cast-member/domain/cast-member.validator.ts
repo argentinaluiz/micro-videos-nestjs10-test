@@ -1,6 +1,6 @@
 import { IsInstance, IsNotEmpty, IsString, MaxLength } from 'class-validator';
 import { ClassValidatorFields } from '../../shared/domain/validators/class-validator-fields';
-import { CastMember } from './cast-member.entity';
+import { CastMember } from './cast-member.aggregate';
 import { CastMemberType } from './cast-member-type.vo';
 import { Notification } from '../../shared/domain/validators/notification';
 
@@ -14,8 +14,8 @@ export class CastMemberRules {
   @IsNotEmpty({ groups: ['type'] })
   type: CastMemberType;
 
-  constructor(entity: CastMember) {
-    Object.assign(this, entity);
+  constructor(aggregate: CastMember) {
+    Object.assign(this, aggregate);
   }
 }
 

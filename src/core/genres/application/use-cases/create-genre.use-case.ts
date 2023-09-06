@@ -1,0 +1,63 @@
+import { CategoriesIdsValidator } from '../../../category/application/validations/categories-ids.validator';
+import { ICategoryRepository } from '../../../category/domain/category.repository';
+import { IUseCase } from '../../../shared/application/use-case-interface';
+import { IUnitOfWork } from '../../../shared/domain/repository/unit-of-work.interface';
+import { AggregateValidationError } from '../../../shared/domain/validators/validation.error';
+import { Genre } from '../../domain/genre.aggregate';
+import { IGenreRepository } from '../../domain/genre.repository';
+import { GenreOutput, GenreOutputMapper } from '../dto/genre-output';
+
+export class CreateGenreUseCase
+  implements IUseCase<CreateGenreInput, CreateGenreOutput>
+{
+  constructor(
+    private uow: IUnitOfWork,
+    private genreRepo: IGenreRepository,
+    private categoryRepo: ICategoryRepository,
+    private categoriesIdValidator: CategoriesIdsValidator,
+  ) {}
+
+  async execute(input: CreateGenreInput): Promise<CreateGenreOutput> {
+    const [categoriesId, errorsCategoriesId] = (
+      await this.categoriesIdValidator.validate(input.categories_id)
+    ).asArray();
+
+    const { name, is_active } = input;
+    const entity = Genre.create({
+      name,
+      categories_id: errorsCategoriesId ? [] : categoriesId,
+      is_active,
+    });
+
+    const notification = entity.notification;
+
+    if (errorsCategoriesId) {
+      notification.setError(
+        errorsCategoriesId.map((e) => e.message),
+        'categories_id',
+      );
+    }
+
+    if (notification.hasErrors()) {
+      throw new AggregateValidationError(notification.toJSON());
+    }
+
+    await this.uow.do(async () => {
+      return this.genreRepo.insert(entity);
+    });
+
+    const categories = await this.categoryRepo.findByIds(
+      Array.from(entity.categories_id.values()),
+    );
+
+    return GenreOutputMapper.toOutput(entity, categories);
+  }
+}
+
+export type CreateGenreInput = {
+  name: string;
+  categories_id: string[];
+  is_active?: boolean;
+};
+
+export type CreateGenreOutput = GenreOutput;

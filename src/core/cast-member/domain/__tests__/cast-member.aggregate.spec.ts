@@ -1,5 +1,5 @@
 import { CastMemberType } from '../cast-member-type.vo';
-import { CastMember, CastMemberId } from '../cast-member.entity';
+import { CastMember, CastMemberId } from '../cast-member.aggregate';
 
 describe('CastMember Unit Tests', () => {
   beforeEach(() => {

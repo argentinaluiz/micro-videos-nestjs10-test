@@ -1,14 +1,14 @@
 import { IUseCase } from '../../../shared/application/use-case-interface';
 import { NotFoundError } from '../../../shared/domain/errors/not-found.error';
-import { EntityValidationError } from '../../../shared/domain/validators/validation.error';
-import { Category, CategoryId } from '../../domain/category.entity';
-import { CategoryRepository } from '../../domain/category.repository';
+import { AggregateValidationError } from '../../../shared/domain/validators/validation.error';
+import { Category, CategoryId } from '../../domain/category.aggregate';
+import { ICategoryRepository } from '../../domain/category.repository';
 import { CategoryOutput, CategoryOutputMapper } from '../dto/category-output';
 
 export class UpdateCategoryUseCase
   implements IUseCase<UpdateCategoryInput, UpdateCategoryOutput>
 {
-  constructor(private categoryRepo: CategoryRepository) {}
+  constructor(private categoryRepo: ICategoryRepository) {}
 
   async execute(input: UpdateCategoryInput): Promise<UpdateCategoryOutput> {
     const categoryId = new CategoryId(input.id);
@@ -32,7 +32,7 @@ export class UpdateCategoryUseCase
     }
 
     if (category.notification.hasErrors()) {
-      throw new EntityValidationError(category.notification.toJSON());
+      throw new AggregateValidationError(category.notification.toJSON());
     }
 
     await this.categoryRepo.update(category);

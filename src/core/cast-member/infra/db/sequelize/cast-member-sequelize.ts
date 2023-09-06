@@ -7,12 +7,12 @@ import {
 } from 'sequelize-typescript';
 
 import { literal, Op } from 'sequelize';
-import { CastMember, CastMemberId } from '../../../domain/cast-member.entity';
+import { CastMember, CastMemberId } from '../../../domain/cast-member.aggregate';
 import { SortDirection } from '../../../../shared/domain/repository/search-params';
-import { LoadEntityError } from '../../../../shared/domain/validators/validation.error';
+import { LoadAggregateError } from '../../../../shared/domain/validators/validation.error';
 import { NotFoundError } from '../../../../shared/domain/errors/not-found.error';
 import {
-  CastMemberRepository,
+  ICastMemberRepository,
   CastMemberSearchParams,
   CastMemberSearchResult,
 } from '../../../domain/cast-member.repository';
@@ -47,7 +47,7 @@ export class CastMemberModel extends Model<CastMemberModelProps> {
   declare created_at: Date;
 }
 
-export class CastMemberSequelizeRepository implements CastMemberRepository {
+export class CastMemberSequelizeRepository implements ICastMemberRepository {
   sortableFields: string[] = ['name', 'created_at'];
   orderBy = {
     mysql: {
@@ -56,40 +56,39 @@ export class CastMemberSequelizeRepository implements CastMemberRepository {
   };
   constructor(private castMemberModel: typeof CastMemberModel) {}
 
-  async insert(entity: CastMember): Promise<void> {
-    await this.castMemberModel.create(entity.toJSON());
+  async insert(aggregate: CastMember): Promise<void> {
+    await this.castMemberModel.create(aggregate.toJSON());
   }
 
-  async bulkInsert(entities: CastMember[]): Promise<void> {
-    await this.castMemberModel.bulkCreate(entities.map((e) => e.toJSON()));
+  async bulkInsert(aggregates: CastMember[]): Promise<void> {
+    await this.castMemberModel.bulkCreate(aggregates.map((e) => e.toJSON()));
   }
 
-  async findById(entity_id: CastMemberId): Promise<CastMember> {
-    const model = await this._get(entity_id.id);
-    return model ? CastMemberModelMapper.toEntity(model) : null;
+  async findById(id: CastMemberId): Promise<CastMember> {
+    const model = await this._get(id.id);
+    return model ? CastMemberModelMapper.toAggregate(model) : null;
   }
 
   async findAll(): Promise<CastMember[]> {
     const models = await this.castMemberModel.findAll();
-    return models.map((m) => CastMemberModelMapper.toEntity(m));
+    return models.map((m) => CastMemberModelMapper.toAggregate(m));
   }
 
-  async update(entity: CastMember): Promise<void> {
-    const model = await this._get(entity.cast_member_id.id);
+  async update(aggregate: CastMember): Promise<void> {
+    const model = await this._get(aggregate.cast_member_id.id);
     if (!model) {
-      throw new NotFoundError(entity.cast_member_id.id, this.getEntity());
+      throw new NotFoundError(aggregate.cast_member_id.id, this.getAggregate());
     }
-    await this.castMemberModel.update(entity.toJSON(), {
-      where: { cast_member_id: entity.cast_member_id.id },
+    await this.castMemberModel.update(aggregate.toJSON(), {
+      where: { cast_member_id: aggregate.cast_member_id.id },
     });
   }
-  async delete(entity_id: CastMemberId): Promise<void> {
-    const _id = `${entity_id}`;
-    const model = await this._get(_id);
+  async delete(id: CastMemberId): Promise<void> {
+    const model = await this._get(id.id);
     if (!model) {
-      throw new NotFoundError(entity_id.id, this.getEntity());
+      throw new NotFoundError(id.id, this.getAggregate());
     }
-    this.castMemberModel.destroy({ where: { cast_member_id: _id } });
+    this.castMemberModel.destroy({ where: { cast_member_id: id.id } });
   }
 
   private async _get(id: string): Promise<CastMemberModel> {
@@ -123,7 +122,7 @@ export class CastMemberSequelizeRepository implements CastMemberRepository {
       limit,
     });
     return new CastMemberSearchResult({
-      items: models.map((m) => CastMemberModelMapper.toEntity(m)),
+      items: models.map((m) => CastMemberModelMapper.toAggregate(m)),
       current_page: props.page,
       per_page: props.per_page,
       total: count,
@@ -138,13 +137,13 @@ export class CastMemberSequelizeRepository implements CastMemberRepository {
     return [[sort, sort_dir]];
   }
 
-  getEntity(): new (...args: any[]) => CastMember {
+  getAggregate(): new (...args: any[]) => CastMember {
     return CastMember;
   }
 }
 
 export class CastMemberModelMapper {
-  static toEntity(model: CastMemberModel) {
+  static toAggregate(model: CastMemberModel) {
     const { cast_member_id: id, ...otherData } = model.toJSON();
     const [type, errorCastMemberType] = CastMemberType.create(
       otherData.type as any,
@@ -164,7 +163,7 @@ export class CastMemberModelMapper {
     }
 
     if (notification.hasErrors()) {
-      throw new LoadEntityError(notification.toJSON());
+      throw new LoadAggregateError(notification.toJSON());
     }
 
     return castMember;

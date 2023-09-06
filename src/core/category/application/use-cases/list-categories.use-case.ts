@@ -6,7 +6,7 @@ import {
 } from '../../../shared/application/pagination-output';
 import { SearchInputDto } from '../../../shared/application/search-input';
 import {
-  CategoryRepository,
+  ICategoryRepository,
   CategorySearchParams,
   CategorySearchResult,
 } from '../../domain/category.repository';
@@ -14,7 +14,7 @@ import {
 export class ListCategoriesUseCase
   implements IUseCase<ListCategoriesInput, ListCategoriesOutput>
 {
-  constructor(private categoryRepo: CategoryRepository) {}
+  constructor(private categoryRepo: ICategoryRepository) {}
 
   async execute(input: ListCategoriesInput): Promise<ListCategoriesOutput> {
     const params = new CategorySearchParams(input);

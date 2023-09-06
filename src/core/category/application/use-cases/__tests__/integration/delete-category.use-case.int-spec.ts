@@ -1,7 +1,7 @@
 import { DeleteCategoryUseCase } from '../../delete-category.use-case';
 import { setupSequelize } from '../../../../../shared/infra/testing/helpers';
 import { NotFoundError } from '../../../../../shared/domain/errors/not-found.error';
-import { Category, CategoryId } from '../../../../domain/category.entity';
+import { Category, CategoryId } from '../../../../domain/category.aggregate';
 import {
   CategoryModel,
   CategorySequelizeRepository,
@@ -18,7 +18,7 @@ describe('DeleteCategoryUseCase Integration Tests', () => {
     useCase = new DeleteCategoryUseCase(repository);
   });
 
-  it('should throws error when entity not found', async () => {
+  it('should throws error when aggregate not found', async () => {
     const categoryId = new CategoryId();
     await expect(() => useCase.execute({ id: categoryId.id })).rejects.toThrow(
       new NotFoundError(categoryId.id, Category),

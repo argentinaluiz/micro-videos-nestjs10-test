@@ -1,5 +1,5 @@
 import { Either } from '../../shared/domain/either';
-import { SearchableRepositoryInterface } from '../../shared/domain/repository/repository-interface';
+import { ISearchableRepository } from '../../shared/domain/repository/repository-interface';
 import {
   SearchParams as DefaultSearchParams,
   SearchResult as DefaultSearchResult,
@@ -7,7 +7,7 @@ import {
 } from '../../shared/domain/repository/search-params';
 import { SearchValidationError } from '../../shared/domain/validators/validation.error';
 import { CastMemberType, CastMemberTypes } from './cast-member-type.vo';
-import { CastMember, CastMemberId } from './cast-member.entity';
+import { CastMember, CastMemberId } from './cast-member.aggregate';
 
 export type CastMemberFilter = {
   name?: string;
@@ -70,8 +70,8 @@ export class CastMemberSearchParams extends DefaultSearchParams<CastMemberFilter
 
 export class CastMemberSearchResult extends DefaultSearchResult<CastMember> {}
 
-export interface CastMemberRepository
-  extends SearchableRepositoryInterface<
+export interface ICastMemberRepository
+  extends ISearchableRepository<
     CastMember,
     CastMemberId,
     CastMemberFilter,

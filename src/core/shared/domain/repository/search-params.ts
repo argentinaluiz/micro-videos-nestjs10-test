@@ -1,4 +1,4 @@
-import { Entity } from '../entity';
+import { AggregateRoot } from '../aggregate-root';
 import { ValueObject } from '../value-object';
 
 export type SortDirection = 'asc' | 'desc';
@@ -93,21 +93,21 @@ export class SearchParams<Filter = string> extends ValueObject {
   }
 }
 
-type SearchResultProps<E extends Entity> = {
-  items: E[];
+type SearchResultProps<A extends AggregateRoot> = {
+  items: A[];
   total: number;
   current_page: number;
   per_page: number;
 };
 
-export class SearchResult<E extends Entity = Entity> {
-  readonly items: E[];
+export class SearchResult<A extends AggregateRoot = AggregateRoot> {
+  readonly items: A[];
   readonly total: number;
   readonly current_page: number;
   readonly per_page: number;
   readonly last_page: number;
 
-  constructor(props: SearchResultProps<E>) {
+  constructor(props: SearchResultProps<A>) {
     this.items = props.items;
     this.total = props.total;
     this.current_page = props.current_page;
@@ -115,9 +115,11 @@ export class SearchResult<E extends Entity = Entity> {
     this.last_page = Math.ceil(this.total / this.per_page);
   }
 
-  toJSON(forceEntity = false) {
+  toJSON(forceAggregate = false) {
     return {
-      items: forceEntity ? this.items.map((item) => item.toJSON()) : this.items,
+      items: forceAggregate
+        ? this.items.map((item) => item.toJSON())
+        : this.items,
       total: this.total,
       current_page: this.current_page,
       per_page: this.per_page,

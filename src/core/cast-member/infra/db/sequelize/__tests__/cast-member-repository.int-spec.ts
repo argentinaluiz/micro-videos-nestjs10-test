@@ -1,4 +1,4 @@
-import { CastMember, CastMemberId } from '../../../../domain/cast-member.entity';
+import { CastMember, CastMemberId } from '../../../../domain/cast-member.aggregate';
 import { setupSequelize } from '../../../../../shared/infra/testing/helpers';
 import { NotFoundError } from '../../../../../shared/domain/errors/not-found.error';
 import {
@@ -21,7 +21,7 @@ describe('CastMemberSequelizeRepository Integration Tests', () => {
     repository = new CastMemberSequelizeRepository(CastMemberModel);
   });
 
-  it('should inserts a new entity', async () => {
+  it('should inserts a new aggregate', async () => {
     const castMember = CastMember.fake().anActor().build();
     await repository.insert(castMember);
     const castMemberCreated = await repository.findById(
@@ -30,57 +30,57 @@ describe('CastMemberSequelizeRepository Integration Tests', () => {
     expect(castMemberCreated.toJSON()).toStrictEqual(castMember.toJSON());
   });
 
-  it('should finds a entity by id', async () => {
-    let entityFound = await repository.findById(new CastMemberId());
-    expect(entityFound).toBeNull();
+  it('should finds a aggregate by id', async () => {
+    let aggregateFound = await repository.findById(new CastMemberId());
+    expect(aggregateFound).toBeNull();
 
-    const entity = CastMember.fake().anActor().build();
-    await repository.insert(entity);
-    entityFound = await repository.findById(entity.cast_member_id);
-    expect(entity.toJSON()).toStrictEqual(entityFound.toJSON());
+    const aggregate = CastMember.fake().anActor().build();
+    await repository.insert(aggregate);
+    aggregateFound = await repository.findById(aggregate.cast_member_id);
+    expect(aggregate.toJSON()).toStrictEqual(aggregateFound.toJSON());
   });
 
   it('should return all cast members', async () => {
-    const entity = CastMember.fake().anActor().build();
-    await repository.insert(entity);
+    const aggregate = CastMember.fake().anActor().build();
+    await repository.insert(aggregate);
     const entities = await repository.findAll();
     expect(entities).toHaveLength(1);
-    expect(JSON.stringify(entities)).toBe(JSON.stringify([entity]));
+    expect(JSON.stringify(entities)).toBe(JSON.stringify([aggregate]));
   });
 
-  it('should throw error on update when a entity not found', async () => {
-    const entity = CastMember.fake().anActor().build();
-    await expect(repository.update(entity)).rejects.toThrow(
-      new NotFoundError(entity.cast_member_id.id, CastMember),
+  it('should throw error on update when an aggregate not found', async () => {
+    const aggregate = CastMember.fake().anActor().build();
+    await expect(repository.update(aggregate)).rejects.toThrow(
+      new NotFoundError(aggregate.cast_member_id.id, CastMember),
     );
   });
 
-  it('should update a entity', async () => {
-    const entity = CastMember.fake().anActor().build();
-    await repository.insert(entity);
+  it('should update an aggregate', async () => {
+    const aggregate = CastMember.fake().anActor().build();
+    await repository.insert(aggregate);
 
-    entity.changeName('Movie updated');
-    await repository.update(entity);
+    aggregate.changeName('Movie updated');
+    await repository.update(aggregate);
 
-    const entityFound = await repository.findById(entity.cast_member_id);
-    expect(entity.toJSON()).toStrictEqual(entityFound.toJSON());
+    const aggregateFound = await repository.findById(aggregate.cast_member_id);
+    expect(aggregate.toJSON()).toStrictEqual(aggregateFound.toJSON());
   });
 
-  it('should throw error on delete when a entity not found', async () => {
+  it('should throw error on delete when a aggregate not found', async () => {
     const castMemberId = new CastMemberId();
     await expect(repository.delete(castMemberId)).rejects.toThrow(
       new NotFoundError(castMemberId.id, CastMember),
     );
   });
 
-  it('should delete a entity', async () => {
-    const entity = CastMember.fake().anActor().build();
-    await repository.insert(entity);
+  it('should delete a aggregate', async () => {
+    const aggregate = CastMember.fake().anActor().build();
+    await repository.insert(aggregate);
 
-    await repository.delete(entity.cast_member_id);
+    await repository.delete(aggregate.cast_member_id);
 
     await expect(
-      repository.findById(entity.cast_member_id),
+      repository.findById(aggregate.cast_member_id),
     ).resolves.toBeNull();
   });
 
@@ -91,13 +91,13 @@ describe('CastMemberSequelizeRepository Integration Tests', () => {
         .withCreatedAt((index) => new Date(new Date().getTime() + 100 + index))
         .build();
       await repository.bulkInsert(castMembers);
-      const spyToEntity = jest.spyOn(CastMemberModelMapper, 'toEntity');
+      const spyToAggregate = jest.spyOn(CastMemberModelMapper, 'toAggregate');
 
       const searchOutput = await repository.search(
         CastMemberSearchParams.create(),
       );
       expect(searchOutput).toBeInstanceOf(CastMemberSearchResult);
-      expect(spyToEntity).toHaveBeenCalledTimes(15);
+      expect(spyToAggregate).toHaveBeenCalledTimes(15);
       expect(searchOutput.toJSON()).toMatchObject({
         total: 16,
         current_page: 1,

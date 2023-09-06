@@ -1,6 +1,6 @@
 import { SortDirection } from "../../../../../shared/domain/repository/search-params";
 import { CastMemberTypes } from "../../../../domain/cast-member-type.vo";
-import { CastMember } from "../../../../domain/cast-member.entity";
+import { CastMember } from "../../../../domain/cast-member.aggregate";
 import { CastMemberSearchResult } from "../../../../domain/cast-member.repository";
 import { CastMemberInMemoryRepository } from "../../../../infra/db/in-memory/cast-member-in-memory.repository";
 import { CastMemberOutputMapper } from "../../../dto/cast-member-output";
@@ -32,9 +32,9 @@ describe('ListCastMembersUseCase Unit Tests', () => {
       last_page: 1,
     });
 
-    const entity = CastMember.fake().anActor().build();
+    const aggregate = CastMember.fake().anActor().build();
     result = new CastMemberSearchResult({
-      items: [entity],
+      items: [aggregate],
       total: 1,
       current_page: 1,
       per_page: 2,
@@ -42,7 +42,7 @@ describe('ListCastMembersUseCase Unit Tests', () => {
 
     output = useCase['toOutput'](result);
     expect(output).toStrictEqual({
-      items: [entity].map(CastMemberOutputMapper.toOutput),
+      items: [aggregate].map(CastMemberOutputMapper.toOutput),
       total: 1,
       current_page: 1,
       per_page: 2,

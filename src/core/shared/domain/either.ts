@@ -79,9 +79,9 @@ export class Either<Ok, Error = any>
    * If one of the values is a fail, the new Either will be a fail.
    * The new Either can be a fail or a ok.
    */
-  chainEach<NewOk, NewError = any>(
+  chainEach<NewOk, NewError>(
     fn: (value: Flatten<Ok>) => Either<Flatten<NewOk>, Flatten<NewError>>,
-  ): Either<NewOk, Error | NewError> {
+  ): Either<NewOk, NewError> {
     if (this.isOk()) {
       if (!Array.isArray(this.ok)) {
         throw new Error('Method chainEach only works with arrays');
@@ -95,7 +95,7 @@ export class Either<Ok, Error = any>
       }
       return Either.ok(result.map((r) => r.ok)) as any;
     }
-    return Either.fail<Error>(this.error);
+    return Either.fail<Error>(this.error) as any;
   }
 
   asArray(): [Ok, Error] {

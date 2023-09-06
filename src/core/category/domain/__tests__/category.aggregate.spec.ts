@@ -1,4 +1,4 @@
-import { Category, CategoryId } from '../category.entity';
+import { Category, CategoryId } from '../category.aggregate';
 
 describe('Category Without Validator Unit Tests', () => {
   beforeEach(() => {

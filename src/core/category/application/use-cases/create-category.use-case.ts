@@ -1,21 +1,21 @@
 import { IUseCase } from '../../../shared/application/use-case-interface';
-import { CategoryRepository } from '../../domain/category.repository';
-import { Category } from '../../domain/category.entity';
+import { ICategoryRepository } from '../../domain/category.repository';
+import { Category } from '../../domain/category.aggregate';
 import { CategoryOutput, CategoryOutputMapper } from '../dto/category-output';
-import { EntityValidationError } from '../../../shared/domain/validators/validation.error';
+import { AggregateValidationError } from '../../../shared/domain/validators/validation.error';
 
 export class CreateCategoryUseCase
   implements IUseCase<CreateCategoryInput, CreateCategoryOutput>
 {
-  constructor(private categoryRepo: CategoryRepository) {}
+  constructor(private categoryRepo: ICategoryRepository) {}
 
   async execute(input: CreateCategoryInput): Promise<CategoryOutput> {
-    const entity = Category.create(input);
-    if (entity.notification.hasErrors()) {
-      throw new EntityValidationError(entity.notification.toJSON());
+    const aggregate = Category.create(input);
+    if (aggregate.notification.hasErrors()) {
+      throw new AggregateValidationError(aggregate.notification.toJSON());
     }
-    await this.categoryRepo.insert(entity);
-    return CategoryOutputMapper.toOutput(entity);
+    await this.categoryRepo.insert(aggregate);
+    return CategoryOutputMapper.toOutput(aggregate);
   }
 }
 

@@ -1,6 +1,6 @@
 import { Chance } from 'chance';
 import { CategoryFakeBuilder } from '../category-fake.builder';
-import { CategoryId } from '../category.entity';
+import { CategoryId } from '../category.aggregate';
 
 describe('CategoryFakerBuilder Unit Tests', () => {
   describe('category_id prop', () => {

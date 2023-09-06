@@ -7,15 +7,16 @@ import {
 } from 'sequelize-typescript';
 
 import { literal, Op } from 'sequelize';
-import { Category, CategoryId } from '../../../domain/category.entity';
+import { Category, CategoryId } from '../../../domain/category.aggregate';
 import { SortDirection } from '../../../../shared/domain/repository/search-params';
-import { LoadEntityError } from '../../../../shared/domain/validators/validation.error';
+import { LoadAggregateError } from '../../../../shared/domain/validators/validation.error';
 import { NotFoundError } from '../../../../shared/domain/errors/not-found.error';
 import {
-  CategoryRepository,
+  ICategoryRepository,
   CategorySearchParams,
   CategorySearchResult,
 } from '../../../domain/category.repository';
+import { InvalidArgumentError } from '../../../../shared/domain/errors/invalid-argument.error';
 
 export type CategoryModelProps = {
   category_id: string;
@@ -44,7 +45,7 @@ export class CategoryModel extends Model<CategoryModelProps> {
   declare created_at: Date;
 }
 
-export class CategorySequelizeRepository implements CategoryRepository {
+export class CategorySequelizeRepository implements ICategoryRepository {
   sortableFields: string[] = ['name', 'created_at'];
   orderBy = {
     mysql: {
@@ -53,40 +54,68 @@ export class CategorySequelizeRepository implements CategoryRepository {
   };
   constructor(private categoryModel: typeof CategoryModel) {}
 
-  async insert(entity: Category): Promise<void> {
-    await this.categoryModel.create(entity.toJSON());
+  async insert(aggregate: Category): Promise<void> {
+    await this.categoryModel.create(aggregate.toJSON());
   }
 
-  async bulkInsert(entities: Category[]): Promise<void> {
-    await this.categoryModel.bulkCreate(entities.map((e) => e.toJSON()));
+  async bulkInsert(aggregates: Category[]): Promise<void> {
+    await this.categoryModel.bulkCreate(aggregates.map((e) => e.toJSON()));
   }
 
-  async findById(entity_id: CategoryId): Promise<Category> {
-    const model = await this._get(entity_id.id);
-    return model ? CategoryModelMapper.toEntity(model) : null;
+  async findById(id: CategoryId): Promise<Category> {
+    const model = await this._get(id.id);
+    return model ? CategoryModelMapper.toAggregate(model) : null;
   }
 
   async findAll(): Promise<Category[]> {
     const models = await this.categoryModel.findAll();
-    return models.map((m) => CategoryModelMapper.toEntity(m));
+    return models.map((m) => CategoryModelMapper.toAggregate(m));
   }
 
-  async update(entity: Category): Promise<void> {
-    const model = await this._get(entity.category_id.id);
-    if (!model) {
-      throw new NotFoundError(entity.category_id.id, this.getEntity());
+  async existsById(
+    ids: CategoryId[],
+  ): Promise<{ exists: CategoryId[]; not_exists: CategoryId[] }> {
+    if (!ids.length) {
+      throw new InvalidArgumentError(
+        'ids must be an array with at least one element',
+      );
     }
-    await this.categoryModel.update(entity.toJSON(), {
-      where: { category_id: entity.category_id.id },
+
+    const existsCategoryModels = await this.categoryModel.findAll({
+      attributes: ['category_id'],
+      where: {
+        category_id: {
+          [Op.in]: ids.map((id) => id.id),
+        },
+      },
+    });
+    const existsCategoryIds = existsCategoryModels.map(
+      (m) => new CategoryId(m.category_id),
+    );
+    const notExistsCategoryIds = ids.filter(
+      (id) => !existsCategoryIds.some((e) => e.equals(id)),
+    );
+    return {
+      exists: existsCategoryIds,
+      not_exists: notExistsCategoryIds,
+    };
+  }
+
+  async update(aggregate: Category): Promise<void> {
+    const model = await this._get(aggregate.category_id.id);
+    if (!model) {
+      throw new NotFoundError(aggregate.category_id.id, this.getAggregate());
+    }
+    await this.categoryModel.update(aggregate.toJSON(), {
+      where: { category_id: aggregate.category_id.id },
     });
   }
-  async delete(entity_id: CategoryId): Promise<void> {
-    const _id = `${entity_id}`;
-    const model = await this._get(_id);
+  async delete(id: CategoryId): Promise<void> {
+    const model = await this._get(id.id);
     if (!model) {
-      throw new NotFoundError(entity_id.id, this.getEntity());
+      throw new NotFoundError(id.id, this.getAggregate());
     }
-    this.categoryModel.destroy({ where: { category_id: _id } });
+    this.categoryModel.destroy({ where: { category_id: id.id } });
   }
 
   private async _get(id: string): Promise<CategoryModel> {
@@ -107,7 +136,7 @@ export class CategorySequelizeRepository implements CategoryRepository {
       limit,
     });
     return new CategorySearchResult({
-      items: models.map((m) => CategoryModelMapper.toEntity(m)),
+      items: models.map((m) => CategoryModelMapper.toAggregate(m)),
       current_page: props.page,
       per_page: props.per_page,
       total: count,
@@ -122,13 +151,13 @@ export class CategorySequelizeRepository implements CategoryRepository {
     return [[sort, sort_dir]];
   }
 
-  getEntity(): new (...args: any[]) => Category {
+  getAggregate(): new (...args: any[]) => Category {
     return Category;
   }
 }
 
 export class CategoryModelMapper {
-  static toEntity(model: CategoryModel) {
+  static toAggregate(model: CategoryModel) {
     const { category_id: id, ...otherData } = model.toJSON();
     const category = new Category({
       ...otherData,
@@ -136,7 +165,7 @@ export class CategoryModelMapper {
     });
     category.validate();
     if (category.notification.hasErrors()) {
-      throw new LoadEntityError(category.notification.toJSON());
+      throw new LoadAggregateError(category.notification.toJSON());
     }
     return category;
   }

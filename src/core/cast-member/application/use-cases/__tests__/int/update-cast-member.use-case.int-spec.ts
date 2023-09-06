@@ -4,7 +4,7 @@ import { NotFoundError } from '../../../../../shared/domain/errors/not-found.err
 import {
   CastMember,
   CastMemberId,
-} from '../../../../domain/cast-member.entity';
+} from '../../../../domain/cast-member.aggregate';
 import {
   CastMemberModel,
   CastMemberSequelizeRepository,
@@ -22,7 +22,7 @@ describe('UpdateCastMemberUseCase Integration Tests', () => {
     useCase = new UpdateCastMemberUseCase(repository);
   });
 
-  it('should throws error when entity not found', async () => {
+  it('should throws error when aggregate not found', async () => {
     const castMemberId = new CastMemberId();
     await expect(() =>
       useCase.execute({ id: castMemberId.id, name: 'fake' }),
@@ -30,19 +30,19 @@ describe('UpdateCastMemberUseCase Integration Tests', () => {
   });
 
   it('should update a cast member', async () => {
-    const entity = CastMember.fake().anActor().build();
-    await repository.insert(entity);
+    const aggregate = CastMember.fake().anActor().build();
+    await repository.insert(aggregate);
 
     let output = await useCase.execute({
-      id: entity.cast_member_id.id,
+      id: aggregate.cast_member_id.id,
       name: 'test',
       type: CastMemberTypes.ACTOR,
     });
     expect(output).toStrictEqual({
-      id: entity.cast_member_id.id,
+      id: aggregate.cast_member_id.id,
       name: 'test',
       type: CastMemberTypes.ACTOR,
-      created_at: entity.created_at,
+      created_at: aggregate.created_at,
     });
 
     type Arrange = {
@@ -61,15 +61,15 @@ describe('UpdateCastMemberUseCase Integration Tests', () => {
     const arrange: Arrange[] = [
       {
         input: {
-          id: entity.cast_member_id.id,
+          id: aggregate.cast_member_id.id,
           name: 'test',
           type: CastMemberTypes.DIRECTOR,
         },
         expected: {
-          id: entity.cast_member_id.id,
+          id: aggregate.cast_member_id.id,
           name: 'test',
           type: CastMemberTypes.DIRECTOR,
-          created_at: entity.created_at,
+          created_at: aggregate.created_at,
         },
       },
     ];
@@ -80,17 +80,17 @@ describe('UpdateCastMemberUseCase Integration Tests', () => {
         name: i.input.name,
         type: i.input.type,
       });
-      const entityUpdated = await repository.findById(
+      const aggregateUpdated = await repository.findById(
         new CastMemberId(i.input.id),
       );
       expect(output).toStrictEqual({
-        id: entity.cast_member_id.id,
+        id: aggregate.cast_member_id.id,
         name: i.expected.name,
         type: i.expected.type,
         created_at: i.expected.created_at,
       });
-      expect(entityUpdated.toJSON()).toStrictEqual({
-        cast_member_id: entity.cast_member_id.id,
+      expect(aggregateUpdated.toJSON()).toStrictEqual({
+        cast_member_id: aggregate.cast_member_id.id,
         name: i.expected.name,
         type: i.expected.type,
         created_at: i.expected.created_at,

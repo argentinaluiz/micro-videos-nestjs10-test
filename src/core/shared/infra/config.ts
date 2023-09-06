@@ -2,7 +2,7 @@ import { config as readEnv } from 'dotenv';
 import { join } from 'path';
 
 export class Config {
-  static env: any = {};
+  static env: any = null;
   static db() {
     Config.readEnv();
 
@@ -19,7 +19,7 @@ export class Config {
     }
 
     Config.env = readEnv({
-      path: join(__dirname, `../../../envs/.env.${process.env.NODE_ENV}`),
+      path: join(__dirname, `../../../../envs/.env.${process.env.NODE_ENV}`),
     }).parsed;
   }
 }

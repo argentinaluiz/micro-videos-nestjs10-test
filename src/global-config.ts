@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { WrapperDataInterceptor } from './shared/interceptors/wrapper-data.interceptor';
-import { EntityValidationErrorFilter } from './shared/exception-filters/entity-validation-error.filter';
+import { AggregateValidationErrorFilter } from './shared/exception-filters/aggregate-validation-error.filter';
 import { SearchValidationErrorFilter } from './shared/exception-filters/search-validation-error.filter';
 import { NotFoundErrorFilter } from './shared/exception-filters/not-found-error.filter';
 
@@ -21,7 +21,7 @@ export function applyGlobalConfig(app: INestApplication) {
     new ClassSerializerInterceptor(app.get(Reflector)),
   );
   app.useGlobalFilters(
-    new EntityValidationErrorFilter(),
+    new AggregateValidationErrorFilter(),
     new SearchValidationErrorFilter(),
     new NotFoundErrorFilter(),
   );

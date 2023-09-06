@@ -1,18 +1,18 @@
 import { InMemorySearchableRepository } from '../../../../shared/domain/repository/in-memory.repository';
 import { SortDirection } from '../../../../shared/domain/repository/search-params';
-import { Category, CategoryId } from '../../../domain/category.entity';
+import { Category, CategoryId } from '../../../domain/category.aggregate';
 import {
-  CategoryRepository,
+  ICategoryRepository,
   CategoryFilter,
 } from '../../../domain/category.repository';
 
 export class CategoryInMemoryRepository
   extends InMemorySearchableRepository<Category, CategoryId>
-  implements CategoryRepository
+  implements ICategoryRepository
 {
   sortableFields: string[] = ['name', 'created_at'];
 
-  getEntity(): new (...args: any[]) => Category {
+  getAggregate(): new (...args: any[]) => Category {
     return Category;
   }
 

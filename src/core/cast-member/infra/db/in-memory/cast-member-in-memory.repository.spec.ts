@@ -1,5 +1,5 @@
 import { CastMemberType } from '../../../domain/cast-member-type.vo';
-import { CastMember } from '../../../domain/cast-member.entity';
+import { CastMember } from '../../../domain/cast-member.aggregate';
 import { CastMemberInMemoryRepository } from './cast-member-in-memory.repository';
 
 describe('CastMemberInMemoryRepository', () => {

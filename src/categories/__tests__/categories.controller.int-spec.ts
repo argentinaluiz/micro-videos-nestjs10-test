@@ -5,7 +5,7 @@ import {
   UpdateCategoryFixture,
 } from '../testing/category-fixtures';
 import { CategoriesController } from '../categories.controller';
-import { CategoryRepository } from '../../core/category/domain/category.repository';
+import { ICategoryRepository } from '../../core/category/domain/category.repository';
 import { ConfigModule } from '../../config/config.module';
 import { DatabaseModule } from '../../database/database.module';
 import { CategoriesModule } from '../categories.module';
@@ -21,11 +21,11 @@ import {
   CategoryPresenter,
 } from '../categories.presenter';
 import { CategoryOutputMapper } from '../../core/category/application/dto/category-output';
-import { Category } from '../../core/category/domain/category.entity';
+import { Category } from '../../core/category/domain/category.aggregate';
 
 describe('CategoriesController Integration Tests', () => {
   let controller: CategoriesController;
-  let repository: CategoryRepository;
+  let repository: ICategoryRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

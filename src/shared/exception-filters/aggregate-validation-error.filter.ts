@@ -1,11 +1,11 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
 import { Response } from 'express';
 import { union } from 'lodash';
-import { EntityValidationError } from '../../core/shared/domain/validators/validation.error';
+import { AggregateValidationError } from '../../core/shared/domain/validators/validation.error';
 
-@Catch(EntityValidationError)
-export class EntityValidationErrorFilter implements ExceptionFilter {
-  catch(exception: EntityValidationError, host: ArgumentsHost) {
+@Catch(AggregateValidationError)
+export class AggregateValidationErrorFilter implements ExceptionFilter {
+  catch(exception: AggregateValidationError, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     response.status(422).json({

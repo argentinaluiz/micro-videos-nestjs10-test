@@ -1,31 +1,33 @@
-import { Entity } from '../entity';
+import { AggregateRoot } from '../aggregate-root';
 import { ValueObject } from '../value-object';
 import { SearchParams, SearchResult } from './search-params';
 
-export interface RepositoryInterface<
-  E extends Entity,
-  EntityId extends ValueObject,
-> {
-  insert(entity: E): Promise<void>;
-  bulkInsert(entities: E[]): Promise<void>;
-  findById(id: EntityId): Promise<E>;
-  findAll(): Promise<E[]>;
-  update(entity: E): Promise<void>;
-  delete(id: EntityId): Promise<void>;
-  getEntity(): new (...args: any[]) => E;
+export interface IRepository<A extends AggregateRoot, ID extends ValueObject> {
+  insert(aggregate: A): Promise<void>;
+  bulkInsert(aggregates: A[]): Promise<void>;
+  findById(id: ID): Promise<A>;
+  findAll(): Promise<A[]>;
+  findByIds(ids: ID[]): Promise<A[]>;
+  existsById(ids: ID[]): Promise<{
+    exists: ID[];
+    not_exists: ID[];
+  }>;
+  update(aggregate: A): Promise<void>;
+  delete(id: ID): Promise<void>;
+  getAggregate(): new (...args: any[]) => A;
 }
 
 //category.props.name
 
 //Entidade e Objetos
 
-export interface SearchableRepositoryInterface<
-  E extends Entity,
-  EntityId extends ValueObject,
+export interface ISearchableRepository<
+  A extends AggregateRoot,
+  AggregateId extends ValueObject,
   Filter = string,
   SearchInput = SearchParams<Filter>,
-  SearchOutput = SearchResult<E>,
-> extends RepositoryInterface<E, EntityId> {
+  SearchOutput = SearchResult<A>,
+> extends IRepository<A, AggregateId> {
   sortableFields: string[];
   search(props: SearchInput): Promise<SearchOutput>;
 }

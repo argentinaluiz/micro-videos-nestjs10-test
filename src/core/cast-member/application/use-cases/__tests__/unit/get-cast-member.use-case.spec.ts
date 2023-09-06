@@ -4,7 +4,7 @@ import { CastMemberTypes } from '../../../../domain/cast-member-type.vo';
 import {
   CastMember,
   CastMemberId,
-} from '../../../../domain/cast-member.entity';
+} from '../../../../domain/cast-member.aggregate';
 import { CastMemberInMemoryRepository } from '../../../../infra/db/in-memory/cast-member-in-memory.repository';
 import { GetCastMemberUseCase } from '../../get-cast-member.use-case';
 
@@ -17,9 +17,9 @@ describe('GetCastMemberUseCase Unit Tests', () => {
     useCase = new GetCastMemberUseCase(repository);
   });
 
-  it('should throws error when entity not found', async () => {
+  it('should throws error when aggregate not found', async () => {
     await expect(() => useCase.execute({ id: 'fake id' })).rejects.toThrow(
-      new InvalidUuidError(),
+      new InvalidUuidError('fake id'),
     );
 
     const castMemberId = new CastMemberId();

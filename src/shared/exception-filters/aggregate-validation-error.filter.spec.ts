@@ -1,14 +1,14 @@
 import { Controller, Get, INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { EntityValidationErrorFilter } from './entity-validation-error.filter';
+import { AggregateValidationErrorFilter } from './aggregate-validation-error.filter';
 import request from 'supertest';
-import { EntityValidationError } from '../../core/shared/domain/validators/validation.error';
+import { AggregateValidationError } from '../../core/shared/domain/validators/validation.error';
 
 @Controller('stub')
 class StubController {
   @Get()
   index() {
-    throw new EntityValidationError([
+    throw new AggregateValidationError([
       {
         field1: ['field1 is required'],
       },
@@ -19,7 +19,7 @@ class StubController {
   }
 }
 
-describe('EntityValidationErrorFilter Unit Tests', () => {
+describe('AggregateValidationErrorFilter Unit Tests', () => {
   let app: INestApplication;
 
   beforeEach(async () => {
@@ -27,17 +27,17 @@ describe('EntityValidationErrorFilter Unit Tests', () => {
       controllers: [StubController],
     }).compile();
     app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new EntityValidationErrorFilter());
+    app.useGlobalFilters(new AggregateValidationErrorFilter());
     await app.init();
   });
 
-  it('should catch a EntityValidationError', () => {
+  it('should catch a AggregateValidationError', () => {
     return request(app.getHttpServer())
       .get('/stub')
       .expect(422)
       .expect({
         statusCode: 422,
-        error: 'Unprocessable Entity',
+        error: 'Unprocessable Aggregate',
         message: ['field1 is required', 'field2 is required'],
       });
   });

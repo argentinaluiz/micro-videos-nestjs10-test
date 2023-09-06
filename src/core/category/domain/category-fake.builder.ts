@@ -1,5 +1,5 @@
 import { Chance } from 'chance';
-import { Category, CategoryId } from './category.entity';
+import { Category, CategoryId } from './category.aggregate';
 
 type PropOrFactory<T> = T | ((index: number) => T);
 

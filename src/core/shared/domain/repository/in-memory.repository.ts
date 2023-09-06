@@ -1,76 +1,105 @@
-import { Entity } from '../entity';
+import { AggregateRoot } from '../aggregate-root';
+import { InvalidArgumentError } from '../errors/invalid-argument.error';
 import { NotFoundError } from '../errors/not-found.error';
 import { ValueObject } from '../value-object';
-import {
-  RepositoryInterface,
-  SearchableRepositoryInterface,
-} from './repository-interface';
+import { IRepository, ISearchableRepository } from './repository-interface';
 import { SearchParams, SearchResult, SortDirection } from './search-params';
 
 export abstract class InMemoryRepository<
-  E extends Entity,
-  EntityId extends ValueObject,
-> implements RepositoryInterface<E, EntityId>
+  A extends AggregateRoot,
+  ID extends ValueObject,
+> implements IRepository<A, ID>
 {
-  items: E[] = [];
+  items: A[] = [];
 
-  async insert(entity: E): Promise<void> {
-    this.items.push(entity);
+  async insert(aggregate: A): Promise<void> {
+    this.items.push(aggregate);
   }
 
-  async bulkInsert(entities: E[]): Promise<void> {
-    this.items.push(...entities);
+  async bulkInsert(aggregates: A[]): Promise<void> {
+    this.items.push(...aggregates);
   }
 
-  async findById(id: EntityId): Promise<E> {
-    return this._get(id);
+  async findById(aggregateId: ID): Promise<A> {
+    return this._get(aggregateId);
   }
 
-  async findAll(): Promise<E[]> {
+  async findAll(): Promise<A[]> {
     return this.items;
   }
 
-  async update(entity: E): Promise<void> {
-    const hasFound = await this._get(entity.entity_id as EntityId);
-    if (!hasFound) {
-      throw new NotFoundError(entity.entity_id, this.getEntity());
-    }
-    const indexFound = this.items.findIndex((i) =>
-      i.entity_id.equals(entity.entity_id),
-    );
-    this.items[indexFound] = entity;
+  async findByIds(ids: ID[]): Promise<A[]> {
+    //avoid to return repeated items
+    return this.items.filter((entity) => {
+      return ids.some((id) => entity.entity_id.equals(id));
+    });
   }
 
-  async delete(entity_id: EntityId): Promise<void> {
-    await this._get(entity_id);
+  async existsById(ids: ID[]): Promise<{ exists: ID[]; not_exists: ID[] }> {
+    if (!ids.length) {
+      throw new InvalidArgumentError(
+        'ids must be an array with at least one element',
+      );
+    }
+
+    if (this.items.length === 0) {
+      return {
+        exists: [],
+        not_exists: ids,
+      };
+    }
+
+    const existsId = new Set<ID>();
+    const notExistsId = new Set<ID>();
+    ids.forEach((id) => {
+      const item = this.items.find((entity) => entity.entity_id.equals(id));
+      item ? existsId.add(id) : notExistsId.add(id);
+    });
+    return {
+      exists: Array.from(existsId.values()),
+      not_exists: Array.from(notExistsId.values()),
+    };
+  }
+
+  async update(aggregate: A): Promise<void> {
+    const hasFound = await this._get(aggregate.entity_id as ID);
+    if (!hasFound) {
+      throw new NotFoundError(aggregate.entity_id, this.getAggregate());
+    }
     const indexFound = this.items.findIndex((i) =>
-      i.entity_id.equals(entity_id),
+      i.entity_id.equals(aggregate.entity_id),
     );
+    this.items[indexFound] = aggregate;
+  }
+
+  async delete(id: ID): Promise<void> {
+    await this._get(id);
+    const indexFound = this.items.findIndex((i) => i.entity_id.equals(id));
     if (indexFound < 0) {
-      throw new NotFoundError(entity_id, this.getEntity());
+      throw new NotFoundError(id, this.getAggregate());
     }
     this.items.splice(indexFound, 1);
   }
 
-  protected async _get(entity_id: EntityId): Promise<E> {
-    const item = this.items.find((i) => i.entity_id.equals(entity_id));
+  protected async _get(id: ID): Promise<A> {
+    const item = this.items.find((i) => i.entity_id.equals(id));
     return typeof item === 'undefined' ? null : item;
   }
 
-  abstract getEntity(): new (...args: any[]) => E;
+  abstract getAggregate(): new (...args: any[]) => A;
 }
 
 export abstract class InMemorySearchableRepository<
-    E extends Entity,
-    EntityId extends ValueObject,
+    A extends AggregateRoot,
+    AggregateId extends ValueObject,
     Filter = string,
   >
-  extends InMemoryRepository<E, EntityId>
-  implements SearchableRepositoryInterface<E, EntityId, Filter>
+  extends InMemoryRepository<A, AggregateId>
+  implements ISearchableRepository<A, AggregateId, Filter>
 {
   sortableFields: string[] = [];
 
-  async search(props: SearchParams<Filter>): Promise<SearchResult<E>> {
+  async search(props: SearchParams<Filter>): Promise<SearchResult<A>> {
     const itemsFiltered = await this.applyFilter(this.items, props.filter);
     const itemsSorted = await this.applySort(
       itemsFiltered,
@@ -91,16 +120,16 @@ export abstract class InMemorySearchableRepository<
   }
 
   protected abstract applyFilter(
-    items: E[],
+    items: A[],
     filter: Filter | null,
-  ): Promise<E[]>;
+  ): Promise<A[]>;
 
   protected async applySort(
-    items: E[],
+    items: A[],
     sort: string | null,
     sort_dir: SortDirection | null,
-    custom_getter?: (sort: string, item: E) => any,
-  ): Promise<E[]> {
+    custom_getter?: (sort: string, item: A) => any,
+  ): Promise<A[]> {
     if (!sort || !this.sortableFields.includes(sort)) {
       return items;
     }
@@ -121,10 +150,10 @@ export abstract class InMemorySearchableRepository<
   }
 
   protected async applyPaginate(
-    items: E[],
+    items: A[],
     page: SearchParams['page'],
     per_page: SearchParams['per_page'],
-  ): Promise<E[]> {
+  ): Promise<A[]> {
     const start = (page - 1) * per_page; // 1 * 15 = 15
     const limit = start + per_page; // 15 + 15 = 30
     return items.slice(start, limit);

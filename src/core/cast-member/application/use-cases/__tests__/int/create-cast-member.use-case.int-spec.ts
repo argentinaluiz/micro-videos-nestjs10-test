@@ -5,7 +5,7 @@ import {
   CastMemberSequelizeRepository,
 } from '../../../../infra/db/sequelize/cast-member-sequelize';
 import { CastMemberTypes } from '../../../../domain/cast-member-type.vo';
-import { CastMemberId } from '../../../../domain/cast-member.entity';
+import { CastMemberId } from '../../../../domain/cast-member.aggregate';
 
 describe('CreateCastMemberUseCase Integration Tests', () => {
   let useCase: CreateCastMemberUseCase;
@@ -23,24 +23,24 @@ describe('CreateCastMemberUseCase Integration Tests', () => {
       name: 'test',
       type: CastMemberTypes.ACTOR,
     });
-    let entity = await repository.findById(new CastMemberId(output.id));
+    let aggregate = await repository.findById(new CastMemberId(output.id));
     expect(output).toStrictEqual({
-      id: entity.cast_member_id.id,
+      id: aggregate.cast_member_id.id,
       name: 'test',
       type: CastMemberTypes.ACTOR,
-      created_at: entity.created_at,
+      created_at: aggregate.created_at,
     });
 
     output = await useCase.execute({
       name: 'test',
       type: CastMemberTypes.DIRECTOR,
     });
-    entity = await repository.findById(new CastMemberId(output.id));
+    aggregate = await repository.findById(new CastMemberId(output.id));
     expect(output).toStrictEqual({
-      id: entity.cast_member_id.id,
+      id: aggregate.cast_member_id.id,
       name: 'test',
       type: CastMemberTypes.DIRECTOR,
-      created_at: entity.created_at,
+      created_at: aggregate.created_at,
     });
   });
 });

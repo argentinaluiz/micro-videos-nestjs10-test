@@ -1,7 +1,7 @@
 import { IUseCase } from '../../../shared/application/use-case-interface';
 import { NotFoundError } from '../../../shared/domain/errors/not-found.error';
-import { CastMember, CastMemberId } from '../../domain/cast-member.entity';
-import { CastMemberRepository } from '../../domain/cast-member.repository';
+import { CastMember, CastMemberId } from '../../domain/cast-member.aggregate';
+import { ICastMemberRepository } from '../../domain/cast-member.repository';
 import {
   CastMemberOutput,
   CastMemberOutputMapper,
@@ -10,7 +10,7 @@ import {
 export class GetCastMemberUseCase
   implements IUseCase<GetCastMemberInput, GetCastMemberOutput>
 {
-  constructor(private castMemberRepo: CastMemberRepository) {}
+  constructor(private castMemberRepo: ICastMemberRepository) {}
 
   async execute(input: GetCastMemberInput): Promise<GetCastMemberOutput> {
     const castMemberId = new CastMemberId(input.id);

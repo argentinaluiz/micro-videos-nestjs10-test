@@ -1,7 +1,7 @@
 import request from 'supertest';
 import { CategoriesController } from '../../src/categories/categories.controller';
 import { instanceToPlain } from 'class-transformer';
-import { CategoryRepository } from '../../src/core/category/domain/category.repository';
+import { ICategoryRepository } from '../../src/core/category/domain/category.repository';
 import { startApp } from '../../src/shared/testing/helpers';
 import { ListCategoriesFixture } from '../../src/categories/testing/category-fixtures';
 import { CategoryOutputMapper } from '../../src/core/category/application/dto/category-output';
@@ -10,13 +10,13 @@ import * as CategoryProviders from '../../src/categories/categories.providers';
 describe('CategoriesController (e2e)', () => {
   describe('/categories (GET)', () => {
     describe('should return categories sorted by created_at when request query is empty', () => {
-      let categoryRepo: CategoryRepository;
+      let categoryRepo: ICategoryRepository;
       const nestApp = startApp();
       const { entitiesMap, arrange } =
         ListCategoriesFixture.arrangeIncrementedWithCreatedAt();
 
       beforeEach(async () => {
-        categoryRepo = nestApp.app.get<CategoryRepository>(
+        categoryRepo = nestApp.app.get<ICategoryRepository>(
           CategoryProviders.REPOSITORIES.CATEGORY_REPOSITORY.provide,
         );
         await categoryRepo.bulkInsert(Object.values(entitiesMap));
@@ -44,12 +44,12 @@ describe('CategoriesController (e2e)', () => {
     });
 
     describe('should return categories using paginate, filter and sort', () => {
-      let categoryRepo: CategoryRepository;
+      let categoryRepo: ICategoryRepository;
       const nestApp = startApp();
       const { entitiesMap, arrange } = ListCategoriesFixture.arrangeUnsorted();
 
       beforeEach(async () => {
-        categoryRepo = nestApp.app.get<CategoryRepository>(
+        categoryRepo = nestApp.app.get<ICategoryRepository>(
           CategoryProviders.REPOSITORIES.CATEGORY_REPOSITORY.provide,
         );
         await categoryRepo.bulkInsert(Object.values(entitiesMap));

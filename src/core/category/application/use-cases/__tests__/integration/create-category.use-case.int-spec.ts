@@ -4,7 +4,7 @@ import {
   CategoryModel,
   CategorySequelizeRepository,
 } from '../../../../infra/db/sequelize/category-sequelize';
-import { CategoryId } from '../../../../domain/category.entity';
+import { CategoryId } from '../../../../domain/category.aggregate';
 
 describe('CreateCategoryUseCase Integration Tests', () => {
   let useCase: CreateCategoryUseCase;
@@ -19,26 +19,26 @@ describe('CreateCategoryUseCase Integration Tests', () => {
 
   it('should create a category', async () => {
     let output = await useCase.execute({ name: 'test' });
-    let entity = await repository.findById(new CategoryId(output.id));
+    let aggregate = await repository.findById(new CategoryId(output.id));
     expect(output).toStrictEqual({
-      id: entity.category_id.id,
+      id: aggregate.category_id.id,
       name: 'test',
       description: null,
       is_active: true,
-      created_at: entity.created_at,
+      created_at: aggregate.created_at,
     });
 
     output = await useCase.execute({
       name: 'test',
       description: 'some description',
     });
-    entity = await repository.findById(new CategoryId(output.id));
+    aggregate = await repository.findById(new CategoryId(output.id));
     expect(output).toStrictEqual({
-      id: entity.category_id.id,
+      id: aggregate.category_id.id,
       name: 'test',
       description: 'some description',
       is_active: true,
-      created_at: entity.created_at,
+      created_at: aggregate.created_at,
     });
 
     output = await useCase.execute({
@@ -46,13 +46,13 @@ describe('CreateCategoryUseCase Integration Tests', () => {
       description: 'some description',
       is_active: true,
     });
-    entity = await repository.findById(new CategoryId(output.id));
+    aggregate = await repository.findById(new CategoryId(output.id));
     expect(output).toStrictEqual({
-      id: entity.category_id.id,
+      id: aggregate.category_id.id,
       name: 'test',
       description: 'some description',
       is_active: true,
-      created_at: entity.created_at,
+      created_at: aggregate.created_at,
     });
 
     output = await useCase.execute({
@@ -60,13 +60,13 @@ describe('CreateCategoryUseCase Integration Tests', () => {
       description: 'some description',
       is_active: false,
     });
-    entity = await repository.findById(new CategoryId(output.id));
+    aggregate = await repository.findById(new CategoryId(output.id));
     expect(output).toStrictEqual({
-      id: entity.category_id.id,
+      id: aggregate.category_id.id,
       name: 'test',
       description: 'some description',
       is_active: false,
-      created_at: entity.created_at,
+      created_at: aggregate.created_at,
     });
   });
 });

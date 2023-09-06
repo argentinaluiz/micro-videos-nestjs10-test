@@ -21,10 +21,10 @@ export abstract class BaseValidationError extends Error {
   }
 }
 
-export class EntityValidationError extends BaseValidationError {
+export class AggregateValidationError extends BaseValidationError {
   constructor(error: FieldsErrors[]) {
-    super(error, 'Entity Validation Error');
-    this.name = 'EntityValidationError';
+    super(error, 'Aggregate Validation Error');
+    this.name = 'AggregateValidationError';
   }
 }
 
@@ -35,12 +35,12 @@ export class SearchValidationError extends BaseValidationError {
   }
 }
 
-export class LoadEntityError extends Error {
+export class LoadAggregateError extends Error {
   constructor(
     public error: FieldsErrors[],
     message?: string,
   ) {
-    super(message ?? 'An entity not be loaded');
-    this.name = 'LoadEntityError';
+    super(message ?? 'An aggregate not be loaded');
+    this.name = 'LoadAggregateError';
   }
 }
