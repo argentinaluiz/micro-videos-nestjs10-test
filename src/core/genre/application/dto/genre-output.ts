@@ -1,7 +1,7 @@
 import { Category } from '../../../category/domain/category.aggregate';
 import { Genre } from '../../domain/genre.aggregate';
 
-export type GenreCategory = {
+export type GenreCategoryOutput = {
   id: string;
   name: string;
   created_at: Date;
@@ -10,7 +10,7 @@ export type GenreCategory = {
 export type GenreOutput = {
   id: string;
   name: string;
-  categories: GenreCategory[];
+  categories: GenreCategoryOutput[];
   categories_id: string[];
   is_active: boolean;
   created_at: Date;

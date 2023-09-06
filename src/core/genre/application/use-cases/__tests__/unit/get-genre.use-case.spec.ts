@@ -22,13 +22,13 @@ describe('GetGenreUseCase Unit Tests', () => {
       new InvalidUuidError('fake id'),
     );
 
-    const castMemberId = new GenreId();
-    await expect(() =>
-      useCase.execute({ id: castMemberId.id }),
-    ).rejects.toThrow(new NotFoundError(castMemberId.id, Genre));
+    const genreId = new GenreId();
+    await expect(() => useCase.execute({ id: genreId.id })).rejects.toThrow(
+      new NotFoundError(genreId.id, Genre),
+    );
   });
 
-  it('should returns a cast member', async () => {
+  it('should returns a genre', async () => {
     const categories = Category.fake().theCategories(3).build();
     await categoryRepo.bulkInsert(categories);
     const genre = Genre.fake()

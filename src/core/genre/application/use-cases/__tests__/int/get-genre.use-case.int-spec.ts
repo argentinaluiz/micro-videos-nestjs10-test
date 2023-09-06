@@ -42,7 +42,7 @@ describe('GetGenreUseCase Integration Tests', () => {
     );
   });
 
-  it('should returns a cast member', async () => {
+  it('should returns a genre', async () => {
     const categories = Category.fake().theCategories(2).build();
     await categoryRepo.bulkInsert(categories);
     const genre = Genre.fake()

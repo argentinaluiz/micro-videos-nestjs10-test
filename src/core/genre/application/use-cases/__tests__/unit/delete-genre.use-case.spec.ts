@@ -28,7 +28,7 @@ describe('DeleteGenreUseCase Unit Tests', () => {
     );
   });
 
-  it('should delete a cast member', async () => {
+  it('should delete a genre', async () => {
     const items = [Genre.fake().aGenre().build()];
     repository.items = items;
     await useCase.execute({

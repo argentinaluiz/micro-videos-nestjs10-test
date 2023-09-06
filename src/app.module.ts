@@ -6,7 +6,7 @@ import { SharedModule } from './nest-modules/shared-module/shared.module';
 import { DatabaseModule } from './nest-modules/database-module/database.module';
 import { CategoriesModule } from './nest-modules/categories-module/categories.module';
 import { CastMembersModule } from './nest-modules/cast-members-module/cast-members.module';
-
+import { GenresModule } from './nest-modules/genres-modules/genres.module';
 
 @Module({
   imports: [
@@ -14,7 +14,8 @@ import { CastMembersModule } from './nest-modules/cast-members-module/cast-membe
     SharedModule,
     DatabaseModule,
     CategoriesModule,
-    CastMembersModule
+    CastMembersModule,
+    GenresModule,
   ],
   controllers: [AppController],
   providers: [AppService],

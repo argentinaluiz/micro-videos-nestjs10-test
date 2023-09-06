@@ -36,15 +36,15 @@ describe('GenreFakerBuilder Unit Tests', () => {
       faker.build();
       expect(mockFactory).toHaveBeenCalledTimes(1);
 
-      const castMemberId = new GenreId();
-      mockFactory = jest.fn(() => castMemberId);
+      const genreId = new GenreId();
+      mockFactory = jest.fn(() => genreId);
       const fakerMany = GenreFakeBuilder.theGenres(2);
       fakerMany.withGenreId(mockFactory);
       fakerMany.build();
 
       expect(mockFactory).toHaveBeenCalledTimes(2);
-      expect(fakerMany.build()[0].genre_id).toBe(castMemberId);
-      expect(fakerMany.build()[1].genre_id).toBe(castMemberId);
+      expect(fakerMany.build()[0].genre_id).toBe(genreId);
+      expect(fakerMany.build()[1].genre_id).toBe(genreId);
     });
   });
 
@@ -77,8 +77,8 @@ describe('GenreFakerBuilder Unit Tests', () => {
 
     test('should pass index to name factory', () => {
       faker.withName((index) => `test name ${index}`);
-      const castMember = faker.build();
-      expect(castMember.name).toBe(`test name 0`);
+      const genre = faker.build();
+      expect(genre.name).toBe(`test name 0`);
 
       const fakerMany = GenreFakeBuilder.theGenres(2);
       fakerMany.withName((index) => `test name ${index}`);
@@ -205,8 +205,8 @@ describe('GenreFakerBuilder Unit Tests', () => {
     test('should pass index to created_at factory', () => {
       const date = new Date();
       faker.withCreatedAt((index) => new Date(date.getTime() + index + 2));
-      const castMember = faker.build();
-      expect(castMember.created_at.getTime()).toBe(date.getTime() + 2);
+      const genre = faker.build();
+      expect(genre.created_at.getTime()).toBe(date.getTime() + 2);
 
       const fakerMany = GenreFakeBuilder.theGenres(2);
       fakerMany.withCreatedAt((index) => new Date(date.getTime() + index + 2));

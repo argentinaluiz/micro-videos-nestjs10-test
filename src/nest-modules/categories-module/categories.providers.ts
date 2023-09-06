@@ -10,6 +10,7 @@ import {
   CategorySequelizeRepository,
 } from '../../core/category/infra/db/sequelize/category-sequelize';
 import { ICategoryRepository } from '../../core/category/domain/category.repository';
+import { CategoriesIdsValidator } from '../../core/category/application/validations/categories-ids.validator';
 
 export const REPOSITORIES = {
   CATEGORY_REPOSITORY: {
@@ -62,6 +63,16 @@ export const USE_CASES = {
     provide: DeleteCategoryUseCase,
     useFactory: (categoryRepo: ICategoryRepository) => {
       return new DeleteCategoryUseCase(categoryRepo);
+    },
+    inject: [REPOSITORIES.CATEGORY_REPOSITORY.provide],
+  },
+};
+
+export const VALIDATIONS = {
+  CATEGORIES_IDS_VALIDATOR: {
+    provide: CategoriesIdsValidator,
+    useFactory: (categoryRepo: ICategoryRepository) => {
+      return new CategoriesIdsValidator(categoryRepo);
     },
     inject: [REPOSITORIES.CATEGORY_REPOSITORY.provide],
   },
