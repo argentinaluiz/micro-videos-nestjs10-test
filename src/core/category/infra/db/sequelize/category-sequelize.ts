@@ -72,6 +72,17 @@ export class CategorySequelizeRepository implements ICategoryRepository {
     return models.map((m) => CategoryModelMapper.toAggregate(m));
   }
 
+  async findByIds(ids: CategoryId[]): Promise<Category[]> {
+    const models = await this.categoryModel.findAll({
+      where: {
+        category_id: {
+          [Op.in]: ids.map((id) => id.id),
+        },
+      },
+    });
+    return models.map((m) => CategoryModelMapper.toAggregate(m));
+  }
+
   async existsById(
     ids: CategoryId[],
   ): Promise<{ exists: CategoryId[]; not_exists: CategoryId[] }> {

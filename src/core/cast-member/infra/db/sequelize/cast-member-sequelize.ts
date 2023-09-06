@@ -7,7 +7,10 @@ import {
 } from 'sequelize-typescript';
 
 import { literal, Op } from 'sequelize';
-import { CastMember, CastMemberId } from '../../../domain/cast-member.aggregate';
+import {
+  CastMember,
+  CastMemberId,
+} from '../../../domain/cast-member.aggregate';
 import { SortDirection } from '../../../../shared/domain/repository/search-params';
 import { LoadAggregateError } from '../../../../shared/domain/validators/validation.error';
 import { NotFoundError } from '../../../../shared/domain/errors/not-found.error';
@@ -20,6 +23,7 @@ import {
   CastMemberType,
   CastMemberTypes,
 } from '../../../domain/cast-member-type.vo';
+import { InvalidArgumentError } from '../../../../shared/domain/errors/invalid-argument.error';
 
 export type CastMemberModelProps = {
   cast_member_id: string;
@@ -72,6 +76,46 @@ export class CastMemberSequelizeRepository implements ICastMemberRepository {
   async findAll(): Promise<CastMember[]> {
     const models = await this.castMemberModel.findAll();
     return models.map((m) => CastMemberModelMapper.toAggregate(m));
+  }
+
+  async findByIds(ids: CastMemberId[]): Promise<CastMember[]> {
+    const models = await this.castMemberModel.findAll({
+      where: {
+        cast_member_id: {
+          [Op.in]: ids.map((id) => id.id),
+        },
+      },
+    });
+    return models.map((m) => CastMemberModelMapper.toAggregate(m));
+  }
+
+  async existsById(
+    ids: CastMemberId[],
+  ): Promise<{ exists: CastMemberId[]; not_exists: CastMemberId[] }> {
+    if (!ids.length) {
+      throw new InvalidArgumentError(
+        'ids must be an array with at least one element',
+      );
+    }
+
+    const existsCastMemberModels = await this.castMemberModel.findAll({
+      attributes: ['category_id'],
+      where: {
+        cast_member_id: {
+          [Op.in]: ids.map((id) => id.id),
+        },
+      },
+    });
+    const existsCastMemberIds = existsCastMemberModels.map(
+      (m) => new CastMemberId(m.cast_member_id),
+    );
+    const notExistsCastMemberIds = ids.filter(
+      (id) => !existsCastMemberIds.some((e) => e.equals(id)),
+    );
+    return {
+      exists: existsCastMemberIds,
+      not_exists: notExistsCastMemberIds,
+    };
   }
 
   async update(aggregate: CastMember): Promise<void> {

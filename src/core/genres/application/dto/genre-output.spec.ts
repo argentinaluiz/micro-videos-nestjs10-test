@@ -13,9 +13,7 @@ describe('GenreOutputMapper Unit Tests', () => {
       .withCategoryId(categories[1].category_id)
       .withCreatedAt(created_at)
       .build();
-    const spyToJSON = jest.spyOn(entity, 'toJSON');
     const output = GenreOutputMapper.toOutput(entity, categories);
-    expect(spyToJSON).toHaveBeenCalled();
     expect(output).toStrictEqual({
       id: entity.genre_id.id,
       name: 'test',

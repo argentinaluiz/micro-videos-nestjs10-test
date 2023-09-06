@@ -1,5 +1,6 @@
 import { NotFoundError } from '../../../../../shared/domain/errors/not-found.error';
 import InvalidUuidError from '../../../../../shared/domain/value-objects/uuid.vo';
+import { UnitOfWorkFakeInMemory } from '../../../../../shared/infra/db/in-memory/fake-unit-work-in-memory';
 import { Genre, GenreId } from '../../../../domain/genre.aggregate';
 import { GenreInMemoryRepository } from '../../../../infra/db/in-memory/genre-in-memory.repository';
 import { DeleteGenreUseCase } from '../../delete-genre.use-case';
@@ -7,10 +8,12 @@ import { DeleteGenreUseCase } from '../../delete-genre.use-case';
 describe('DeleteGenreUseCase Unit Tests', () => {
   let useCase: DeleteGenreUseCase;
   let repository: GenreInMemoryRepository;
+  let uow: UnitOfWorkFakeInMemory;
 
   beforeEach(() => {
+    uow = new UnitOfWorkFakeInMemory();
     repository = new GenreInMemoryRepository();
-    useCase = new DeleteGenreUseCase(repository);
+    useCase = new DeleteGenreUseCase(uow, repository);
   });
 
   it('should throws error when aggregate not found', async () => {
