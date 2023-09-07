@@ -11,19 +11,20 @@ import {
   HttpCode,
   Query,
 } from '@nestjs/common';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
-import { CreateCategoryUseCase } from '@core/category/application/use-cases/create-category.use-case';
-import { UpdateCategoryUseCase } from '@core/category/application/use-cases/update-category.use-case';
-import { DeleteCategoryUseCase } from '@core/category/application/use-cases/delete-category.use-case';
-import { GetCategoryUseCase } from '@core/category/application/use-cases/get-category.use-case';
-import { ListCategoriesUseCase } from '@core/category/application/use-cases/list-categories.use-case';
-import { CategoryOutput } from '@core/category/application/dto/category-output';
+import { CategoryOutput } from '@core/category/application/use-cases/common-output/category-output';
 import { SearchCategoriesDto } from './dto/search-categories.dto';
 import {
   CategoryCollectionPresenter,
   CategoryPresenter,
 } from './categories.presenter';
+import { CreateCategoryInput } from '../../core/category/application/use-cases/create-category/create-category.input';
+import { CreateCategoryUseCase } from '../../core/category/application/use-cases/create-category/create-category.use-case';
+import { UpdateCategoryUseCase } from '../../core/category/application/use-cases/update-category/update-category.use-case';
+import { DeleteCategoryUseCase } from '../../core/category/application/use-cases/delete-category/delete-category.use-case';
+import { GetCategoryUseCase } from '../../core/category/application/use-cases/get-category/get-category.use-case';
+import { ListCategoriesUseCase } from '../../core/category/application/use-cases/list-categories/list-categories.use-case';
+import { UpdateCategoryDto } from './dto/update-category.dto';
+import { UpdateCategoryInput } from '../../core/category/application/use-cases/update-category/update-category.input';
 
 @Controller('categories')
 export class CategoriesController {
@@ -43,7 +44,7 @@ export class CategoriesController {
   private listUseCase: ListCategoriesUseCase;
 
   @Post()
-  async create(@Body() createCategoryDto: CreateCategoryDto) {
+  async create(@Body() createCategoryDto: CreateCategoryInput) {
     const output = await this.createUseCase.execute(createCategoryDto);
     return CategoriesController.serialize(output);
   }
@@ -67,10 +68,8 @@ export class CategoriesController {
     @Param('id', new ParseUUIDPipe({ errorHttpStatusCode: 422 })) id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
   ) {
-    const output = await this.updateUseCase.execute({
-      id,
-      ...updateCategoryDto,
-    });
+    const input = new UpdateCategoryInput({ ...updateCategoryDto, id });
+    const output = await this.updateUseCase.execute(input);
     return CategoriesController.serialize(output);
   }
 

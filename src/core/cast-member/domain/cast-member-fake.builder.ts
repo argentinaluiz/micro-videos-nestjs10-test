@@ -67,28 +67,13 @@ export class CastMemberFakeBuilder<TBuild = any> {
     return this;
   }
 
-  withInvalidNameEmpty(value: '' | null | undefined) {
-    this._name = value as any;
-    return this;
-  }
-
-  withInvalidNameNotAString(value?: any) {
-    this._name = value ?? 5;
+  withCreatedAt(valueOrFactory: PropOrFactory<Date>) {
+    this._created_at = valueOrFactory;
     return this;
   }
 
   withInvalidNameTooLong(value?: string) {
     this._name = value ?? this.chance.word({ length: 256 });
-    return this;
-  }
-
-  withInvalidType() {
-    this._type = 'fake type' as any;
-    return this;
-  }
-
-  withCreatedAt(valueOrFactory: PropOrFactory<Date>) {
-    this._created_at = valueOrFactory;
     return this;
   }
 

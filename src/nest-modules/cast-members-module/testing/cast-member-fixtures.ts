@@ -2,10 +2,14 @@ import { CastMemberTypes } from '../../../core/cast-member/domain/cast-member-ty
 import { CastMember } from '../../../core/cast-member/domain/cast-member.aggregate';
 import { SortDirection } from '../../../core/shared/domain/repository/search-params';
 
-export class CastMemberFixture {
-  static keysInResponse() {
-    return ['id', 'name', 'type', 'created_at'];
-  }
+const _keysInResponse = ['id', 'name', 'type', 'created_at'];
+
+export class GetCastMemberFixture {
+  static keysInResponse = _keysInResponse;
+}
+
+export class CreateCastMemberFixture {
+  static keysInResponse = _keysInResponse;
 
   static arrangeForCreate() {
     const faker = CastMember.fake().anActor().withName('Member');
@@ -33,39 +37,7 @@ export class CastMemberFixture {
     ];
   }
 
-  static arrangeForUpdate() {
-    const faker = CastMember.fake().anActor().withName('Member');
-    return [
-      {
-        send_data: {
-          name: faker.name,
-          type: faker.type.type,
-        },
-        expected: {
-          name: faker.name,
-          type: faker.type.type,
-        },
-      },
-      {
-        send_data: {
-          name: faker.name + ' Updated',
-        },
-        expected: {
-          name: faker.name + ' Updated',
-        },
-      },
-      {
-        send_data: {
-          type: CastMemberTypes.DIRECTOR,
-        },
-        expected: {
-          type: CastMemberTypes.DIRECTOR,
-        },
-      },
-    ];
-  }
-
-  static arrangeInvalidRequestForCreate() {
+  static arrangeInvalidRequest() {
     const faker = CastMember.fake().anActor().withName('Member');
     const defaultExpected = {
       statusCode: 422,
@@ -81,14 +53,13 @@ export class CastMemberFixture {
             'name must be a string',
             'type should not be empty',
             'type must be an integer number',
-            'type must be one of the following values: 1, 2',
           ],
           ...defaultExpected,
         },
       },
       NAME_UNDEFINED: {
         send_data: {
-          name: faker.withInvalidNameEmpty(undefined).name,
+          name: undefined,
           type: faker.type.type,
         },
         expected: {
@@ -98,7 +69,7 @@ export class CastMemberFixture {
       },
       NAME_NULL: {
         send_data: {
-          name: faker.withInvalidNameEmpty(null).name,
+          name: null,
           type: faker.type.type,
         },
         expected: {
@@ -108,7 +79,7 @@ export class CastMemberFixture {
       },
       NAME_EMPTY: {
         send_data: {
-          name: faker.withInvalidNameEmpty('').name,
+          name: '',
           type: faker.type.type,
         },
         expected: {
@@ -125,7 +96,6 @@ export class CastMemberFixture {
           message: [
             'type should not be empty',
             'type must be an integer number',
-            'type must be one of the following values: 1, 2',
           ],
           ...defaultExpected,
         },
@@ -139,7 +109,6 @@ export class CastMemberFixture {
           message: [
             'type should not be empty',
             'type must be an integer number',
-            'type must be one of the following values: 1, 2',
           ],
           ...defaultExpected,
         },
@@ -153,177 +122,130 @@ export class CastMemberFixture {
           message: [
             'type should not be empty',
             'type must be an integer number',
-            'type must be one of the following values: 1, 2',
           ],
           ...defaultExpected,
         },
       },
-      TYPE_INVALID: {
+      TYPE_NOT_A_NUMBER: {
         send_data: {
           name: faker.withName('Member').name,
-          type: faker.withInvalidType().type,
+          type: 'A',
         },
         expected: {
-          message: [
-            'type must be an integer number',
-            'type must be one of the following values: 1, 2',
-          ],
+          message: ['type must be an integer number'],
           ...defaultExpected,
         },
       },
     };
-  }
-
-  static arrangeInvalidRequestForUpdate() {
-    const faker = CastMember.fake().anActor().withName('Member');
-    const defaultExpected = {
-      statusCode: 422,
-      error: 'Unprocessable Entity',
-    };
-
-    return {
-      TYPE_INVALID: {
-        send_data: {
-          name: faker.name,
-          type: faker.withInvalidType().type,
-        },
-        expected: {
-          message: [
-            'type must be an integer number',
-            'type must be one of the following values: 1, 2',
-          ],
-          ...defaultExpected,
-        },
-      },
-    };
-  }
-
-  static arrangeForEntityValidationErrorForCreate() {
-    const faker = CastMember.fake().anActor().withName('Member');
-    const defaultExpected = {
-      statusCode: 422,
-      error: 'Unprocessable Entity',
-    };
-
-    return {
-      EMPTY: {
-        send_data: {},
-        expected: {
-          message: [
-            'name should not be empty',
-            'name must be a string',
-            'name must be shorter than or equal to 255 characters',
-            'Invalid cast member type: undefined',
-          ],
-          ...defaultExpected,
-        },
-      },
-      NAME_UNDEFINED: {
-        send_data: {
-          name: faker.withInvalidNameEmpty(undefined).name,
-          type: faker.type.type,
-        },
-        expected: {
-          message: [
-            'name should not be empty',
-            'name must be a string',
-            'name must be shorter than or equal to 255 characters',
-          ],
-          ...defaultExpected,
-        },
-      },
-      NAME_NULL: {
-        send_data: {
-          name: faker.withInvalidNameEmpty(null).name,
-          type: faker.type.type,
-        },
-        expected: {
-          message: [
-            'name should not be empty',
-            'name must be a string',
-            'name must be shorter than or equal to 255 characters',
-          ],
-          ...defaultExpected,
-        },
-      },
-      NAME_EMPTY: {
-        send_data: {
-          name: faker.withInvalidNameEmpty('').name,
-          type: faker.type.type,
-        },
-        expected: {
-          message: ['name should not be empty'],
-          ...defaultExpected,
-        },
-      },
-      TYPE_INVALID: {
-        send_data: {
-          name: faker.withName('Member').name,
-          type: faker.withInvalidType().type,
-        },
-        expected: {
-          message: ['Invalid cast member type: fake type'],
-          ...defaultExpected,
-        },
-      },
-    };
-  }
-
-  static arrangeForEntityValidationErrorForUpdate() {
-    const faker = CastMember.fake().anActor().withName('Member');
-    const defaultExpected = {
-      statusCode: 422,
-      error: 'Unprocessable Entity',
-    };
-
-    return {
-      TYPE_INVALID: {
-        send_data: {
-          name: faker.name,
-          type: faker.withInvalidType().type,
-        },
-        expected: {
-          message: ['Invalid cast member type: fake type'],
-          ...defaultExpected,
-        },
-      },
-    };
-  }
-}
-
-export class CreateCastMemberFixture {
-  static keysInResponse() {
-    return CastMemberFixture.keysInResponse();
-  }
-
-  static arrangeForCreate() {
-    return CastMemberFixture.arrangeForCreate();
-  }
-
-  static arrangeInvalidRequest() {
-    return CastMemberFixture.arrangeInvalidRequestForCreate();
   }
 
   static arrangeForEntityValidationError() {
-    return CastMemberFixture.arrangeForEntityValidationErrorForCreate();
+    const faker = CastMember.fake().anActor().withName('Member');
+    const defaultExpected = {
+      statusCode: 422,
+      error: 'Unprocessable Entity',
+    };
+
+    return {
+      NAME_TOO_LONG: {
+        send_data: {
+          name: faker.withInvalidNameTooLong().name,
+          type: faker.type.type,
+        },
+        expected: {
+          message: ['name must be shorter than or equal to 255 characters'],
+          ...defaultExpected,
+        },
+      },
+      TYPE_INVALID: {
+        send_data: {
+          name: faker.withName('Member').name,
+          type: 10,
+        },
+        expected: {
+          message: ['Invalid cast member type: 10'],
+          ...defaultExpected,
+        },
+      },
+    };
   }
 }
 
 export class UpdateCastMemberFixture {
-  static keysInResponse() {
-    return CastMemberFixture.keysInResponse();
-  }
+  static keysInResponse = _keysInResponse;
 
   static arrangeForUpdate() {
-    return CastMemberFixture.arrangeForUpdate();
+    const faker = CastMember.fake().anActor().withName('Member');
+    return [
+      {
+        send_data: {
+          name: faker.name,
+          type: faker.type.type,
+        },
+        expected: {
+          name: faker.name,
+          type: faker.type.type,
+        },
+      },
+      {
+        send_data: {
+          name: faker.name + ' Updated',
+        },
+        expected: {
+          name: faker.name + ' Updated',
+        },
+      },
+      {
+        send_data: {
+          type: CastMemberTypes.DIRECTOR,
+        },
+        expected: {
+          type: CastMemberTypes.DIRECTOR,
+        },
+      },
+    ];
   }
 
   static arrangeInvalidRequest() {
-    return CastMemberFixture.arrangeInvalidRequestForUpdate();
+    const faker = CastMember.fake().anActor().withName('Member');
+    const defaultExpected = {
+      statusCode: 422,
+      error: 'Unprocessable Entity',
+    };
+
+    return {
+      TYPE_INVALID: {
+        send_data: {
+          name: faker.name,
+          type: 'a',
+        },
+        expected: {
+          message: ['type must be an integer number'],
+          ...defaultExpected,
+        },
+      },
+    };
   }
 
   static arrangeForEntityValidationError() {
-    return CastMemberFixture.arrangeForEntityValidationErrorForUpdate();
+    const faker = CastMember.fake().anActor().withName('Member');
+    const defaultExpected = {
+      statusCode: 422,
+      error: 'Unprocessable Entity',
+    };
+
+    return {
+      TYPE_INVALID: {
+        send_data: {
+          name: faker.name,
+          type: 10,
+        },
+        expected: {
+          message: ['Invalid cast member type: 10'],
+          ...defaultExpected,
+        },
+      },
+    };
   }
 }
 

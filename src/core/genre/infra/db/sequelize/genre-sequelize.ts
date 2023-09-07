@@ -20,11 +20,10 @@ import {
   GenreSearchResult,
 } from '../../../domain/genre.repository';
 import { CategoryModel } from '../../../../category/infra/db/sequelize/category-sequelize';
-import { Either } from '../../../../shared/domain/either';
 import { CategoryId } from '../../../../category/domain/category.aggregate';
-import InvalidUuidError from '../../../../shared/domain/value-objects/uuid.vo';
 import { UnitOfWorkSequelize } from '../../../../shared/infra/db/sequelize/unit-of-work-sequelize';
 import { InvalidArgumentError } from '../../../../shared/domain/errors/invalid-argument.error';
+import { Notification } from '../../../../shared/domain/validators/notification';
 
 export type GenreModelProps = {
   genre_id: string;
@@ -79,12 +78,12 @@ export class GenreSequelizeRepository implements IGenreRepository {
   sortableFields: string[] = ['name', 'created_at'];
   orderBy = {
     mysql: {
-      name: (sort_dir: SortDirection) => literal(`binary name ${sort_dir}`),
+      name: (sort_dir: SortDirection) =>
+        `binary ${this.genreModel.name}.name ${sort_dir}`,
     },
   };
   constructor(
     private genreModel: typeof GenreModel,
-    private genreCategoryModel: typeof GenreCategoryModel,
     private uow: UnitOfWorkSequelize,
   ) {}
 
@@ -166,10 +165,10 @@ export class GenreSequelizeRepository implements IGenreRepository {
       throw new NotFoundError(aggregate.genre_id.id, this.getAggregate());
     }
 
-    await this.genreCategoryModel.destroy({
-      where: { genre_id: aggregate.genre_id.id },
-      transaction: this.uow.getTransaction(),
-    });
+    await model.$remove(
+      'categories',
+      model.categories_id.map((c) => c.category_id),
+    );
     const { categories_id, ...props } =
       GenreModelMapper.toModelProps(aggregate);
     await this.genreModel.update(props, {
@@ -189,10 +188,13 @@ export class GenreSequelizeRepository implements IGenreRepository {
     if (!model) {
       throw new NotFoundError(id.id, this.getAggregate());
     }
-    await this.genreCategoryModel.destroy({
-      where: { genre_id: id.id },
-      transaction: this.uow.getTransaction(),
-    });
+    await model.$remove(
+      'categories',
+      model.categories_id.map((c) => c.category_id),
+      {
+        transaction: this.uow.getTransaction(),
+      },
+    );
     await this.genreModel.destroy({
       where: { genre_id: id.id },
       transaction: this.uow.getTransaction(),
@@ -210,8 +212,10 @@ export class GenreSequelizeRepository implements IGenreRepository {
   async search(props: GenreSearchParams): Promise<GenreSearchResult> {
     const offset = (props.page - 1) * props.per_page;
     const limit = props.per_page;
+    const genreCategoryRelation =
+      this.genreModel.associations.categories_id.target;
     const genreTableName = this.genreModel.getTableName();
-    const genreCategoryTableName = this.genreCategoryModel.getTableName();
+    const genreCategoryTableName = genreCategoryRelation.getTableName();
     const genreAlias = this.genreModel.name;
 
     const wheres = [];
@@ -255,7 +259,9 @@ export class GenreSequelizeRepository implements IGenreRepository {
 
     const count = await this.genreModel.count({
       distinct: true,
-      include: ['categories_id'],
+      include: [props.filter?.categories_id && 'categories_id'].filter(
+        (i) => i,
+      ),
       where: wheres.length ? { [Op.and]: wheres.map((w) => w.condition) } : {},
       transaction: this.uow.getTransaction(),
     });
@@ -265,7 +271,9 @@ export class GenreSequelizeRepository implements IGenreRepository {
     const query = [
       'SELECT',
       `DISTINCT ${genreAlias}.\`genre_id\`,${columnOrder} FROM ${genreTableName} as ${genreAlias}`,
-      `INNER JOIN ${genreCategoryTableName} ON ${genreAlias}.\`genre_id\` = ${genreCategoryTableName}.\`genre_id\``,
+      props.filter?.categories_id
+        ? `INNER JOIN ${genreCategoryTableName} ON ${genreAlias}.\`genre_id\` = ${genreCategoryTableName}.\`genre_id\``
+        : '',
       wheres.length
         ? `WHERE ${wheres.map((w) => w.rawCondition).join(' AND ')}`
         : '',
@@ -318,20 +326,17 @@ export class GenreSequelizeRepository implements IGenreRepository {
 
 export class GenreModelMapper {
   static toAggregate(model: GenreModel) {
-    const { genre_id: id, categories_id, ...otherData } = model.toJSON();
-    const [categoriesId, errorsCategoriesId] = Either.of(categories_id)
-      .map((value) => (Array.isArray(value) ? value : []))
-      .chainEach<CategoryId[], InvalidUuidError[]>((value) =>
-        Either.safe(() => new CategoryId(value.category_id)),
-      )
-      .asArray();
+    const { genre_id: id, categories_id = [], ...otherData } = model.toJSON();
+    const categoriesId = categories_id.map(
+      (c) => new CategoryId(c.category_id),
+    );
 
-    if (errorsCategoriesId && errorsCategoriesId.length > 0) {
-      throw new LoadAggregateError([
-        {
-          categories_id: errorsCategoriesId.map((e) => e.message),
-        },
-      ]);
+    const notification = new Notification();
+    if (!categoriesId.length) {
+      notification.addError(
+        'categories_id should not be empty',
+        'categories_id',
+      );
     }
 
     const genre = new Genre({
@@ -342,7 +347,7 @@ export class GenreModelMapper {
 
     genre.validate();
 
-    const notification = genre.notification;
+    notification.copyErrors(genre.notification);
 
     if (notification.hasErrors()) {
       throw new LoadAggregateError(notification.toJSON());

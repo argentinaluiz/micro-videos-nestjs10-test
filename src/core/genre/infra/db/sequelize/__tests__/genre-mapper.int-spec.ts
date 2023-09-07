@@ -27,38 +27,16 @@ describe('GenreModelMapper Unit Tests', () => {
         makeModel: () => {
           return GenreModel.build({
             genre_id: '9366b7dc-2d71-4799-b91c-c64adb205104',
+            name: 't'.repeat(256),
             categories_id: [],
           });
         },
         expectedErrors: [
           {
-            name: [
-              'name should not be empty',
-              'name must be a string',
-              'name must be shorter than or equal to 255 characters',
-            ],
-          },
-          {
             categories_id: ['categories_id should not be empty'],
           },
-        ],
-      },
-      {
-        makeModel: () => {
-          const model = GenreModel.build();
-          jest.spyOn(model, 'toJSON').mockImplementation(() => ({
-            genre_id: '9366b7dc-2d71-4799-b91c-c64adb205104',
-            categories_id: [
-              GenreCategoryModel.build({
-                category_id: '1',
-              }),
-            ],
-          }));
-          return model;
-        },
-        expectedErrors: [
           {
-            categories_id: ['ID 1 must be a valid UUID'],
+            name: ['name must be shorter than or equal to 255 characters'],
           },
         ],
       },

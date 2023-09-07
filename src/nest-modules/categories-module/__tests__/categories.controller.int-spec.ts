@@ -8,20 +8,20 @@ import { CategoriesController } from '../categories.controller';
 import { ICategoryRepository } from '../../../core/category/domain/category.repository';
 import { ConfigModule } from '../../config-module/config.module';
 import { CategoriesModule } from '../categories.module';
-import * as CategoryProviders from '../categories.providers';
-import { CreateCategoryUseCase } from '../../../core/category/application/use-cases/create-category.use-case';
-import { UpdateCategoryUseCase } from '../../../core/category/application/use-cases/update-category.use-case';
-import { ListCategoriesUseCase } from '../../../core/category/application/use-cases/list-categories.use-case';
-import { DeleteCategoryUseCase } from '../../../core/category/application/use-cases/delete-category.use-case';
-import { GetCategoryUseCase } from '../../../core/category/application/use-cases/get-category.use-case';
+import { CreateCategoryUseCase } from '../../../core/category/application/use-cases/create-category/create-category.use-case';
+import { UpdateCategoryUseCase } from '../../../core/category/application/use-cases/update-category/update-category.use-case';
+import { ListCategoriesUseCase } from '../../../core/category/application/use-cases/list-categories/list-categories.use-case';
+import { DeleteCategoryUseCase } from '../../../core/category/application/use-cases/delete-category/delete-category.use-case';
+import { GetCategoryUseCase } from '../../../core/category/application/use-cases/get-category/get-category.use-case';
 import { Uuid } from '../../../core/shared/domain/value-objects/uuid.vo';
 import {
   CategoryCollectionPresenter,
   CategoryPresenter,
 } from '../categories.presenter';
-import { CategoryOutputMapper } from '../../../core/category/application/dto/category-output';
+import { CategoryOutputMapper } from '../../../core/category/application/use-cases/common-output/category-output';
 import { Category } from '../../../core/category/domain/category.aggregate';
 import { DatabaseModule } from '../../database-module/database.module';
+import { CATEGORY_PROVIDERS } from '../categories.providers';
 
 describe('CategoriesController Integration Tests', () => {
   let controller: CategoriesController;
@@ -34,7 +34,7 @@ describe('CategoriesController Integration Tests', () => {
 
     controller = module.get(CategoriesController);
     repository = module.get(
-      CategoryProviders.REPOSITORIES.CATEGORY_REPOSITORY.provide,
+      CATEGORY_PROVIDERS.REPOSITORIES.CATEGORY_REPOSITORY.provide,
     );
   });
 
@@ -87,7 +87,12 @@ describe('CategoriesController Integration Tests', () => {
         expect(entity.toJSON()).toMatchObject({
           category_id: presenter.id,
           created_at: presenter.created_at,
-          ...expected,
+          name: expected.name ?? category.name,
+          description: expected.description ?? category.description,
+          is_active:
+            expected.is_active === true || expected.is_active === false
+              ? expected.is_active
+              : category.is_active,
         });
         const output = CategoryOutputMapper.toOutput(entity);
         expect(presenter).toEqual(new CategoryPresenter(output));

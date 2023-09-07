@@ -1,12 +1,12 @@
 import request from 'supertest';
-import { CastMembersController } from '../../src/cast-members/cast-members.controller';
 import { instanceToPlain } from 'class-transformer';
 import { ICastMemberRepository } from '../../src/core/cast-member/domain/cast-member.repository';
-import { startApp } from '../../src/shared/testing/helpers';
-import { ListCastMembersFixture } from '../../src/cast-members/testing/cast-member-fixtures';
 import { CastMemberOutputMapper } from '../../src/core/cast-member/application/dto/cast-member-output';
-import * as CastMemberProviders from '../../src/cast-members/cast-members.providers';
 import qs from 'qs';
+import { startApp } from '../../src/nest-modules/shared-module/testing/helpers';
+import { ListCastMembersFixture } from '../../src/nest-modules/cast-members-module/testing/cast-member-fixtures';
+import { CastMembersController } from '../../src/nest-modules/cast-members-module/cast-members.controller';
+import { CAST_MEMBERS_PROVIDERS } from '../../src/nest-modules/cast-members-module/cast-members.providers';
 
 describe('CastMembersController (e2e)', () => {
   describe('/cast-members (GET)', () => {
@@ -18,7 +18,7 @@ describe('CastMembersController (e2e)', () => {
 
       beforeEach(async () => {
         castMemberRepo = nestApp.app.get<ICastMemberRepository>(
-          CastMemberProviders.REPOSITORIES.CAST_MEMBER_REPOSITORY.provide,
+          CAST_MEMBERS_PROVIDERS.REPOSITORIES.CAST_MEMBER_REPOSITORY.provide,
         );
         await castMemberRepo.bulkInsert(Object.values(entitiesMap));
       });
@@ -51,7 +51,7 @@ describe('CastMembersController (e2e)', () => {
 
       beforeEach(async () => {
         castMemberRepo = nestApp.app.get<ICastMemberRepository>(
-          CastMemberProviders.REPOSITORIES.CAST_MEMBER_REPOSITORY.provide,
+          CAST_MEMBERS_PROVIDERS.REPOSITORIES.CAST_MEMBER_REPOSITORY.provide,
         );
         await castMemberRepo.bulkInsert(Object.values(entitiesMap));
       });

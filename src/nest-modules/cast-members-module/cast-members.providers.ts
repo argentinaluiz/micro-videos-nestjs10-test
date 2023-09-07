@@ -1,10 +1,10 @@
 import { getModelToken } from '@nestjs/sequelize';
 import { CastMemberInMemoryRepository } from '../../core/cast-member/infra/db/in-memory/cast-member-in-memory.repository';
-import { CreateCastMemberUseCase } from '../../core/cast-member/application/use-cases/create-cast-member.use-case';
-import { UpdateCastMemberUseCase } from '../../core/cast-member/application/use-cases/update-cast-member.use-case';
-import { ListCastMembersUseCase } from '../../core/cast-member/application/use-cases/list-cast-members.use-case';
-import { GetCastMemberUseCase } from '../../core/cast-member/application/use-cases/get-cast-member.use-case';
-import { DeleteCastMemberUseCase } from '../../core/cast-member/application/use-cases/delete-cast-member.use-case';
+import { CreateCastMemberUseCase } from '../../core/cast-member/application/use-cases/create-cast-member/create-cast-member.use-case';
+import { UpdateCastMemberUseCase } from '../../core/cast-member/application/use-cases/update-cast-member/update-cast-member.use-case';
+import { ListCastMembersUseCase } from '../../core/cast-member/application/use-cases/list-cast-members/list-cast-members.use-case';
+import { GetCastMemberUseCase } from '../../core/cast-member/application/use-cases/get-cast-member/get-cast-member.use-case';
+import { DeleteCastMemberUseCase } from '../../core/cast-member/application/use-cases/delete-cast-member/delete-cast-member.use-case';
 import {
   CastMemberModel,
   CastMemberSequelizeRepository,
@@ -44,7 +44,7 @@ export const USE_CASES = {
     },
     inject: [REPOSITORIES.CAST_MEMBER_REPOSITORY.provide],
   },
-  LIST_CATEGORIES_USE_CASE: {
+  LIST_CAST_MEMBERS_USE_CASE: {
     provide: ListCastMembersUseCase,
     useFactory: (castMemberRepo: ICastMemberRepository) => {
       return new ListCastMembersUseCase(castMemberRepo);
@@ -65,4 +65,9 @@ export const USE_CASES = {
     },
     inject: [REPOSITORIES.CAST_MEMBER_REPOSITORY.provide],
   },
+};
+
+export const CAST_MEMBERS_PROVIDERS = {
+  REPOSITORIES,
+  USE_CASES,
 };

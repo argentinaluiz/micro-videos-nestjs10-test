@@ -1,21 +1,20 @@
 import { getModelToken } from '@nestjs/sequelize';
 import { GenreInMemoryRepository } from '../../core/genre/infra/db/in-memory/genre-in-memory.repository';
-import { CreateGenreUseCase } from '../../core/genre/application/use-cases/create-genre.use-case';
-import { UpdateGenreUseCase } from '../../core/genre/application/use-cases/update-genre.use-case';
-import { ListGenresUseCase } from '../../core/genre/application/use-cases/list-genres.use-case';
-import { GetGenreUseCase } from '../../core/genre/application/use-cases/get-genre.use-case';
-import { DeleteGenreUseCase } from '../../core/genre/application/use-cases/delete-genre.use-case';
+import { CreateGenreUseCase } from '../../core/genre/application/use-cases/create-genre/create-genre.use-case';
+import { UpdateGenreUseCase } from '../../core/genre/application/use-cases/update-genre/update-genre.use-case';
+import { ListGenresUseCase } from '../../core/genre/application/use-cases/list-genres/list-genres.use-case';
+import { GetGenreUseCase } from '../../core/genre/application/use-cases/get-genre/get-genre.use-case';
+import { DeleteGenreUseCase } from '../../core/genre/application/use-cases/delete-genre/delete-genre.use-case';
 import {
-  GenreCategoryModel,
   GenreModel,
   GenreSequelizeRepository,
 } from '../../core/genre/infra/db/sequelize/genre-sequelize';
 import { IGenreRepository } from '../../core/genre/domain/genre.repository';
 import { UnitOfWorkSequelize } from '../../core/shared/infra/db/sequelize/unit-of-work-sequelize';
-import * as CategoryProviders from '../categories-module/categories.providers';
 import { IUnitOfWork } from '../../core/shared/domain/repository/unit-of-work.interface';
 import { ICategoryRepository } from '../../core/category/domain/category.repository';
 import { CategoriesIdsValidator } from '../../core/category/application/validations/categories-ids.validator';
+import { CATEGORY_PROVIDERS } from '../categories-module/categories.providers';
 
 export const REPOSITORIES = {
   GENRE_REPOSITORY: {
@@ -28,18 +27,10 @@ export const REPOSITORIES = {
   },
   GENRE_SEQUELIZE_REPOSITORY: {
     provide: GenreSequelizeRepository,
-    useFactory: (
-      genreModel: typeof GenreModel,
-      genreCategoryModel: typeof GenreCategoryModel,
-      uow: UnitOfWorkSequelize,
-    ) => {
-      return new GenreSequelizeRepository(genreModel, genreCategoryModel, uow);
+    useFactory: (genreModel: typeof GenreModel, uow: UnitOfWorkSequelize) => {
+      return new GenreSequelizeRepository(genreModel, uow);
     },
-    inject: [
-      getModelToken(GenreModel),
-      getModelToken(GenreCategoryModel),
-      'UnitOfWork',
-    ],
+    inject: [getModelToken(GenreModel), 'UnitOfWork'],
   },
 };
 
@@ -62,8 +53,8 @@ export const USE_CASES = {
     inject: [
       'UnitOfWork',
       REPOSITORIES.GENRE_REPOSITORY.provide,
-      CategoryProviders.REPOSITORIES.CATEGORY_REPOSITORY.provide,
-      CategoryProviders.VALIDATIONS.CATEGORIES_IDS_VALIDATOR.provide,
+      CATEGORY_PROVIDERS.REPOSITORIES.CATEGORY_REPOSITORY.provide,
+      CATEGORY_PROVIDERS.VALIDATIONS.CATEGORIES_IDS_VALIDATOR.provide,
     ],
   },
   UPDATE_GENRE_USE_CASE: {
@@ -84,8 +75,8 @@ export const USE_CASES = {
     inject: [
       'UnitOfWork',
       REPOSITORIES.GENRE_REPOSITORY.provide,
-      CategoryProviders.REPOSITORIES.CATEGORY_REPOSITORY.provide,
-      CategoryProviders.VALIDATIONS.CATEGORIES_IDS_VALIDATOR.provide,
+      CATEGORY_PROVIDERS.REPOSITORIES.CATEGORY_REPOSITORY.provide,
+      CATEGORY_PROVIDERS.VALIDATIONS.CATEGORIES_IDS_VALIDATOR.provide,
     ],
   },
   LIST_CATEGORIES_USE_CASE: {
@@ -98,7 +89,7 @@ export const USE_CASES = {
     },
     inject: [
       REPOSITORIES.GENRE_REPOSITORY.provide,
-      CategoryProviders.REPOSITORIES.CATEGORY_REPOSITORY.provide,
+      CATEGORY_PROVIDERS.REPOSITORIES.CATEGORY_REPOSITORY.provide,
     ],
   },
   GET_GENRE_USE_CASE: {
@@ -111,7 +102,7 @@ export const USE_CASES = {
     },
     inject: [
       REPOSITORIES.GENRE_REPOSITORY.provide,
-      CategoryProviders.REPOSITORIES.CATEGORY_REPOSITORY.provide,
+      CATEGORY_PROVIDERS.REPOSITORIES.CATEGORY_REPOSITORY.provide,
     ],
   },
   DELETE_GENRE_USE_CASE: {
@@ -121,4 +112,9 @@ export const USE_CASES = {
     },
     inject: ['UnitOfWork', REPOSITORIES.GENRE_REPOSITORY.provide],
   },
+};
+
+export const GENRES_PROVIDERS = {
+  REPOSITORIES,
+  USE_CASES,
 };

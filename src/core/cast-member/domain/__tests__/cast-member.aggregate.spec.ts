@@ -57,6 +57,7 @@ describe('CastMember Unit Tests', () => {
       expect(castMember.type).toEqual(actor);
       expect(castMember.created_at).toBeInstanceOf(Date);
       expect(CastMember.prototype.validate).toHaveBeenCalledTimes(1);
+      expect(castMember.notification.hasErrors()).toBe(false);
     });
   });
 
@@ -82,6 +83,7 @@ describe('CastMember Unit Tests', () => {
     castMember.changeName('new name');
     expect(castMember.name).toBe('new name');
     expect(CastMember.prototype.validate).toHaveBeenCalledTimes(2);
+    expect(castMember.notification.hasErrors()).toBe(false);
   });
 
   test('should change type', () => {
@@ -93,81 +95,18 @@ describe('CastMember Unit Tests', () => {
     const director = CastMemberType.createADirector();
     castMember.changeType(director);
     expect(castMember.type).toEqual(director);
-    expect(CastMember.prototype.validate).toHaveBeenCalledTimes(2);
+    expect(CastMember.prototype.validate).toHaveBeenCalledTimes(1);
   });
 });
 
 describe('CastMember Validator', () => {
   describe('create command', () => {
     test('should an invalid cast member with name property', () => {
-      let castMember = CastMember.create({ name: null } as any);
-      expect(castMember.notification.hasErrors()).toBe(true);
-      expect(castMember.notification).notificationContainsErrorMessages([
-        {
-          name: [
-            'name should not be empty',
-            'name must be a string',
-            'name must be shorter than or equal to 255 characters',
-          ],
-        },
-      ]);
-
-      castMember = CastMember.create({ name: '' } as any);
-      expect(castMember.notification.hasErrors()).toBe(true);
-      expect(castMember.notification).notificationContainsErrorMessages([
-        {
-          name: ['name should not be empty'],
-        },
-      ]);
-
-      castMember = CastMember.create({ name: 5 } as any);
-      expect(castMember.notification.hasErrors()).toBe(true);
-      expect(castMember.notification).notificationContainsErrorMessages([
-        {
-          name: [
-            'name must be a string',
-            'name must be shorter than or equal to 255 characters',
-          ],
-        },
-      ]);
-
-      castMember = CastMember.create({ name: 't'.repeat(256) } as any);
+      const castMember = CastMember.create({ name: 't'.repeat(256) } as any);
       expect(castMember.notification.hasErrors()).toBe(true);
       expect(castMember.notification).notificationContainsErrorMessages([
         {
           name: ['name must be shorter than or equal to 255 characters'],
-        },
-      ]);
-    });
-
-    it('should a invalid cast member using type property', () => {
-      let castMember = CastMember.create({ type: null } as any);
-      expect(castMember.notification.hasErrors()).toBe(true);
-      expect(castMember.notification).notificationContainsErrorMessages([
-        {
-          type: [
-            'type should not be empty',
-            'type must be an instance of CastMemberType',
-          ],
-        },
-      ]);
-
-      castMember = CastMember.create({ type: '' } as any);
-      expect(castMember.notification.hasErrors()).toBe(true);
-      expect(castMember.notification).notificationContainsErrorMessages([
-        {
-          type: [
-            'type should not be empty',
-            'type must be an instance of CastMemberType',
-          ],
-        },
-      ]);
-
-      castMember = CastMember.create({ type: 5 } as any);
-      expect(castMember.notification.hasErrors()).toBe(true);
-      expect(castMember.notification).notificationContainsErrorMessages([
-        {
-          type: ['type must be an instance of CastMemberType'],
         },
       ]);
     });
@@ -175,83 +114,12 @@ describe('CastMember Validator', () => {
 
   describe('changeName method', () => {
     it('should a invalid cast member using name property', () => {
-      let castMember = CastMember.fake().aDirector().build();
-      castMember.changeName(null);
-      expect(castMember.notification.hasErrors()).toBe(true);
-      expect(castMember.notification).notificationContainsErrorMessages([
-        {
-          name: [
-            'name should not be empty',
-            'name must be a string',
-            'name must be shorter than or equal to 255 characters',
-          ],
-        },
-      ]);
-
-      castMember = CastMember.fake().aDirector().build();
-      castMember.changeName('');
-      expect(castMember.notification.hasErrors()).toBe(true);
-      expect(castMember.notification).notificationContainsErrorMessages([
-        {
-          name: ['name should not be empty'],
-        },
-      ]);
-
-      castMember = CastMember.fake().aDirector().build();
-      castMember.changeName(5 as any);
-      expect(castMember.notification.hasErrors()).toBe(true);
-      expect(castMember.notification).notificationContainsErrorMessages([
-        {
-          name: [
-            'name must be a string',
-            'name must be shorter than or equal to 255 characters',
-          ],
-        },
-      ]);
-
-      castMember = CastMember.fake().aDirector().build();
+      const castMember = CastMember.fake().aDirector().build();
       castMember.changeName('t'.repeat(256));
       expect(castMember.notification.hasErrors()).toBe(true);
       expect(castMember.notification).notificationContainsErrorMessages([
         {
           name: ['name must be shorter than or equal to 255 characters'],
-        },
-      ]);
-    });
-  });
-
-  describe('changeType method', () => {
-    it('should a invalid cast member using type property', () => {
-      let castMember = CastMember.fake().aDirector().build();
-      castMember.changeType(null);
-      expect(castMember.notification.hasErrors()).toBe(true);
-      expect(castMember.notification).notificationContainsErrorMessages([
-        {
-          type: [
-            'type should not be empty',
-            'type must be an instance of CastMemberType',
-          ],
-        },
-      ]);
-
-      castMember = CastMember.fake().aDirector().build();
-      castMember.changeType('' as any);
-      expect(castMember.notification.hasErrors()).toBe(true);
-      expect(castMember.notification).notificationContainsErrorMessages([
-        {
-          type: [
-            'type should not be empty',
-            'type must be an instance of CastMemberType',
-          ],
-        },
-      ]);
-
-      castMember = CastMember.fake().aDirector().build();
-      castMember.changeType(5 as any);
-      expect(castMember.notification.hasErrors()).toBe(true);
-      expect(castMember.notification).notificationContainsErrorMessages([
-        {
-          type: ['type must be an instance of CastMemberType'],
         },
       ]);
     });

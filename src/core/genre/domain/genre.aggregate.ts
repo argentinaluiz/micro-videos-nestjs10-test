@@ -1,5 +1,4 @@
 import { Uuid } from '../../shared/domain/value-objects/uuid.vo';
-import { Entity } from '../../shared/domain/entity';
 import GenreValidatorFactory from './genre.validator';
 import { GenreFakeBuilder } from './genre-fake.builder';
 import { CategoryId } from '../../category/domain/category.aggregate';
@@ -44,7 +43,7 @@ export class Genre extends AggregateRoot {
         ? null
         : new Map(props.categories_id.map((id) => [id.id, id])),
     });
-    genre.validate(['name', 'categories_id', 'is_active']);
+    genre.validate(['name']);
     return genre;
   }
 
@@ -55,12 +54,10 @@ export class Genre extends AggregateRoot {
 
   addCategoryId(categoryId: CategoryId): void {
     this.categories_id.set(categoryId.id, categoryId);
-    this.validate(['categories_id']);
   }
 
   removeCategoryId(categoryId: CategoryId): void {
     this.categories_id.delete(categoryId.id);
-    this.validate(['categories_id']);
   }
 
   syncCategoriesId(categoriesId: CategoryId[]): void {
@@ -70,7 +67,6 @@ export class Genre extends AggregateRoot {
     this.categories_id = !categoriesId
       ? null
       : new Map(categoriesId.map((id) => [id.id, id]));
-    this.validate(['categories_id']);
   }
 
   activate() {

@@ -2,10 +2,11 @@ import { INestApplication } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { getConnectionToken } from '@nestjs/sequelize';
 import { Test, TestingModule } from '@nestjs/testing';
-import { AppModule } from '../../app.module';
-import { applyGlobalConfig } from '../../global-config';
 import { Sequelize } from 'sequelize';
-import { migrator } from '../../core/shared/infra/db/sequelize/migrator';
+import { AppModule } from '../../../app.module';
+import { migrator } from '../../../core/shared/infra/db/sequelize/migrator';
+import { applyGlobalConfig } from '../../../global-config';
+import { UnitOfWorkSequelize } from '../../../core/shared/infra/db/sequelize/unit-of-work-sequelize';
 
 export function startApp({
   beforeInit,
@@ -16,7 +17,15 @@ export function startApp({
   beforeEach(async () => {
     const moduleBuilder: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    })
+      .overrideProvider('UnitOfWork')
+      .useFactory({
+        factory: (sequelize: Sequelize) => {
+          return new UnitOfWorkSequelize(sequelize as any);
+        },
+        inject: [getConnectionToken()],
+      })
+      .compile();
 
     canRunMigrations = !moduleBuilder
       .get(ConfigService)

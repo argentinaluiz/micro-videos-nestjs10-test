@@ -84,22 +84,10 @@ describe('CastMemberFakerBuilder Unit Tests', () => {
 
       const fakerMany = CastMemberFakeBuilder.theCastMembers(2);
       fakerMany.withName((index) => `test name ${index}`);
-      const categories = fakerMany.build();
+      const castMembers = fakerMany.build();
 
-      expect(categories[0].name).toBe(`test name 0`);
-      expect(categories[1].name).toBe(`test name 1`);
-    });
-
-    test('invalid empty case', () => {
-      const $this = faker.withInvalidNameEmpty(undefined);
-      expect($this).toBeInstanceOf(CastMemberFakeBuilder);
-      expect(faker['_name']).toBeUndefined();
-
-      faker.withInvalidNameEmpty(null);
-      expect(faker['_name']).toBe(null);
-
-      faker.withInvalidNameEmpty('');
-      expect(faker['_name']).toBe('');
+      expect(castMembers[0].name).toBe(`test name 0`);
+      expect(castMembers[1].name).toBe(`test name 1`);
     });
 
     test('invalid too long case', () => {
@@ -168,10 +156,10 @@ describe('CastMemberFakerBuilder Unit Tests', () => {
 
       const fakerMany = CastMemberFakeBuilder.theCastMembers(2);
       fakerMany.withCreatedAt((index) => new Date(date.getTime() + index + 2));
-      const categories = fakerMany.build();
+      const castMembers = fakerMany.build();
 
-      expect(categories[0].created_at.getTime()).toBe(date.getTime() + 2);
-      expect(categories[1].created_at.getTime()).toBe(date.getTime() + 3);
+      expect(castMembers[0].created_at.getTime()).toBe(date.getTime() + 2);
+      expect(castMembers[1].created_at.getTime()).toBe(date.getTime() + 3);
     });
   });
 

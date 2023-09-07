@@ -34,7 +34,7 @@ export class CastMember extends AggregateRoot {
 
   static create(props: CastMemberCreateCommand) {
     const castMember = new CastMember(props);
-    castMember.validate(['name', 'type']);
+    castMember.validate(['name']);
     return castMember;
   }
 
@@ -45,7 +45,6 @@ export class CastMember extends AggregateRoot {
 
   changeType(type: CastMemberType): void {
     this.type = type;
-    this.validate(['type']);
   }
 
   validate(fields?: string[]) {

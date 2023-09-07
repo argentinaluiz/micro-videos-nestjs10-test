@@ -1,18 +1,11 @@
-import { IsInstance, IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { MaxLength } from 'class-validator';
 import { ClassValidatorFields } from '../../shared/domain/validators/class-validator-fields';
 import { CastMember } from './cast-member.aggregate';
-import { CastMemberType } from './cast-member-type.vo';
 import { Notification } from '../../shared/domain/validators/notification';
 
 export class CastMemberRules {
   @MaxLength(255, { groups: ['name'] })
-  @IsString({ groups: ['name'] })
-  @IsNotEmpty({ groups: ['name'] })
   name: string;
-
-  @IsInstance(CastMemberType, { groups: ['type'] })
-  @IsNotEmpty({ groups: ['type'] })
-  type: CastMemberType;
 
   constructor(aggregate: CastMember) {
     Object.assign(this, aggregate);
@@ -25,7 +18,7 @@ export class CastMemberValidator extends ClassValidatorFields {
     data: CastMember,
     fields: string[],
   ): boolean {
-    const newFields = fields?.length ? fields : ['name', 'type'];
+    const newFields = fields?.length ? fields : ['name'];
     return super.validate(notification, new CastMemberRules(data), newFields);
   }
 }

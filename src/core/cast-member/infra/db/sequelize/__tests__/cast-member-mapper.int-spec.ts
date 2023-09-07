@@ -28,11 +28,7 @@ describe('CastMemberModelMapper Integration Tests', () => {
       expect(e).toBeInstanceOf(LoadAggregateError);
       expect((e as LoadAggregateError).error).toMatchObject([
         {
-          name: [
-            'name should not be empty',
-            'name must be a string',
-            'name must be shorter than or equal to 255 characters',
-          ],
+          name: ['name must be shorter than or equal to 255 characters'],
         },
         { type: ['Invalid cast member type: undefined'] },
       ]);

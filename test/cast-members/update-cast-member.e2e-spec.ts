@@ -1,13 +1,13 @@
 import request from 'supertest';
-import { CastMembersController } from '../../src/cast-members/cast-members.controller';
 import { instanceToPlain } from 'class-transformer';
-import { startApp } from '../../src/shared/testing/helpers';
 import { CastMember } from '../../src/core/cast-member/domain/cast-member.aggregate';
-import { UpdateCastMemberFixture } from '../../src/cast-members/testing/cast-member-fixtures';
 import { ICastMemberRepository } from '../../src/core/cast-member/domain/cast-member.repository';
-import * as CastMemberProviders from '../../src/cast-members/cast-members.providers';
 import { CastMemberOutputMapper } from '../../src/core/cast-member/application/dto/cast-member-output';
 import { Uuid } from '../../src/core/shared/domain/value-objects/uuid.vo';
+import { startApp } from '../../src/nest-modules/shared-module/testing/helpers';
+import { UpdateCastMemberFixture } from '../../src/nest-modules/cast-members-module/testing/cast-member-fixtures';
+import { CastMembersController } from '../../src/nest-modules/cast-members-module/cast-members.controller';
+import { CAST_MEMBERS_PROVIDERS } from '../../src/nest-modules/cast-members-module/cast-members.providers';
 
 describe('CastMembersController (e2e)', () => {
   const uuid = '9366b7dc-2d71-4799-b91c-c64adb205104';
@@ -67,62 +67,58 @@ describe('CastMembersController (e2e)', () => {
     });
 
     describe('should a response error with 422 when throw EntityValidationError', () => {
-      const app = startApp({
-        beforeInit: (app) => {
-          app['config'].globalPipes = [];
-        },
-      });
+      const app = startApp();
       const validationError =
         UpdateCastMemberFixture.arrangeForEntityValidationError();
       const arrange = Object.keys(validationError).map((key) => ({
         label: key,
         value: validationError[key],
       }));
-      let categoryRepo: ICastMemberRepository;
+      let castMemberRepo: ICastMemberRepository;
 
       beforeEach(() => {
-        categoryRepo = app.app.get<ICastMemberRepository>(
-          CastMemberProviders.REPOSITORIES.CAST_MEMBER_REPOSITORY.provide,
+        castMemberRepo = app.app.get<ICastMemberRepository>(
+          CAST_MEMBERS_PROVIDERS.REPOSITORIES.CAST_MEMBER_REPOSITORY.provide,
         );
       });
       test.each(arrange)('when body is $label', async ({ value }) => {
-        const category = CastMember.fake().anActor().build();
-        await categoryRepo.insert(category);
+        const castMember = CastMember.fake().anActor().build();
+        await castMemberRepo.insert(castMember);
         return request(app.app.getHttpServer())
-          .patch(`/cast-members/${category.cast_member_id.id}`)
+          .patch(`/cast-members/${castMember.cast_member_id.id}`)
           .send(value.send_data)
           .expect(422)
           .expect(value.expected);
       });
     });
 
-    describe('should update a category', () => {
+    describe('should update a cast member', () => {
       const app = startApp();
       const arrange = UpdateCastMemberFixture.arrangeForUpdate();
-      let categoryRepo: ICastMemberRepository;
+      let castMemberRepo: ICastMemberRepository;
 
       beforeEach(async () => {
-        categoryRepo = app.app.get<ICastMemberRepository>(
-          CastMemberProviders.REPOSITORIES.CAST_MEMBER_REPOSITORY.provide,
+        castMemberRepo = app.app.get<ICastMemberRepository>(
+          CAST_MEMBERS_PROVIDERS.REPOSITORIES.CAST_MEMBER_REPOSITORY.provide,
         );
       });
       test.each(arrange)(
         'when body is $send_data',
         async ({ send_data, expected }) => {
           const castMemberCreated = CastMember.fake().anActor().build();
-          await categoryRepo.insert(castMemberCreated);
+          await castMemberRepo.insert(castMemberCreated);
 
           const res = await request(app.app.getHttpServer())
             .patch(`/cast-members/${castMemberCreated.cast_member_id.id}`)
             .send(send_data)
             .expect(200);
-          const keyInResponse = UpdateCastMemberFixture.keysInResponse();
+          const keyInResponse = UpdateCastMemberFixture.keysInResponse;
           expect(Object.keys(res.body)).toStrictEqual(['data']);
           expect(Object.keys(res.body.data)).toStrictEqual(keyInResponse);
           const id = res.body.data.id;
-          const categoryUpdated = await categoryRepo.findById(new Uuid(id));
+          const castMemberUpdated = await castMemberRepo.findById(new Uuid(id));
           const presenter = CastMembersController.serialize(
-            CastMemberOutputMapper.toOutput(categoryUpdated),
+            CastMemberOutputMapper.toOutput(castMemberUpdated),
           );
           const serialized = instanceToPlain(presenter);
           expect(res.body.data).toStrictEqual(serialized);

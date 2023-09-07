@@ -1,15 +1,15 @@
-import { CreateCategoryOutput } from '@core/category/application/use-cases/create-category.use-case';
-import { GetCategoryOutput } from '@core/category/application/use-cases/get-category.use-case';
-import { ListCategoriesOutput } from '@core/category/application/use-cases/list-categories.use-case';
-import { UpdateCategoryOutput } from '@core/category/application/use-cases/update-category.use-case';
 import { SortDirection } from '@core/shared/domain/repository/search-params';
 import { CategoriesController } from '../categories.controller';
 import {
   CategoryCollectionPresenter,
   CategoryPresenter,
 } from '../categories.presenter';
+import { CreateCategoryOutput } from '../../../core/category/application/use-cases/create-category/create-category.use-case';
+import { GetCategoryOutput } from '../../../core/category/application/use-cases/get-category/get-category.use-case';
+import { ListCategoriesOutput } from '../../../core/category/application/use-cases/list-categories/list-categories.use-case';
 import { CreateCategoryDto } from '../dto/create-category.dto';
-import { UpdateCategoryDto } from '../dto/update-category.dto';
+import { UpdateCategoryInput } from '../../../core/category/application/use-cases/update-category/update-category.input';
+import { UpdateCategoryOutput } from '../../../core/category/application/use-cases/update-category/update-category.use-case';
 
 describe('CategoriesController Unit Tests', () => {
   let controller: CategoriesController;
@@ -40,7 +40,6 @@ describe('CategoriesController Unit Tests', () => {
     expect(mockCreateUseCase.execute).toHaveBeenCalledWith(input);
     expect(presenter).toBeInstanceOf(CategoryPresenter);
     expect(presenter).toStrictEqual(new CategoryPresenter(output));
-    //expect(expectedOutput).toStrictEqual(output);
   });
 
   it('should updates a category', async () => {
@@ -57,7 +56,7 @@ describe('CategoriesController Unit Tests', () => {
     };
     //@ts-expect-error defined part of methods
     controller['updateUseCase'] = mockUpdateUseCase;
-    const input: UpdateCategoryDto = {
+    const input: Omit<UpdateCategoryInput, 'id'> = {
       name: 'Movie',
       description: 'some description',
       is_active: true,

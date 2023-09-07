@@ -1,4 +1,4 @@
-import { Module, Scope } from '@nestjs/common';
+import { Global, Module, Scope } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SequelizeModule, getConnectionToken } from '@nestjs/sequelize';
 import { CONFIG_SCHEMA_TYPE } from '../config-module/config.module';
@@ -13,6 +13,7 @@ import {
 
 const models = [CategoryModel, CastMemberModel, GenreModel, GenreCategoryModel];
 
+@Global()
 @Module({
   imports: [
     SequelizeModule.forRootAsync({
@@ -58,7 +59,9 @@ const models = [CategoryModel, CastMemberModel, GenreModel, GenreCategoryModel];
     {
       provide: 'UnitOfWork',
       useExisting: UnitOfWorkSequelize,
+      scope: Scope.REQUEST,
     },
   ],
+  exports: ['UnitOfWork'],
 })
 export class DatabaseModule {}

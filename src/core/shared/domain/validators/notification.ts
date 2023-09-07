@@ -30,8 +30,8 @@ export class Notification {
   }
 
   copyErrors(notification: Notification) {
-    notification.errors.forEach((value, key) => {
-      this.errors.set(key, value);
+    notification.errors.forEach((value, field) => {
+      this.setError(value, field);
     });
   }
 

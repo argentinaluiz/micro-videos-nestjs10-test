@@ -1,13 +1,10 @@
 import { CategoryId } from '../../category/domain/category.aggregate';
-import { Either } from '../../shared/domain/either';
 import { ISearchableRepository } from '../../shared/domain/repository/repository-interface';
 import {
   SearchParams as DefaultSearchParams,
   SearchResult as DefaultSearchResult,
   SearchParamsConstructorProps,
 } from '../../shared/domain/repository/search-params';
-import { SearchValidationError } from '../../shared/domain/validators/validation.error';
-import InvalidUuidError from '../../shared/domain/value-objects/uuid.vo';
 import { Genre, GenreId } from './genre.aggregate';
 
 export type GenreFilter = {
@@ -28,23 +25,9 @@ export class GenreSearchParams extends DefaultSearchParams<GenreFilter> {
       };
     } = {},
   ) {
-    const [categories_id, errorCategoriesId] = Either.of(
-      props.filter?.categories_id,
-    )
-      .map((value) => value || [])
-      .chainEach<CategoryId[], InvalidUuidError[]>((value) =>
-        Either.safe(() =>
-          value instanceof CategoryId ? value : new CategoryId(value),
-        ),
-      )
-      .asArray();
-
-    if (errorCategoriesId) {
-      const error = new SearchValidationError([
-        { categories_id: errorCategoriesId.map((error) => error.message) },
-      ]);
-      throw error;
-    }
+    const categories_id = props.filter?.categories_id?.map((c) =>
+      c instanceof CategoryId ? c : new CategoryId(c),
+    );
 
     return new GenreSearchParams({
       ...props,

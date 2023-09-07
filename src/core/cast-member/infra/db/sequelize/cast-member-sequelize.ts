@@ -99,7 +99,7 @@ export class CastMemberSequelizeRepository implements ICastMemberRepository {
     }
 
     const existsCastMemberModels = await this.castMemberModel.findAll({
-      attributes: ['category_id'],
+      attributes: ['cast_member_id'],
       where: {
         cast_member_id: {
           [Op.in]: ids.map((id) => id.id),

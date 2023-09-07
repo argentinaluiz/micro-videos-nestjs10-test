@@ -9,8 +9,8 @@ describe('GenreOutputMapper Unit Tests', () => {
     const entity = Genre.fake()
       .aGenre()
       .withName('test')
-      .withCategoryId(categories[0].category_id)
-      .withCategoryId(categories[1].category_id)
+      .addCategoryId(categories[0].category_id)
+      .addCategoryId(categories[1].category_id)
       .withCreatedAt(created_at)
       .build();
     const output = GenreOutputMapper.toOutput(entity, categories);

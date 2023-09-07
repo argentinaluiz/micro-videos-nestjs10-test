@@ -1,13 +1,13 @@
 import request from 'supertest';
-import { CategoriesController } from '../../src/categories/categories.controller';
 import { instanceToPlain } from 'class-transformer';
-import { startApp } from '../../src/shared/testing/helpers';
 import { Category } from '../../src/core/category/domain/category.aggregate';
-import { UpdateCategoryFixture } from '../../src/categories/testing/category-fixtures';
 import { ICategoryRepository } from '../../src/core/category/domain/category.repository';
-import * as CategoryProviders from '../../src/categories/categories.providers';
-import { CategoryOutputMapper } from '../../src/core/category/application/dto/category-output';
+import * as CategoryProviders from '../../src/nest-modules/categories-module/categories.providers';
+import { CategoryOutputMapper } from '../../src/core/category/application/use-cases/common-output/category-output';
 import { Uuid } from '../../src/core/shared/domain/value-objects/uuid.vo';
+import { startApp } from '../../src/nest-modules/shared-module/testing/helpers';
+import { UpdateCategoryFixture } from '../../src/nest-modules/categories-module/testing/category-fixtures';
+import { CategoriesController } from '../../src/nest-modules/categories-module/categories.controller';
 
 describe('CategoriesController (e2e)', () => {
   const uuid = '9366b7dc-2d71-4799-b91c-c64adb205104';
@@ -67,11 +67,7 @@ describe('CategoriesController (e2e)', () => {
     });
 
     describe('should a response error with 422 when throw EntityValidationError', () => {
-      const app = startApp({
-        beforeInit: (app) => {
-          app['config'].globalPipes = [];
-        },
-      });
+      const app = startApp();
       const validationError =
         UpdateCategoryFixture.arrangeForEntityValidationError();
       const arrange = Object.keys(validationError).map((key) => ({
@@ -116,7 +112,7 @@ describe('CategoriesController (e2e)', () => {
             .patch(`/categories/${categoryCreated.category_id.id}`)
             .send(send_data)
             .expect(200);
-          const keyInResponse = UpdateCategoryFixture.keysInResponse();
+          const keyInResponse = UpdateCategoryFixture.keysInResponse;
           expect(Object.keys(res.body)).toStrictEqual(['data']);
           expect(Object.keys(res.body.data)).toStrictEqual(keyInResponse);
           const id = res.body.data.id;
@@ -129,8 +125,9 @@ describe('CategoriesController (e2e)', () => {
           expect(res.body.data).toStrictEqual({
             id: serialized.id,
             created_at: serialized.created_at,
-            ...send_data,
-            ...expected,
+            name: expected.name ?? categoryUpdated.name,
+            description: expected.description ?? categoryUpdated.description,
+            is_active: expected.is_active ?? categoryUpdated.is_active,
           });
         },
       );

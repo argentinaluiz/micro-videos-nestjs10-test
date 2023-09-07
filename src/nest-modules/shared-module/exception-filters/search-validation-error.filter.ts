@@ -1,7 +1,7 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
 import { Response } from 'express';
 import { union } from 'lodash';
-import { SearchValidationError } from '../../core/shared/domain/validators/validation.error';
+import { SearchValidationError } from '../../../core/shared/domain/validators/validation.error';
 
 @Catch(SearchValidationError)
 export class SearchValidationErrorFilter implements ExceptionFilter {

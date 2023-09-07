@@ -1,12 +1,12 @@
 import request from 'supertest';
-import { CategoriesController } from '../../src/categories/categories.controller';
 import { instanceToPlain } from 'class-transformer';
-import { CreateCategoryFixture } from '../../src/categories/testing/category-fixtures';
 import { ICategoryRepository } from '../../src/core/category/domain/category.repository';
-import { CategoryOutputMapper } from '../../src/core/category/application/dto/category-output';
-import { startApp } from '../../src/shared/testing/helpers';
-import * as CategoryProviders from '../../src/categories/categories.providers';
+import { CategoryOutputMapper } from '../../src/core/category/application/use-cases/common-output/category-output';
+import * as CategoryProviders from '../../src/nest-modules/categories-module/categories.providers';
 import { Uuid } from '../../src/core/shared/domain/value-objects/uuid.vo';
+import { startApp } from '../../src/nest-modules/shared-module/testing/helpers';
+import { CreateCategoryFixture } from '../../src/nest-modules/categories-module/testing/category-fixtures';
+import { CategoriesController } from '../../src/nest-modules/categories-module/categories.controller';
 
 describe('CategoriesController (e2e)', () => {
   describe('/categories (POST)', () => {
@@ -27,11 +27,7 @@ describe('CategoriesController (e2e)', () => {
     });
 
     describe('should a response error with 422 when throw EntityValidationError', () => {
-      const app = startApp({
-        beforeInit: (app) => {
-          app['config'].globalPipes = [];
-        },
-      });
+      const app = startApp();
       const validationError =
         CreateCategoryFixture.arrangeForEntityValidationError();
       const arrange = Object.keys(validationError).map((key) => ({
@@ -63,7 +59,7 @@ describe('CategoriesController (e2e)', () => {
             .post('/categories')
             .send(send_data)
             .expect(201);
-          const keyInResponse = CreateCategoryFixture.keysInResponse();
+          const keyInResponse = CreateCategoryFixture.keysInResponse;
           expect(Object.keys(res.body)).toStrictEqual(['data']);
           expect(Object.keys(res.body.data)).toStrictEqual(keyInResponse);
           const id = res.body.data.id;

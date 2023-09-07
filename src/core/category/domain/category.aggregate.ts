@@ -1,6 +1,5 @@
 import { CategoryFakeBuilder } from './category-fake.builder';
 import { Uuid } from '../../shared/domain/value-objects/uuid.vo';
-import { Entity } from '../../shared/domain/entity';
 //import ValidatorRules from "../../shared/domain/validators/validator-rules";
 import CategoryValidatorFactory from './category.validator';
 import { AggregateRoot } from '../../shared/domain/aggregate-root';
@@ -39,7 +38,7 @@ export class Category extends AggregateRoot {
 
   static create(props: CategoryCreateCommand) {
     const category = new Category(props);
-    category.validate(['name', 'description', 'is_active']);
+    category.validate(['name']);
     return category;
   }
 
@@ -50,7 +49,6 @@ export class Category extends AggregateRoot {
 
   changeDescription(description: string | null): void {
     this.description = description;
-    this.validate(['description']);
   }
 
   // static validate(entity: Category) {

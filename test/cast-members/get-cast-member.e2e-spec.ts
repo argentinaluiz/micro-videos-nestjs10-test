@@ -1,12 +1,12 @@
 import request from 'supertest';
-import { CastMembersController } from '../../src/cast-members/cast-members.controller';
 import { instanceToPlain } from 'class-transformer';
-import { startApp } from '../../src/shared/testing/helpers';
 import { ICastMemberRepository } from '../../src/core/cast-member/domain/cast-member.repository';
 import { CastMember } from '../../src/core/cast-member/domain/cast-member.aggregate';
-import { CastMemberFixture } from '../../src/cast-members/testing/cast-member-fixtures';
-import * as CastMemberProviders from '../../src/cast-members/cast-members.providers';
 import { CastMemberOutputMapper } from '../../src/core/cast-member/application/dto/cast-member-output';
+import { startApp } from '../../src/nest-modules/shared-module/testing/helpers';
+import { CastMembersController } from '../../src/nest-modules/cast-members-module/cast-members.controller';
+import { GetCastMemberFixture } from '../../src/nest-modules/cast-members-module/testing/cast-member-fixtures';
+import { CAST_MEMBERS_PROVIDERS } from '../../src/nest-modules/cast-members-module/cast-members.providers';
 
 describe('CastMembersController (e2e)', () => {
   const nestApp = startApp();
@@ -42,7 +42,7 @@ describe('CastMembersController (e2e)', () => {
 
     it('should return a cast-member ', async () => {
       const castMemberRepo = nestApp.app.get<ICastMemberRepository>(
-        CastMemberProviders.REPOSITORIES.CAST_MEMBER_REPOSITORY.provide,
+        CAST_MEMBERS_PROVIDERS.REPOSITORIES.CAST_MEMBER_REPOSITORY.provide,
       );
       const castMember = CastMember.fake().anActor().build();
       castMemberRepo.insert(castMember);
@@ -50,7 +50,7 @@ describe('CastMembersController (e2e)', () => {
       const res = await request(nestApp.app.getHttpServer())
         .get(`/cast-members/${castMember.cast_member_id.id}`)
         .expect(200);
-      const keyInResponse = CastMemberFixture.keysInResponse();
+      const keyInResponse = GetCastMemberFixture.keysInResponse;
       expect(Object.keys(res.body)).toStrictEqual(['data']);
       expect(Object.keys(res.body.data)).toStrictEqual(keyInResponse);
 

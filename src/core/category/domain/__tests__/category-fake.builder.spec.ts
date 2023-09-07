@@ -89,18 +89,6 @@ describe('CategoryFakerBuilder Unit Tests', () => {
       expect(categories[1].name).toBe(`test name 1`);
     });
 
-    test('invalid empty case', () => {
-      const $this = faker.withInvalidNameEmpty(undefined);
-      expect($this).toBeInstanceOf(CategoryFakeBuilder);
-      expect(faker['_name']).toBeUndefined();
-
-      faker.withInvalidNameEmpty(null);
-      expect(faker['_name']).toBe(null);
-
-      faker.withInvalidNameEmpty('');
-      expect(faker['_name']).toBe('');
-    });
-
     test('invalid too long case', () => {
       const $this = faker.withInvalidNameTooLong();
       expect($this).toBeInstanceOf(CategoryFakeBuilder);

@@ -1,9 +1,19 @@
 import { Category } from '../../../core/category/domain/category.aggregate';
 
-export class CategoryFixture {
-  static keysInResponse() {
-    return ['id', 'name', 'description', 'is_active', 'created_at'];
-  }
+const _keysInResponse = [
+  'id',
+  'name',
+  'description',
+  'is_active',
+  'created_at',
+];
+
+export class GetCategoryFixture {
+  static keysInResponse = _keysInResponse;
+}
+
+export class CreateCategoryFixture {
+  static keysInResponse = _keysInResponse;
 
   static arrangeForCreate() {
     const faker = Category.fake()
@@ -68,6 +78,100 @@ export class CategoryFixture {
       },
     ];
   }
+
+  static arrangeInvalidRequest() {
+    const defaultExpected = {
+      statusCode: 422,
+      error: 'Unprocessable Entity',
+    };
+
+    return {
+      EMPTY: {
+        send_data: {},
+        expected: {
+          message: ['name should not be empty', 'name must be a string'],
+          ...defaultExpected,
+        },
+      },
+      NAME_UNDEFINED: {
+        send_data: {
+          name: undefined,
+        },
+        expected: {
+          message: ['name should not be empty', 'name must be a string'],
+          ...defaultExpected,
+        },
+      },
+      NAME_NULL: {
+        send_data: {
+          name: null,
+        },
+        expected: {
+          message: ['name should not be empty', 'name must be a string'],
+          ...defaultExpected,
+        },
+      },
+      NAME_EMPTY: {
+        send_data: {
+          name: '',
+        },
+        expected: {
+          message: ['name should not be empty'],
+          ...defaultExpected,
+        },
+      },
+      DESCRIPTION_NOT_A_STRING: {
+        send_data: {
+          description: 5,
+        },
+        expected: {
+          message: [
+            'name should not be empty',
+            'name must be a string',
+            'description must be a string',
+          ],
+          ...defaultExpected,
+        },
+      },
+      IS_ACTIVE_NOT_A_BOOLEAN: {
+        send_data: {
+          is_active: 'a',
+        },
+        expected: {
+          message: [
+            'name should not be empty',
+            'name must be a string',
+            'is_active must be a boolean value',
+          ],
+          ...defaultExpected,
+        },
+      },
+    };
+  }
+
+  static arrangeForEntityValidationError() {
+    const faker = Category.fake().aCategory();
+    const defaultExpected = {
+      statusCode: 422,
+      error: 'Unprocessable Entity',
+    };
+
+    return {
+      NAME_TOO_LONG: {
+        send_data: {
+          name: faker.withInvalidNameTooLong().name,
+        },
+        expected: {
+          message: ['name must be shorter than or equal to 255 characters'],
+          ...defaultExpected,
+        },
+      },
+    };
+  }
+}
+
+export class UpdateCategoryFixture {
+  static keysInResponse = _keysInResponse;
 
   static arrangeForUpdate() {
     const faker = Category.fake()
@@ -112,79 +216,7 @@ export class CategoryFixture {
     ];
   }
 
-  static arrangeInvalidRequestForCreate() {
-    const faker = Category.fake().aCategory();
-    const defaultExpected = {
-      statusCode: 422,
-      error: 'Unprocessable Entity',
-    };
-
-    return {
-      EMPTY: {
-        send_data: {},
-        expected: {
-          message: ['name should not be empty', 'name must be a string'],
-          ...defaultExpected,
-        },
-      },
-      NAME_UNDEFINED: {
-        send_data: {
-          name: faker.withInvalidNameEmpty(undefined).name,
-        },
-        expected: {
-          message: ['name should not be empty', 'name must be a string'],
-          ...defaultExpected,
-        },
-      },
-      NAME_NULL: {
-        send_data: {
-          name: faker.withInvalidNameEmpty(null).name,
-        },
-        expected: {
-          message: ['name should not be empty', 'name must be a string'],
-          ...defaultExpected,
-        },
-      },
-      NAME_EMPTY: {
-        send_data: {
-          name: faker.withInvalidNameEmpty('').name,
-        },
-        expected: {
-          message: ['name should not be empty'],
-          ...defaultExpected,
-        },
-      },
-      DESCRIPTION_NOT_A_STRING: {
-        send_data: {
-          description: faker.withInvalidDescriptionNotAString().description,
-        },
-        expected: {
-          message: [
-            'name should not be empty',
-            'name must be a string',
-            'description must be a string',
-          ],
-          ...defaultExpected,
-        },
-      },
-      IS_ACTIVE_NOT_A_BOOLEAN: {
-        send_data: {
-          is_active: faker.withInvalidIsActiveNotABoolean().is_active,
-        },
-        expected: {
-          message: [
-            'name should not be empty',
-            'name must be a string',
-            'is_active must be a boolean value',
-          ],
-          ...defaultExpected,
-        },
-      },
-    };
-  }
-
-  static arrangeInvalidRequestForUpdate() {
-    const faker = Category.fake().aCategory();
+  static arrangeInvalidRequest() {
     const defaultExpected = {
       statusCode: 422,
       error: 'Unprocessable Entity',
@@ -193,7 +225,7 @@ export class CategoryFixture {
     return {
       DESCRIPTION_NOT_A_STRING: {
         send_data: {
-          description: faker.withInvalidDescriptionNotAString().description,
+          description: 5,
         },
         expected: {
           message: ['description must be a string'],
@@ -202,7 +234,7 @@ export class CategoryFixture {
       },
       IS_ACTIVE_NOT_A_BOOLEAN: {
         send_data: {
-          is_active: faker.withInvalidIsActiveNotABoolean().is_active,
+          is_active: 'a',
         },
         expected: {
           message: ['is_active must be a boolean value'],
@@ -212,7 +244,7 @@ export class CategoryFixture {
     };
   }
 
-  static arrangeForEntityValidationErrorForCreate() {
+  static arrangeForEntityValidationError() {
     const faker = Category.fake().aCategory();
     const defaultExpected = {
       statusCode: 422,
@@ -220,137 +252,16 @@ export class CategoryFixture {
     };
 
     return {
-      EMPTY: {
-        send_data: {},
-        expected: {
-          message: [
-            'name should not be empty',
-            'name must be a string',
-            'name must be shorter than or equal to 255 characters',
-          ],
-          ...defaultExpected,
-        },
-      },
-      NAME_UNDEFINED: {
+      NAME_TOO_LONG: {
         send_data: {
-          name: faker.withInvalidNameEmpty(undefined).name,
+          name: faker.withInvalidNameTooLong().name,
         },
         expected: {
-          message: [
-            'name should not be empty',
-            'name must be a string',
-            'name must be shorter than or equal to 255 characters',
-          ],
-          ...defaultExpected,
-        },
-      },
-      NAME_NULL: {
-        send_data: {
-          name: faker.withInvalidNameEmpty(null).name,
-        },
-        expected: {
-          message: [
-            'name should not be empty',
-            'name must be a string',
-            'name must be shorter than or equal to 255 characters',
-          ],
-          ...defaultExpected,
-        },
-      },
-      NAME_EMPTY: {
-        send_data: {
-          name: faker.withInvalidNameEmpty('').name,
-        },
-        expected: {
-          message: ['name should not be empty'],
-          ...defaultExpected,
-        },
-      },
-      DESCRIPTION_NOT_A_STRING: {
-        send_data: {
-          description: faker.withInvalidDescriptionNotAString().description,
-        },
-        expected: {
-          message: [
-            'name should not be empty',
-            'name must be a string',
-            'name must be shorter than or equal to 255 characters',
-            'description must be a string',
-          ],
-          ...defaultExpected,
-        },
-      },
-      IS_ACTIVE_NOT_A_BOOLEAN: {
-        send_data: {
-          is_active: faker.withInvalidIsActiveNotABoolean().is_active,
-        },
-        expected: {
-          message: [
-            'name should not be empty',
-            'name must be a string',
-            'name must be shorter than or equal to 255 characters',
-            'is_active must be a boolean value',
-          ],
+          message: ['name must be shorter than or equal to 255 characters'],
           ...defaultExpected,
         },
       },
     };
-  }
-
-  static arrangeForEntityValidationErrorForUpdate() {
-    const faker = Category.fake().aCategory();
-    const defaultExpected = {
-      statusCode: 422,
-      error: 'Unprocessable Entity',
-    };
-
-    return {
-      DESCRIPTION_NOT_A_STRING: {
-        send_data: {
-          description: faker.withInvalidDescriptionNotAString().description,
-        },
-        expected: {
-          message: ['description must be a string'],
-          ...defaultExpected,
-        },
-      },
-    };
-  }
-}
-
-export class CreateCategoryFixture {
-  static keysInResponse() {
-    return CategoryFixture.keysInResponse();
-  }
-
-  static arrangeForCreate() {
-    return CategoryFixture.arrangeForCreate();
-  }
-
-  static arrangeInvalidRequest() {
-    return CategoryFixture.arrangeInvalidRequestForCreate();
-  }
-
-  static arrangeForEntityValidationError() {
-    return CategoryFixture.arrangeForEntityValidationErrorForCreate();
-  }
-}
-
-export class UpdateCategoryFixture {
-  static keysInResponse() {
-    return CategoryFixture.keysInResponse();
-  }
-
-  static arrangeForUpdate() {
-    return CategoryFixture.arrangeForUpdate();
-  }
-
-  static arrangeInvalidRequest() {
-    return CategoryFixture.arrangeInvalidRequestForUpdate();
-  }
-
-  static arrangeForEntityValidationError() {
-    return CategoryFixture.arrangeForEntityValidationErrorForUpdate();
   }
 }
 

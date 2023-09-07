@@ -1,12 +1,12 @@
 import request from 'supertest';
-import { CastMembersController } from '../../src/cast-members/cast-members.controller';
 import { instanceToPlain } from 'class-transformer';
-import { CreateCastMemberFixture } from '../../src/cast-members/testing/cast-member-fixtures';
 import { ICastMemberRepository } from '../../src/core/cast-member/domain/cast-member.repository';
 import { CastMemberOutputMapper } from '../../src/core/cast-member/application/dto/cast-member-output';
-import { startApp } from '../../src/shared/testing/helpers';
-import * as CastMemberProviders from '../../src/cast-members/cast-members.providers';
-import { Uuid } from '../../src/core/shared/domain/value-objects/uuid.vo';
+import { CastMemberId } from '../../src/core/cast-member/domain/cast-member.aggregate';
+import { startApp } from '../../src/nest-modules/shared-module/testing/helpers';
+import { CreateCastMemberFixture } from '../../src/nest-modules/cast-members-module/testing/cast-member-fixtures';
+import { CastMembersController } from '../../src/nest-modules/cast-members-module/cast-members.controller';
+import { CAST_MEMBERS_PROVIDERS } from '../../src/nest-modules/cast-members-module/cast-members.providers';
 
 describe('CastMembersController (e2e)', () => {
   describe('/cast-members (POST)', () => {
@@ -27,11 +27,7 @@ describe('CastMembersController (e2e)', () => {
     });
 
     describe('should a response error with 422 when throw EntityValidationError', () => {
-      const app = startApp({
-        beforeInit: (app) => {
-          app['config'].globalPipes = [];
-        },
-      });
+      const app = startApp();
       const validationError =
         CreateCastMemberFixture.arrangeForEntityValidationError();
       const arrange = Object.keys(validationError).map((key) => ({
@@ -53,7 +49,7 @@ describe('CastMembersController (e2e)', () => {
       let castMemberRepo: ICastMemberRepository;
       beforeEach(async () => {
         castMemberRepo = app.app.get<ICastMemberRepository>(
-          CastMemberProviders.REPOSITORIES.CAST_MEMBER_REPOSITORY.provide,
+          CAST_MEMBERS_PROVIDERS.REPOSITORIES.CAST_MEMBER_REPOSITORY.provide,
         );
       });
       test.each(arrange)(
@@ -64,13 +60,15 @@ describe('CastMembersController (e2e)', () => {
             .send(send_data)
             .expect(201);
 
-          const keyInResponse = CreateCastMemberFixture.keysInResponse();
+          const keyInResponse = CreateCastMemberFixture.keysInResponse;
           expect(Object.keys(res.body)).toStrictEqual(['data']);
           expect(Object.keys(res.body.data)).toStrictEqual(keyInResponse);
           const id = res.body.data.id;
-          const categoryCreated = await castMemberRepo.findById(new Uuid(id));
+          const castMemberCreated = await castMemberRepo.findById(
+            new CastMemberId(id),
+          );
           const presenter = CastMembersController.serialize(
-            CastMemberOutputMapper.toOutput(categoryCreated),
+            CastMemberOutputMapper.toOutput(castMemberCreated),
           );
           const serialized = instanceToPlain(presenter);
           expect(res.body.data).toStrictEqual({

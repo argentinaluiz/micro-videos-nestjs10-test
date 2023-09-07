@@ -13,14 +13,15 @@ import {
 } from '@nestjs/common';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { UpdateGenreDto } from './dto/update-genre.dto';
-import { CreateGenreUseCase } from '@core/genre/application/use-cases/create-genre.use-case';
-import { UpdateGenreUseCase } from '@core/genre/application/use-cases/update-genre.use-case';
-import { DeleteGenreUseCase } from '@core/genre/application/use-cases/delete-genre.use-case';
-import { GetGenreUseCase } from '@core/genre/application/use-cases/get-genre.use-case';
-import { ListGenresUseCase } from '@core/genre/application/use-cases/list-genres.use-case';
 import { GenreOutput } from '@core/genre/application/dto/genre-output';
 import { SearchGenreDto } from './dto/search-genres.dto';
 import { GenreCollectionPresenter, GenrePresenter } from './genres.presenter';
+import { CreateGenreUseCase } from '../../core/genre/application/use-cases/create-genre/create-genre.use-case';
+import { UpdateGenreUseCase } from '../../core/genre/application/use-cases/update-genre/update-genre.use-case';
+import { DeleteGenreUseCase } from '../../core/genre/application/use-cases/delete-genre/delete-genre.use-case';
+import { GetGenreUseCase } from '../../core/genre/application/use-cases/get-genre/get-genre.use-case';
+import { ListGenresUseCase } from '../../core/genre/application/use-cases/list-genres/list-genres.use-case';
+import { UpdateGenreInput } from '../../core/genre/application/use-cases/update-genre/update-genre.input';
 
 @Controller('genres')
 export class GenresController {
@@ -64,10 +65,8 @@ export class GenresController {
     @Param('id', new ParseUUIDPipe({ errorHttpStatusCode: 422 })) id: string,
     @Body() updateGenreDto: UpdateGenreDto,
   ) {
-    const output = await this.updateUseCase.execute({
-      id,
-      ...updateGenreDto,
-    });
+    const input = new UpdateGenreInput({ id, ...updateGenreDto });
+    const output = await this.updateUseCase.execute(input);
     return GenresController.serialize(output);
   }
 

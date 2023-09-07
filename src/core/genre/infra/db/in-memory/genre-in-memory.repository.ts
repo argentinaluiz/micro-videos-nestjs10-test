@@ -1,7 +1,10 @@
 import { InMemorySearchableRepository } from '../../../../shared/domain/repository/in-memory.repository';
 import { SortDirection } from '../../../../shared/domain/repository/search-params';
 import { Genre, GenreId } from '../../../domain/genre.aggregate';
-import { IGenreRepository, GenreFilter } from '../../../domain/genre.repository';
+import {
+  IGenreRepository,
+  GenreFilter,
+} from '../../../domain/genre.repository';
 
 export class GenreInMemoryRepository
   extends InMemorySearchableRepository<Genre, GenreId, GenreFilter>

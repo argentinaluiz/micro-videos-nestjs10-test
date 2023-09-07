@@ -1,8 +1,8 @@
 import request from 'supertest';
-import { startApp } from '../../src/shared/testing/helpers';
 import { ICastMemberRepository } from '../../src/core/cast-member/domain/cast-member.repository';
 import { CastMember } from '../../src/core/cast-member/domain/cast-member.aggregate';
-import * as CastMemberProviders from '../../src/cast-members/cast-members.providers';
+import { startApp } from '../../src/nest-modules/shared-module/testing/helpers';
+import { CAST_MEMBERS_PROVIDERS } from '../../src/nest-modules/cast-members-module/cast-members.providers';
 
 describe('CastMembersController (e2e)', () => {
   describe('/delete/:id (DELETE)', () => {
@@ -36,9 +36,9 @@ describe('CastMembersController (e2e)', () => {
       });
     });
 
-    it('should delete a category response with status 204', async () => {
+    it('should delete a cast member response with status 204', async () => {
       const castMemberRepo = nestApp.app.get<ICastMemberRepository>(
-        CastMemberProviders.REPOSITORIES.CAST_MEMBER_REPOSITORY.provide,
+        CAST_MEMBERS_PROVIDERS.REPOSITORIES.CAST_MEMBER_REPOSITORY.provide,
       );
       const castMember = CastMember.fake().anActor().build();
       await castMemberRepo.insert(castMember);

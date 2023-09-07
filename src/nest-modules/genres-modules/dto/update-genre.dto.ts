@@ -1,7 +1,8 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateGenreDto } from './create-genre.dto';
-import { UpdateGenreInput } from '../../../core/genre/application/use-cases/update-genre.use-case';
+import { OmitType } from '@nestjs/mapped-types';
+import { UpdateGenreInput } from '../../../core/genre/application/use-cases/update-genre/update-genre.input';
 
-export class UpdateGenreDto
-  extends PartialType(CreateGenreDto)
-  implements Omit<UpdateGenreInput, 'id'> {}
+export class UpdateGenreInputWithoutId extends OmitType(UpdateGenreInput, [
+  'id',
+] as any) {}
+
+export class UpdateGenreDto extends UpdateGenreInputWithoutId {}

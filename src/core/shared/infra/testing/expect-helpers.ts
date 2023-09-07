@@ -1,7 +1,4 @@
-import { ClassValidatorFields } from '../../domain/validators/class-validator-fields';
 import { Notification } from '../../domain/validators/notification';
-import { AggregateValidationError } from '../../domain/validators/validation.error';
-import { FieldsErrors } from '../../domain/validators/validator-fields-interface';
 import { ValueObject } from '../../domain/value-object';
 
 //type Expected = { validator: ClassValidatorFields; data: any } | (() => any);

@@ -1,6 +1,9 @@
 import { InMemorySearchableRepository } from '../../../../shared/domain/repository/in-memory.repository';
 import { SortDirection } from '../../../../shared/domain/repository/search-params';
-import { CastMember, CastMemberId } from '../../../domain/cast-member.aggregate';
+import {
+  CastMember,
+  CastMemberId,
+} from '../../../domain/cast-member.aggregate';
 import {
   ICastMemberRepository,
   CastMemberFilter,

@@ -1,12 +1,12 @@
-import { CreateGenreOutput } from '@core/genre/application/use-cases/create-genre.use-case';
-import { GetGenreOutput } from '@core/genre/application/use-cases/get-genre.use-case';
-import { ListGenresOutput } from '@core/genre/application/use-cases/list-genres.use-case';
-import { UpdateGenreOutput } from '@core/genre/application/use-cases/update-genre.use-case';
 import { SortDirection } from '@core/shared/domain/repository/search-params';
 import { GenresController } from '../genres.controller';
 import { GenreCollectionPresenter, GenrePresenter } from '../genres.presenter';
 import { CreateGenreDto } from '../dto/create-genre.dto';
 import { UpdateGenreDto } from '../dto/update-genre.dto';
+import { CreateGenreOutput } from '../../../core/genre/application/use-cases/create-genre/create-genre.use-case';
+import { UpdateGenreOutput } from '../../../core/genre/application/use-cases/update-genre/update-genre.use-case';
+import { GetGenreOutput } from '../../../core/genre/application/use-cases/get-genre/get-genre.use-case';
+import { ListGenresOutput } from '../../../core/genre/application/use-cases/list-genres/list-genres.use-case';
 
 describe('GenresController Unit Tests', () => {
   let controller: GenresController;
@@ -15,7 +15,7 @@ describe('GenresController Unit Tests', () => {
     controller = new GenresController();
   });
 
-  it('should creates a cast member', async () => {
+  it('should creates a genre', async () => {
     const output: CreateGenreOutput = {
       id: '9366b7dc-2d71-4799-b91c-c64adb205104',
       name: 'action',
@@ -46,7 +46,7 @@ describe('GenresController Unit Tests', () => {
     //expect(expectedOutput).toStrictEqual(output);
   });
 
-  it('should updates a cast member', async () => {
+  it('should updates a genre', async () => {
     const id = '9366b7dc-2d71-4799-b91c-c64adb205104';
     const output: UpdateGenreOutput = {
       id,

@@ -1,12 +1,3 @@
-import { IsNotEmpty, IsString, IsArray } from 'class-validator';
-import { CreateGenreInput } from '../../../core/genre/application/use-cases/create-genre.use-case';
+import { CreateGenreInput } from '../../../core/genre/application/use-cases/create-genre/create-genre.input';
 
-export class CreateGenreDto implements CreateGenreInput {
-  @IsString()
-  @IsNotEmpty()
-  name: string;
-
-  @IsArray()
-  @IsNotEmpty()
-  categories_id: string[];
-}
+export class CreateGenreDto extends CreateGenreInput {}

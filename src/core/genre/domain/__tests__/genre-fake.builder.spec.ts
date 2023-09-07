@@ -88,18 +88,6 @@ describe('GenreFakerBuilder Unit Tests', () => {
       expect(categories[1].name).toBe(`test name 1`);
     });
 
-    test('invalid empty case', () => {
-      const $this = faker.withInvalidNameEmpty(undefined);
-      expect($this).toBeInstanceOf(GenreFakeBuilder);
-      expect(faker['_name']).toBeUndefined();
-
-      faker.withInvalidNameEmpty(null);
-      expect(faker['_name']).toBe(null);
-
-      faker.withInvalidNameEmpty('');
-      expect(faker['_name']).toBe('');
-    });
-
     test('invalid too long case', () => {
       const $this = faker.withInvalidNameTooLong();
       expect($this).toBeInstanceOf(GenreFakeBuilder);
@@ -120,12 +108,12 @@ describe('GenreFakerBuilder Unit Tests', () => {
 
     test('withCategoryId', () => {
       const categoryId1 = new CategoryId();
-      const $this = faker.withCategoryId(categoryId1);
+      const $this = faker.addCategoryId(categoryId1);
       expect($this).toBeInstanceOf(GenreFakeBuilder);
       expect(faker['_categories_id']).toStrictEqual([categoryId1]);
 
       const categoryId2 = new CategoryId();
-      faker.withCategoryId(() => categoryId2);
+      faker.addCategoryId(() => categoryId2);
 
       expect([
         faker['_categories_id'][0],
@@ -136,13 +124,13 @@ describe('GenreFakerBuilder Unit Tests', () => {
 
     it('should pass index to categories_id factory', () => {
       const categoriesId = [new CategoryId(), new CategoryId()];
-      faker.withCategoryId((index) => categoriesId[index]);
+      faker.addCategoryId((index) => categoriesId[index]);
       const genre = faker.build();
 
       expect(genre.categories_id.get(categoriesId[0].id)).toBe(categoriesId[0]);
 
       const fakerMany = GenreFakeBuilder.theGenres(2);
-      fakerMany.withCategoryId((index) => categoriesId[index]);
+      fakerMany.addCategoryId((index) => categoriesId[index]);
       const genres = fakerMany.build();
 
       expect(genres[0].categories_id.get(categoriesId[0].id)).toBe(
@@ -239,8 +227,8 @@ describe('GenreFakerBuilder Unit Tests', () => {
     genre = faker
       .withGenreId(genreId)
       .withName('name test')
-      .withCategoryId(categoryId1)
-      .withCategoryId(categoryId2)
+      .addCategoryId(categoryId1)
+      .addCategoryId(categoryId2)
       .deactivate()
       .withCreatedAt(created_at)
       .build();
@@ -274,8 +262,8 @@ describe('GenreFakerBuilder Unit Tests', () => {
     genres = faker
       .withGenreId(genreId)
       .withName('name test')
-      .withCategoryId(categoryId1)
-      .withCategoryId(categoryId2)
+      .addCategoryId(categoryId1)
+      .addCategoryId(categoryId2)
       .deactivate()
       .withCreatedAt(created_at)
       .build();

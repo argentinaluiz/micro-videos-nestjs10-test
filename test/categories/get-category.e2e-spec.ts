@@ -1,12 +1,12 @@
 import request from 'supertest';
-import { CategoriesController } from '../../src/categories/categories.controller';
 import { instanceToPlain } from 'class-transformer';
-import { startApp } from '../../src/shared/testing/helpers';
 import { ICategoryRepository } from '../../src/core/category/domain/category.repository';
 import { Category } from '../../src/core/category/domain/category.aggregate';
-import { CategoryFixture } from '../../src/categories/testing/category-fixtures';
-import * as CategoryProviders from '../../src/categories/categories.providers';
-import { CategoryOutputMapper } from '../../src/core/category/application/dto/category-output';
+import * as CategoryProviders from '../../src/nest-modules/categories-module/categories.providers';
+import { CategoryOutputMapper } from '../../src/core/category/application/use-cases/common-output/category-output';
+import { startApp } from '../../src/nest-modules/shared-module/testing/helpers';
+import { CategoriesController } from '../../src/nest-modules/categories-module/categories.controller';
+import { GetCategoryFixture } from '../../src/nest-modules/categories-module/testing/category-fixtures';
 
 describe('CategoriesController (e2e)', () => {
   const nestApp = startApp();
@@ -50,7 +50,7 @@ describe('CategoriesController (e2e)', () => {
       const res = await request(nestApp.app.getHttpServer())
         .get(`/categories/${category.category_id.id}`)
         .expect(200);
-      const keyInResponse = CategoryFixture.keysInResponse();
+      const keyInResponse = GetCategoryFixture.keysInResponse;
       expect(Object.keys(res.body)).toStrictEqual(['data']);
       expect(Object.keys(res.body.data)).toStrictEqual(keyInResponse);
 

@@ -1,7 +1,3 @@
-import { CreateCastMemberOutput } from '@core/cast-member/application/use-cases/create-cast-member.use-case';
-import { GetCastMemberOutput } from '@core/cast-member/application/use-cases/get-cast-member.use-case';
-import { ListCastMembersOutput } from '@core/cast-member/application/use-cases/list-cast-members.use-case';
-import { UpdateCastMemberOutput } from '@core/cast-member/application/use-cases/update-cast-member.use-case';
 import { SortDirection } from '@core/shared/domain/repository/search-params';
 import { CastMembersController } from '../cast-members.controller';
 import {
@@ -11,6 +7,10 @@ import {
 import { CreateCastMemberDto } from '../dto/create-cast-member.dto';
 import { UpdateCastMemberDto } from '../dto/update-cast-member.dto';
 import { CastMemberTypes } from '../../../core/cast-member/domain/cast-member-type.vo';
+import { CreateCastMemberOutput } from '../../../core/cast-member/application/use-cases/create-cast-member/create-cast-member.use-case';
+import { UpdateCastMemberOutput } from '../../../core/cast-member/application/use-cases/update-cast-member/update-cast-member.use-case';
+import { GetCastMemberOutput } from '../../../core/cast-member/application/use-cases/get-cast-member/get-cast-member.use-case';
+import { ListCastMembersOutput } from '../../../core/cast-member/application/use-cases/list-cast-members/list-cast-members.use-case';
 
 describe('CastMembersController Unit Tests', () => {
   let controller: CastMembersController;
@@ -65,7 +65,7 @@ describe('CastMembersController Unit Tests', () => {
     expect(presenter).toStrictEqual(new CastMemberPresenter(output));
   });
 
-  it('should deletes a category', async () => {
+  it('should deletes a cast member', async () => {
     const expectedOutput = undefined;
     const mockDeleteUseCase = {
       execute: jest.fn().mockReturnValue(Promise.resolve(expectedOutput)),
@@ -79,7 +79,7 @@ describe('CastMembersController Unit Tests', () => {
     expect(expectedOutput).toStrictEqual(output);
   });
 
-  it('should gets a category', async () => {
+  it('should gets a cast member', async () => {
     const id = '9366b7dc-2d71-4799-b91c-c64adb205104';
     const output: GetCastMemberOutput = {
       id,
@@ -98,7 +98,7 @@ describe('CastMembersController Unit Tests', () => {
     expect(presenter).toStrictEqual(new CastMemberPresenter(output));
   });
 
-  it('should list categories', async () => {
+  it('should list cast members', async () => {
     const output: ListCastMembersOutput = {
       items: [
         {

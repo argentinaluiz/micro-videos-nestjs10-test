@@ -1,6 +1,6 @@
 import { Transform } from 'class-transformer';
 import { CastMemberOutput } from '../../core/cast-member/application/dto/cast-member-output';
-import { ListCastMembersOutput } from '../../core/cast-member/application/use-cases/list-cast-members.use-case';
+import { ListCastMembersOutput } from '../../core/cast-member/application/use-cases/list-cast-members/list-cast-members.use-case';
 import { CastMemberTypes } from '../../core/cast-member/domain/cast-member-type.vo';
 import { CollectionPresenter } from '../../nest-modules/shared-module/collection.presenter';
 

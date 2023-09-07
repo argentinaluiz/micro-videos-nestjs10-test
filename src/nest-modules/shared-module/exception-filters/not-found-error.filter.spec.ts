@@ -4,8 +4,9 @@ import { NotFoundErrorFilter } from './not-found-error.filter';
 import request from 'supertest';
 import { Entity } from '../../../core/shared/domain/entity';
 import { NotFoundError } from '../../../core/shared/domain/errors/not-found.error';
+import { AggregateRoot } from '../../../core/shared/domain/aggregate-root';
 
-class StubEntity extends Entity {
+class StubAggregate extends AggregateRoot {
   entity_id: any;
   toJSON(): Required<any> {
     return {};
@@ -16,7 +17,7 @@ class StubEntity extends Entity {
 class StubController {
   @Get()
   index() {
-    throw new NotFoundError('fake id', StubEntity);
+    throw new NotFoundError('fake id', StubAggregate);
   }
 }
 

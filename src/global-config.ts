@@ -4,10 +4,10 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { WrapperDataInterceptor } from './shared/interceptors/wrapper-data.interceptor';
-import { AggregateValidationErrorFilter } from './shared/exception-filters/aggregate-validation-error.filter';
-import { SearchValidationErrorFilter } from './shared/exception-filters/search-validation-error.filter';
-import { NotFoundErrorFilter } from './shared/exception-filters/not-found-error.filter';
+import { WrapperDataInterceptor } from './nest-modules/shared-module/interceptors/wrapper-data.interceptor';
+import { AggregateValidationErrorFilter } from './nest-modules/shared-module/exception-filters/aggregate-validation-error.filter';
+import { SearchValidationErrorFilter } from './nest-modules/shared-module/exception-filters/search-validation-error.filter';
+import { NotFoundErrorFilter } from './nest-modules/shared-module/exception-filters/not-found-error.filter';
 
 export function applyGlobalConfig(app: INestApplication) {
   app.useGlobalPipes(

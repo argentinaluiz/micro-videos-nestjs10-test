@@ -2,11 +2,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ICastMemberRepository } from '../../../core/cast-member/domain/cast-member.repository';
 import { CastMembersController } from '../cast-members.controller';
 import { CastMembersModule } from '../cast-members.module';
-import { CreateCastMemberUseCase } from '../../../core/cast-member/application/use-cases/create-cast-member.use-case';
-import { UpdateCastMemberUseCase } from '../../../core/cast-member/application/use-cases/update-cast-member.use-case';
-import { ListCastMembersUseCase } from '../../../core/cast-member/application/use-cases/list-cast-members.use-case';
-import { GetCastMemberUseCase } from '../../../core/cast-member/application/use-cases/get-cast-member.use-case';
-import { DeleteCastMemberUseCase } from '../../../core/cast-member/application/use-cases/delete-cast-member.use-case';
+import { CreateCastMemberUseCase } from '../../../core/cast-member/application/use-cases/create-cast-member/create-cast-member.use-case';
+import { UpdateCastMemberUseCase } from '../../../core/cast-member/application/use-cases/update-cast-member/update-cast-member.use-case';
+import { ListCastMembersUseCase } from '../../../core/cast-member/application/use-cases/list-cast-members/list-cast-members.use-case';
+import { GetCastMemberUseCase } from '../../../core/cast-member/application/use-cases/get-cast-member/get-cast-member.use-case';
+import { DeleteCastMemberUseCase } from '../../../core/cast-member/application/use-cases/delete-cast-member/delete-cast-member.use-case';
 import { CastMember } from '../../../core/cast-member/domain/cast-member.aggregate';
 import { Uuid } from '../../../core/shared/domain/value-objects/uuid.vo';
 import { CastMemberOutputMapper } from '../../../core/cast-member/application/dto/cast-member-output';
@@ -44,7 +44,7 @@ describe('CastMembersController Integration Tests', () => {
     expect(controller['deleteUseCase']).toBeInstanceOf(DeleteCastMemberUseCase);
   });
 
-  describe('should create a category', () => {
+  describe('should create a cast member', () => {
     const arrange = CreateCastMemberFixture.arrangeForCreate();
 
     test.each(arrange)(
@@ -68,7 +68,7 @@ describe('CastMembersController Integration Tests', () => {
     );
   });
 
-  describe('should update a category', () => {
+  describe('should update a cast member', () => {
     const arrange = UpdateCastMemberFixture.arrangeForUpdate();
 
     const castMember = CastMember.fake().anActor().build();
@@ -100,7 +100,7 @@ describe('CastMembersController Integration Tests', () => {
     );
   });
 
-  it('should delete a category', async () => {
+  it('should delete a cast member', async () => {
     const castMember = CastMember.fake().anActor().build();
     await repository.insert(castMember);
     const response = await controller.remove(castMember.entity_id.id);
@@ -110,11 +110,14 @@ describe('CastMembersController Integration Tests', () => {
     ).resolves.toBeNull();
   });
 
-  it('should get a category', async () => {
+  it('should get a cast member', async () => {
     const castMember = CastMember.fake().anActor().build();
     await repository.insert(castMember);
     const presenter = await controller.findOne(castMember.cast_member_id.id);
-    expect(presenter).toStrictEqual(presenter);
+    expect(presenter.id).toBe(castMember.cast_member_id.id);
+    expect(presenter.name).toBe(castMember.name);
+    expect(presenter.type).toBe(castMember.type.type);
+    expect(presenter.created_at).toEqual(castMember.created_at);
   });
 
   describe('search method', () => {

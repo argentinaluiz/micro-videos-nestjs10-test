@@ -43,28 +43,8 @@ export class CategoryFakeBuilder<TBuild = any> {
     return this;
   }
 
-  withInvalidNameEmpty(value: '' | null | undefined) {
-    this._name = value as any;
-    return this;
-  }
-
-  withInvalidNameNotAString(value?: any) {
-    this._name = value ?? 5;
-    return this;
-  }
-
-  withInvalidNameTooLong(value?: string) {
-    this._name = value ?? this.chance.word({ length: 256 });
-    return this;
-  }
-
   withDescription(valueOrFactory: PropOrFactory<string | null>) {
     this._description = valueOrFactory;
-    return this;
-  }
-
-  withInvalidDescriptionNotAString(value?: any) {
-    this._description = value ?? 5;
     return this;
   }
 
@@ -78,18 +58,13 @@ export class CategoryFakeBuilder<TBuild = any> {
     return this;
   }
 
-  withInvalidIsActiveEmpty(value: '' | null | undefined) {
-    this._is_active = value as any;
-    return this;
-  }
-
-  withInvalidIsActiveNotABoolean(value?: any) {
-    this._is_active = value ?? 'fake boolean';
-    return this;
-  }
-
   withCreatedAt(valueOrFactory: PropOrFactory<Date>) {
     this._created_at = valueOrFactory;
+    return this;
+  }
+
+  withInvalidNameTooLong(value?: string) {
+    this._name = value ?? this.chance.word({ length: 256 });
     return this;
   }
 

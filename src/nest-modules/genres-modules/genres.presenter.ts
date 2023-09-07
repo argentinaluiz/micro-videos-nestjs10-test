@@ -4,7 +4,7 @@ import {
   GenreOutput,
 } from '../../core/genre/application/dto/genre-output';
 import { CollectionPresenter } from '../shared-module/collection.presenter';
-import { ListGenresOutput } from '../../core/genre/application/use-cases/list-genres.use-case';
+import { ListGenresOutput } from '../../core/genre/application/use-cases/list-genres/list-genres.use-case';
 
 export class GenreCategoryPresenter {
   id: string;

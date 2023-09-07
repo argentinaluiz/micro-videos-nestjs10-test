@@ -102,7 +102,7 @@ describe('Genre Unit Tests', () => {
     genre.addCategoryId(categoryId);
     expect(genre.categories_id.size).toBe(1);
     expect(genre.categories_id).toEqual(new Map([[categoryId.id, categoryId]]));
-    expect(Genre.prototype.validate).toHaveBeenCalledTimes(2);
+    expect(Genre.prototype.validate).toHaveBeenCalledTimes(1);
 
     const categoryId2 = new CategoryId();
     genre.addCategoryId(categoryId2);
@@ -113,7 +113,7 @@ describe('Genre Unit Tests', () => {
         [categoryId2.id, categoryId2],
       ]),
     );
-    expect(Genre.prototype.validate).toHaveBeenCalledTimes(3);
+    expect(Genre.prototype.validate).toHaveBeenCalledTimes(1);
   });
 });
 
@@ -121,38 +121,7 @@ describe('Genre Validator', () => {
   describe('create command', () => {
     test('should an invalid genre with name property', () => {
       const categoryId = new CategoryId();
-      let genre = Genre.create({
-        name: null,
-        categories_id: [categoryId],
-      } as any);
-      expect(genre.notification.hasErrors()).toBe(true);
-      expect(genre.notification).notificationContainsErrorMessages([
-        {
-          name: [
-            'name should not be empty',
-            'name must be a string',
-            'name must be shorter than or equal to 255 characters',
-          ],
-        },
-      ]);
-      genre = Genre.create({ name: '', categories_id: [categoryId] } as any);
-      expect(genre.notification.hasErrors()).toBe(true);
-      expect(genre.notification).notificationContainsErrorMessages([
-        {
-          name: ['name should not be empty'],
-        },
-      ]);
-      genre = Genre.create({ name: 5, categories_id: [categoryId] } as any);
-      expect(genre.notification.hasErrors()).toBe(true);
-      expect(genre.notification).notificationContainsErrorMessages([
-        {
-          name: [
-            'name must be a string',
-            'name must be shorter than or equal to 255 characters',
-          ],
-        },
-      ]);
-      genre = Genre.create({
+      const genre = Genre.create({
         name: 't'.repeat(256),
         categories_id: [categoryId],
       } as any);
@@ -163,66 +132,10 @@ describe('Genre Validator', () => {
         },
       ]);
     });
-
-    it('should a invalid genre using categories_id property', () => {
-      let genre = Genre.create({
-        name: 'action',
-        categories_id: [],
-      } as any);
-      expect(genre.notification.hasErrors()).toBe(true);
-      expect(genre.notification).notificationContainsErrorMessages([
-        {
-          categories_id: ['categories_id should not be empty'],
-        },
-      ]);
-      genre = Genre.create({
-        name: 'action',
-        categories_id: [new GenreId()],
-      } as any);
-      expect(genre.notification.hasErrors()).toBe(true);
-      expect(genre.notification).notificationContainsErrorMessages([
-        {
-          categories_id: [
-            'each value in categories_id must be an instance of CategoryId',
-          ],
-        },
-      ]);
-    });
   });
   describe('changeName method', () => {
     it('should a invalid genre using name property', () => {
-      let genre = Genre.fake().aGenre().build();
-      genre.changeName(null);
-      expect(genre.notification.hasErrors()).toBe(true);
-      expect(genre.notification).notificationContainsErrorMessages([
-        {
-          name: [
-            'name should not be empty',
-            'name must be a string',
-            'name must be shorter than or equal to 255 characters',
-          ],
-        },
-      ]);
-      genre = Genre.fake().aGenre().build();
-      genre.changeName('');
-      expect(genre.notification.hasErrors()).toBe(true);
-      expect(genre.notification).notificationContainsErrorMessages([
-        {
-          name: ['name should not be empty'],
-        },
-      ]);
-      genre = Genre.fake().aGenre().build();
-      genre.changeName(5 as any);
-      expect(genre.notification.hasErrors()).toBe(true);
-      expect(genre.notification).notificationContainsErrorMessages([
-        {
-          name: [
-            'name must be a string',
-            'name must be shorter than or equal to 255 characters',
-          ],
-        },
-      ]);
-      genre = Genre.fake().aGenre().build();
+      const genre = Genre.fake().aGenre().build();
       genre.changeName('t'.repeat(256));
       expect(genre.notification.hasErrors()).toBe(true);
       expect(genre.notification).notificationContainsErrorMessages([

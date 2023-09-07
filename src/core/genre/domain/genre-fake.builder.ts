@@ -12,6 +12,7 @@ export class GenreFakeBuilder<TBuild = any> {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private _categories_id: PropOrFactory<CategoryId>[] = [];
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private _is_active: PropOrFactory<boolean> = (_index) => true;
   // auto generated in entity
   private _created_at: PropOrFactory<Date> | undefined = undefined;
@@ -43,7 +44,7 @@ export class GenreFakeBuilder<TBuild = any> {
     return this;
   }
 
-  withCategoryId(valueOrFactory: PropOrFactory<CategoryId>) {
+  addCategoryId(valueOrFactory: PropOrFactory<CategoryId>) {
     this._categories_id.push(valueOrFactory);
     return this;
   }
@@ -58,33 +59,8 @@ export class GenreFakeBuilder<TBuild = any> {
     return this;
   }
 
-  withInvalidNameEmpty(value: '' | null | undefined) {
-    this._name = value as any;
-    return this;
-  }
-
-  withInvalidNameNotAString(value?: any) {
-    this._name = value ?? 5;
-    return this;
-  }
-
   withInvalidNameTooLong(value?: string) {
     this._name = value ?? this.chance.word({ length: 256 });
-    return this;
-  }
-
-  withInvalidCategoryId() {
-    this._categories_id.push('fake id' as any);
-    return this;
-  }
-
-  withInvalidIsActiveEmpty(value: '' | null | undefined) {
-    this._is_active = value as any;
-    return this;
-  }
-
-  withInvalidIsActiveNotABoolean(value?: any) {
-    this._is_active = value ?? 'fake boolean';
     return this;
   }
 
@@ -99,7 +75,7 @@ export class GenreFakeBuilder<TBuild = any> {
       const categoriesId = this._categories_id.length
         ? this.callFactory(this._categories_id, index)
         : [categoryId];
-      
+
       const genre = new Genre({
         genre_id: !this._genre_id
           ? undefined
@@ -107,9 +83,6 @@ export class GenreFakeBuilder<TBuild = any> {
         name: this.callFactory(this._name, index),
         categories_id: new Map(categoriesId.map((id) => [id.id, id])),
         is_active: this.callFactory(this._is_active, index),
-        ...(this._created_at && {
-          created_at: this.callFactory(this._created_at, index),
-        }),
         ...(this._created_at && {
           created_at: this.callFactory(this._created_at, index),
         }),
