@@ -168,6 +168,9 @@ export class GenreSequelizeRepository implements IGenreRepository {
     await model.$remove(
       'categories',
       model.categories_id.map((c) => c.category_id),
+      {
+        transaction: this.uow.getTransaction(),
+      },
     );
     const { categories_id, ...props } =
       GenreModelMapper.toModelProps(aggregate);

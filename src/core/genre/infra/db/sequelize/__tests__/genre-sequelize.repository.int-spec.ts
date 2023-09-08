@@ -822,11 +822,12 @@ describe('GenreSequelizeRepository Integration Tests', () => {
       it('should insert a genre', async () => {
         const category = Category.fake().aCategory().build();
         await categoryRepo.insert(category);
-        uow.start();
         const genre = Genre.fake()
           .aGenre()
           .addCategoryId(category.category_id)
           .build();
+
+        uow.start();
         await genreRepo.insert(genre);
         await uow.commit();
 
@@ -837,11 +838,12 @@ describe('GenreSequelizeRepository Integration Tests', () => {
       it('rollback the insertion', async () => {
         const category = Category.fake().aCategory().build();
         await categoryRepo.insert(category);
-        await uow.start();
         const genre = Genre.fake()
           .aGenre()
           .addCategoryId(category.category_id)
           .build();
+
+        await uow.start();
         await genreRepo.insert(genre);
         await uow.rollback();
 
@@ -857,6 +859,7 @@ describe('GenreSequelizeRepository Integration Tests', () => {
           .theGenres(2)
           .addCategoryId(category.category_id)
           .build();
+
         await uow.start();
         await genreRepo.bulkInsert(genres);
         await uow.commit();
@@ -876,6 +879,7 @@ describe('GenreSequelizeRepository Integration Tests', () => {
           .theGenres(2)
           .addCategoryId(category.category_id)
           .build();
+
         await uow.start();
         await genreRepo.bulkInsert(genres);
         await uow.rollback();
@@ -897,6 +901,7 @@ describe('GenreSequelizeRepository Integration Tests', () => {
           .aGenre()
           .addCategoryId(category.category_id)
           .build();
+
         await uow.start();
         await genreRepo.insert(genre);
         const result = await genreRepo.findById(genre.genre_id);
@@ -913,6 +918,7 @@ describe('GenreSequelizeRepository Integration Tests', () => {
           .theGenres(2)
           .addCategoryId(category.category_id)
           .build();
+
         await uow.start();
         await genreRepo.bulkInsert(genres);
         const result = await genreRepo.findAll();
@@ -929,6 +935,7 @@ describe('GenreSequelizeRepository Integration Tests', () => {
           .theGenres(2)
           .addCategoryId(category.category_id)
           .build();
+
         await uow.start();
         await genreRepo.bulkInsert(genres);
         const result = await genreRepo.findByIds(genres.map((g) => g.genre_id));
@@ -945,6 +952,7 @@ describe('GenreSequelizeRepository Integration Tests', () => {
           .aGenre()
           .addCategoryId(category.category_id)
           .build();
+
         await uow.start();
         await genreRepo.insert(genre);
         const existsResult = await genreRepo.existsById([genre.genre_id]);
@@ -962,10 +970,12 @@ describe('GenreSequelizeRepository Integration Tests', () => {
           .addCategoryId(category.category_id)
           .build();
         await genreRepo.insert(genre);
+
         await uow.start();
         genre.changeName('new name');
         await genreRepo.update(genre);
         await uow.commit();
+
         const result = await genreRepo.findById(genre.genre_id);
         expect(result.name).toBe(genre.name);
       });
@@ -996,9 +1006,11 @@ describe('GenreSequelizeRepository Integration Tests', () => {
           .addCategoryId(category.category_id)
           .build();
         await genreRepo.insert(genre);
+
         await uow.start();
         await genreRepo.delete(genre.genre_id);
         await uow.commit();
+
         await expect(genreRepo.findById(genre.genre_id)).resolves.toBeNull();
       });
 
@@ -1010,9 +1022,11 @@ describe('GenreSequelizeRepository Integration Tests', () => {
           .addCategoryId(category.category_id)
           .build();
         await genreRepo.insert(genre);
+
         await uow.start();
         await genreRepo.delete(genre.genre_id);
         await uow.rollback();
+
         const result = await genreRepo.findById(genre.genre_id);
         expect(result.genre_id).toBeValueObject(genre.genre_id);
       });
@@ -1027,6 +1041,7 @@ describe('GenreSequelizeRepository Integration Tests', () => {
           .withName('genre')
           .addCategoryId(category.category_id)
           .build();
+
         await uow.start();
         await genreRepo.bulkInsert(genres);
         const searchParams = GenreSearchParams.create({

@@ -85,7 +85,7 @@ export class VideoSequelizeRepository implements IVideoRepository {
     }
 
     const existsVideoModels = await this.videoModel.findAll({
-      attributes: ['genre_id'],
+      attributes: ['video_id'],
       where: {
         video_id: {
           [Op.in]: ids.map((id) => id.id),
@@ -113,19 +113,34 @@ export class VideoSequelizeRepository implements IVideoRepository {
     }
 
     await Promise.all([
-      ...model.image_medias.map((i) => i.destroy()),
-      ...model.audio_video_medias.map((i) => i.destroy()),
+      ...model.image_medias.map((i) =>
+        i.destroy({ transaction: this.uow.getTransaction() }),
+      ),
+      ...model.audio_video_medias.map((i) =>
+        i.destroy({
+          transaction: this.uow.getTransaction(),
+        }),
+      ),
       model.$remove(
         'categories',
         model.categories_id.map((c) => c.category_id),
+        {
+          transaction: this.uow.getTransaction(),
+        },
       ),
       model.$remove(
         'genres',
         model.genres_id.map((c) => c.genre_id),
+        {
+          transaction: this.uow.getTransaction(),
+        },
       ),
       model.$remove(
         'cast_members',
         model.cast_members_id.map((c) => c.cast_member_id),
+        {
+          transaction: this.uow.getTransaction(),
+        },
       ),
     ]);
 
@@ -143,9 +158,15 @@ export class VideoSequelizeRepository implements IVideoRepository {
     });
 
     await Promise.all([
-      ...image_medias.map((i) => model.$create('image_media', i.toJSON())),
+      ...image_medias.map((i) =>
+        model.$create('image_media', i.toJSON(), {
+          transaction: this.uow.getTransaction(),
+        }),
+      ),
       ...audio_video_medias.map((i) =>
-        model.$create('audio_video_media', i.toJSON()),
+        model.$create('audio_video_media', i.toJSON(), {
+          transaction: this.uow.getTransaction(),
+        }),
       ),
       model.$add(
         'categories',
@@ -310,13 +331,13 @@ export class VideoSequelizeRepository implements IVideoRepository {
     const query = [
       'SELECT',
       `DISTINCT ${videoAlias}.\`video_id\`,${columnOrder} FROM ${videoTableName} as ${videoAlias}`,
-      props.filter.categories_id
+      props.filter?.categories_id
         ? `INNER JOIN ${videoCategoryTableName} ON ${videoAlias}.\`video_id\` = ${videoCategoryTableName}.\`category_id\``
         : '',
-      props.filter.genres_id
+      props.filter?.genres_id
         ? `INNER JOIN ${videoGenreTableName} ON ${videoAlias}.\`video_id\` = ${videoGenreTableName}.\`genre_id\``
         : '',
-      props.filter.cast_members_id
+      props.filter?.cast_members_id
         ? `INNER JOIN ${videoGenreTableName} ON ${videoAlias}.\`video_id\` = ${videoGenreTableName}.\`cast_member_id\``
         : '',
       wheres.length
@@ -339,7 +360,7 @@ export class VideoSequelizeRepository implements IVideoRepository {
       where: {
         video_id: {
           [Op.in]: idsResult.map(
-            (id: { genre_id: string }) => id.genre_id,
+            (id: { video_id: string }) => id.video_id,
           ) as string[],
         },
       },

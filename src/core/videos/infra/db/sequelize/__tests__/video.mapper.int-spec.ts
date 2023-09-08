@@ -51,7 +51,6 @@ describe('VideoModelMapper Unit Tests', () => {
     castMemberRepo = new CastMemberSequelizeRepository(CastMemberModel);
     genreRepo = new GenreSequelizeRepository(
       GenreModel,
-      GenreCategoryModel,
       new UnitOfWorkFakeInMemory() as any,
     );
   });

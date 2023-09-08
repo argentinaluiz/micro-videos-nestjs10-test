@@ -362,7 +362,6 @@ describe('VideoModel Unit Tests', () => {
 
     const genreRepo = new GenreSequelizeRepository(
       GenreModel,
-      GenreCategoryModel,
       new UnitOfWorkFakeInMemory() as any,
     );
     const genre = Genre.fake()
@@ -482,7 +481,6 @@ describe('VideoModel Unit Tests', () => {
 
     const genreRepo = new GenreSequelizeRepository(
       GenreModel,
-      GenreCategoryModel,
       new UnitOfWorkFakeInMemory() as any,
     );
     const genre = Genre.fake()
