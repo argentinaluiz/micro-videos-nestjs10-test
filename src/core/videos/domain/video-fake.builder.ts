@@ -17,12 +17,11 @@ export class VideoFakeBuilder<TBuild = any> {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private _description: PropOrFactory<string> = (_index) => this.chance.word();
   private _year_launched: PropOrFactory<number> = (_index) =>
-    this.chance.year();
+    +this.chance.year();
   private _duration: PropOrFactory<number> = (_index) =>
     this.chance.integer({ min: 1, max: 100 });
   private _rating: PropOrFactory<Rating> = (_index) => Rating.createRL();
   private _opened: PropOrFactory<boolean> = (_index) => true;
-  private _published: PropOrFactory<boolean> = (_index) => true;
   private _banner: PropOrFactory<ImageMedia | null> | undefined =
     new ImageMedia({
       checksum: 'test checksum banner',
@@ -41,13 +40,13 @@ export class VideoFakeBuilder<TBuild = any> {
       name: 'test name thumbnail half',
       location: 'test path thumbnail half',
     });
-  private _trailer: PropOrFactory<ImageMedia | null> | undefined =
+  private _trailer: PropOrFactory<AudioVideoMedia | null> | undefined =
     AudioVideoMedia.create({
       checksum: 'test checksum trailer',
       name: 'test name trailer',
       raw_location: 'test path trailer',
     });
-  private _video: PropOrFactory<ImageMedia | null> | undefined =
+  private _video: PropOrFactory<AudioVideoMedia | null> | undefined =
     AudioVideoMedia.create({
       checksum: 'test checksum video',
       name: 'test name video',
@@ -64,15 +63,29 @@ export class VideoFakeBuilder<TBuild = any> {
 
   private countObjs;
 
+  static aVideoWithoutMedias() {
+    return new VideoFakeBuilder<Video>()
+      .withoutBanner()
+      .withoutThumbnail()
+      .withoutThumbnailHalf()
+      .withoutTrailer()
+      .withoutVideo();
+  }
+
   static aVideoWithAllMedias() {
     return new VideoFakeBuilder<Video>();
   }
 
-  static aVideoWithoutMedias() {
-    return new VideoFakeBuilder<Video>();
+  static theVideosWithoutMedias(countObjs: number) {
+    return new VideoFakeBuilder<Video[]>(countObjs)
+      .withoutBanner()
+      .withoutThumbnail()
+      .withoutThumbnailHalf()
+      .withoutTrailer()
+      .withoutVideo();
   }
 
-  static theVideos(countObjs: number) {
+  static theVideosWithAllMedias(countObjs: number) {
     return new VideoFakeBuilder<Video[]>(countObjs);
   }
 
@@ -123,13 +136,13 @@ export class VideoFakeBuilder<TBuild = any> {
     return this;
   }
 
-  withMarkAsPublished() {
-    this._published = true;
+  withBanner(valueOrFactory: PropOrFactory<ImageMedia | null>) {
+    this._banner = valueOrFactory;
     return this;
   }
 
-  withBanner(valueOrFactory: PropOrFactory<ImageMedia | null>) {
-    this._banner = valueOrFactory;
+  withoutBanner() {
+    this._banner = null;
     return this;
   }
 
@@ -138,63 +151,76 @@ export class VideoFakeBuilder<TBuild = any> {
     return this;
   }
 
+  withoutThumbnail() {
+    this._thumbnail = null;
+    return this;
+  }
+
   withThumbnailHalf(valueOrFactory: PropOrFactory<ImageMedia | null>) {
     this._thumbnail_half = valueOrFactory;
     return this;
   }
 
-  withTrailer(valueOrFactory: PropOrFactory<ImageMedia | null>) {
+  withoutThumbnailHalf() {
+    this._thumbnail_half = null;
+    return this;
+  }
+
+  withTrailer(valueOrFactory: PropOrFactory<AudioVideoMedia | null>) {
     this._trailer = valueOrFactory;
     return this;
   }
 
-  withVideo(valueOrFactory: PropOrFactory<ImageMedia | null>) {
+  withTrailerComplete() {
+    this._trailer = AudioVideoMedia.create({
+      checksum: 'test checksum trailer',
+      name: 'test name trailer',
+      raw_location: 'test path trailer',
+    }).complete('test encoded_location trailer');
+    return this;
+  }
+
+  withoutTrailer() {
+    this._trailer = null;
+    return this;
+  }
+
+  withVideo(valueOrFactory: PropOrFactory<AudioVideoMedia | null>) {
     this._video = valueOrFactory;
     return this;
   }
 
-  withCategoryId(valueOrFactory: PropOrFactory<CategoryId>) {
+  withVideoComplete() {
+    this._video = AudioVideoMedia.create({
+      checksum: 'test checksum video',
+      name: 'test name video',
+      raw_location: 'test path video',
+    }).complete('test encoded_location video');
+    return this;
+  }
+
+  withoutVideo() {
+    this._video = null;
+    return this;
+  }
+
+  addCategoryId(valueOrFactory: PropOrFactory<CategoryId>) {
     this._categories_id.push(valueOrFactory);
     return this;
   }
 
-  activate() {
-    this._is_active = true;
+  addGenreId(valueOrFactory: PropOrFactory<GenreId>) {
+    this._genres_id.push(valueOrFactory);
     return this;
   }
 
-  deactivate() {
-    this._is_active = false;
+  addCastMemberId(valueOrFactory: PropOrFactory<CastMemberId>) {
+    this._cast_members_id.push(valueOrFactory);
     return this;
   }
 
-  withInvalidNameEmpty(value: '' | null | undefined) {
-    this._title = value as any;
-    return this;
-  }
-
-  withInvalidNameNotAString(value?: any) {
-    this._title = value ?? 5;
-    return this;
-  }
-
-  withInvalidNameTooLong(value?: string) {
+  withInvalidTitleTooLong(value?: string) {
     this._title = value ?? this.chance.word({ length: 256 });
-    return this;
-  }
-
-  withInvalidCategoryId() {
-    this._categories_id.push('fake id' as any);
-    return this;
-  }
-
-  withInvalidIsActiveEmpty(value: '' | null | undefined) {
-    this._is_active = value as any;
-    return this;
-  }
-
-  withInvalidIsActiveNotABoolean(value?: any) {
-    this._is_active = value ?? 'fake boolean';
     return this;
   }
 
@@ -204,38 +230,136 @@ export class VideoFakeBuilder<TBuild = any> {
   }
 
   build(): TBuild {
-    const Videos = new Array(this.countObjs).fill(undefined).map((_, index) => {
+    const videos = new Array(this.countObjs).fill(undefined).map((_, index) => {
       const categoryId = new CategoryId();
       const categoriesId = this._categories_id.length
         ? this.callFactory(this._categories_id, index)
         : [categoryId];
 
-      const genre = new Video({
-        genre_id: !this._video_id
-          ? undefined
-          : this.callFactory(this._video_id, index),
-        name: this.callFactory(this._title, index),
-        categories_id: new Map(categoriesId.map((id) => [id.id, id])),
-        is_active: this.callFactory(this._is_active, index),
-        ...(this._created_at && {
-          created_at: this.callFactory(this._created_at, index),
-        }),
+      const genreId = new GenreId();
+      const genresId = this._genres_id.length
+        ? this.callFactory(this._genres_id, index)
+        : [genreId];
+
+      const castMemberId = new CastMemberId();
+      const castMembersId = this._cast_members_id.length
+        ? this.callFactory(this._cast_members_id, index)
+        : [castMemberId];
+
+      const video = Video.create({
+        title: this.callFactory(this._title, index),
+        description: this.callFactory(this._description, index),
+        year_launched: this.callFactory(this._year_launched, index),
+        duration: this.callFactory(this._duration, index),
+        rating: this.callFactory(this._rating, index),
+        is_opened: this.callFactory(this._opened, index),
+        banner: this.callFactory(this._banner, index),
+        thumbnail: this.callFactory(this._thumbnail, index),
+        thumbnail_half: this.callFactory(this._thumbnail_half, index),
+        trailer: this.callFactory(this._trailer, index),
+        video: this.callFactory(this._video, index),
+        categories_id: categoriesId,
+        genres_id: genresId,
+        cast_members_id: castMembersId,
         ...(this._created_at && {
           created_at: this.callFactory(this._created_at, index),
         }),
       });
-      genre.validate();
-      return genre;
+      video['video_id'] = !this._video_id
+        ? video['video_id']
+        : this.callFactory(this._video_id, index);
+      video.validate();
+      return video;
     });
-    return this.countObjs === 1 ? (Videos[0] as any) : Videos;
+    return this.countObjs === 1 ? (videos[0] as any) : videos;
   }
 
-  get genre_id() {
-    return this.getValue('genre_id');
+  get video_id() {
+    return this.getValue('video_id');
   }
 
-  get name() {
-    return this.getValue('name');
+  get title() {
+    return this.getValue('title');
+  }
+
+  get description() {
+    return this.getValue('description');
+  }
+
+  get year_launched() {
+    return this.getValue('year_launched');
+  }
+
+  get duration() {
+    return this.getValue('duration');
+  }
+
+  get rating() {
+    return this.getValue('rating');
+  }
+
+  get is_opened() {
+    return this.getValue('is_opened');
+  }
+
+  get banner() {
+    const banner = this.getValue('banner');
+    return (
+      banner ??
+      new ImageMedia({
+        checksum: 'test checksum banner',
+        name: 'test name banner',
+        location: 'test path banner',
+      })
+    );
+  }
+
+  get thumbnail() {
+    const thumbnail = this.getValue('thumbnail');
+    return (
+      thumbnail ??
+      new ImageMedia({
+        checksum: 'test checksum thumbnail',
+        name: 'test name thumbnail',
+        location: 'test path thumbnail',
+      })
+    );
+  }
+
+  get thumbnail_half() {
+    const thumbnailHalf = this.getValue('thumbnail_half');
+    return (
+      thumbnailHalf ??
+      new ImageMedia({
+        checksum: 'test checksum thumbnail half',
+        name: 'test name thumbnail half',
+        location: 'test path thumbnail half',
+      })
+    );
+  }
+
+  get trailer() {
+    const trailer = this.getValue('trailer');
+    return (
+      trailer ??
+      AudioVideoMedia.create({
+        checksum: 'test checksum trailer',
+        name: 'test name trailer',
+        raw_location: 'test path trailer',
+      })
+    );
+  }
+
+  get video() {
+    const video = this.getValue('video');
+    return (
+      video ??
+      AudioVideoMedia.create({
+        checksum: 'test checksum video',
+        name: 'test name video',
+        raw_location: 'test path video',
+      })
+    );
   }
 
   get categories_id(): CategoryId[] {
@@ -247,8 +371,23 @@ export class VideoFakeBuilder<TBuild = any> {
     return categories_id;
   }
 
-  get is_active() {
-    return this.getValue('is_active');
+  get genres_id(): GenreId[] {
+    let genres_id = this.getValue('genres_id');
+
+    if (!genres_id.length) {
+      genres_id = [new GenreId()];
+    }
+    return genres_id;
+  }
+
+  get cast_members_id(): CastMemberId[] {
+    let cast_members_id = this.getValue('cast_members_id');
+
+    if (!cast_members_id.length) {
+      cast_members_id = [new CastMemberId()];
+    }
+
+    return cast_members_id;
   }
 
   get created_at() {
@@ -256,7 +395,7 @@ export class VideoFakeBuilder<TBuild = any> {
   }
 
   private getValue(prop: any) {
-    const optional = ['genre_id', 'created_at'];
+    const optional = ['video_id', 'created_at'];
     const privateProp = `_${prop}` as keyof this;
     if (!this[privateProp] && optional.includes(prop)) {
       throw new Error(

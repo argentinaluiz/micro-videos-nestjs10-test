@@ -63,7 +63,7 @@ export class VideoSearchParams extends DefaultSearchParams<VideoFilter> {
         : value;
 
     const filter = {
-      ...(_value.title && { name: `${_value?.title}` }),
+      ...(_value.title && { title: `${_value?.title}` }),
       ...(_value.categories_id &&
         _value.categories_id.length && {
           categories_id: _value.categories_id,
