@@ -13,7 +13,6 @@ import {
 import { Genre } from '../../../../../genre/domain/genre.aggregate';
 import { IGenreRepository } from '../../../../../genre/domain/genre.repository';
 import {
-  GenreCategoryModel,
   GenreModel,
   GenreSequelizeRepository,
 } from '../../../../../genre/infra/db/sequelize/genre-sequelize';
@@ -23,8 +22,12 @@ import {
   AudioVideoMedia,
   AudioVideoMediaStatus,
 } from '../../../../domain/audio-video-media.vo';
-import { ImageMedia } from '../../../../domain/image-media.vo';
+import { Banner } from '../../../../domain/banner.vo';
 import { Rating, RatingValues } from '../../../../domain/rating.vo';
+import { ThumbnailHalf } from '../../../../domain/thumbnail-half.vo';
+import { Thumbnail } from '../../../../domain/thumbnail.vo';
+import { Trailer } from '../../../../domain/trailer.vo';
+import { VideoMedia } from '../../../../domain/video-media.vo';
 import { Video, VideoId } from '../../../../domain/video.aggregate';
 import {
   AudioVideoMediaModel,
@@ -253,29 +256,29 @@ describe('VideoModelMapper Unit Tests', () => {
         is_opened: videoProps.is_opened,
         is_published: videoProps.is_published,
         created_at: videoProps.created_at,
-        banner: new ImageMedia({
+        banner: new Banner({
           checksum: 'checksum banner',
           location: 'location banner',
           name: 'name banner',
         }),
-        thumbnail: new ImageMedia({
+        thumbnail: new Thumbnail({
           checksum: 'checksum thumbnail',
           location: 'location thumbnail',
           name: 'name thumbnail',
         }),
-        thumbnail_half: new ImageMedia({
+        thumbnail_half: new ThumbnailHalf({
           checksum: 'checksum thumbnail half',
           location: 'location thumbnail half',
           name: 'name thumbnail half',
         }),
-        trailer: new AudioVideoMedia({
+        trailer: new Trailer({
           checksum: 'checksum trailer',
           name: 'name trailer',
           raw_location: 'raw_location trailer',
           encoded_location: 'encoded_location trailer',
           status: AudioVideoMediaStatus.COMPLETED,
         }),
-        video: new AudioVideoMedia({
+        video: new VideoMedia({
           checksum: 'checksum video',
           name: 'name video',
           raw_location: 'raw_location video',
@@ -362,29 +365,29 @@ describe('VideoModelMapper Unit Tests', () => {
 
     aggregate = new Video({
       ...videoProps,
-      banner: new ImageMedia({
+      banner: new Banner({
         checksum: 'checksum banner',
         location: 'location banner',
         name: 'name banner',
       }),
-      thumbnail: new ImageMedia({
+      thumbnail: new Thumbnail({
         checksum: 'checksum thumbnail',
         location: 'location thumbnail',
         name: 'name thumbnail',
       }),
-      thumbnail_half: new ImageMedia({
+      thumbnail_half: new ThumbnailHalf({
         checksum: 'checksum thumbnail half',
         location: 'location thumbnail half',
         name: 'name thumbnail half',
       }),
-      trailer: new AudioVideoMedia({
+      trailer: new Trailer({
         checksum: 'checksum trailer',
         name: 'name trailer',
         raw_location: 'raw_location trailer',
         encoded_location: 'encoded_location trailer',
         status: AudioVideoMediaStatus.COMPLETED,
       }),
-      video: new AudioVideoMedia({
+      video: new VideoMedia({
         checksum: 'checksum video',
         name: 'name video',
         raw_location: 'raw_location video',

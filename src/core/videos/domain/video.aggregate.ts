@@ -10,6 +10,11 @@ import VideoValidatorFactory from './video.validator';
 import { VideoCreatedEvent } from './domain-events/video-created.event';
 import { VideoAudioMediaReplacedEvent } from './domain-events/video-audio-media-replaced.event';
 import { VideoFakeBuilder } from './video-fake.builder';
+import { Banner } from './banner.vo';
+import { Thumbnail } from './thumbnail.vo';
+import { ThumbnailHalf } from './thumbnail-half.vo';
+import { Trailer } from './trailer.vo';
+import { VideoMedia } from './video-media.vo';
 
 export type VideoConstructorProps = {
   video_id?: VideoId;
@@ -21,11 +26,11 @@ export type VideoConstructorProps = {
   is_opened: boolean;
   is_published: boolean;
 
-  banner?: ImageMedia;
-  thumbnail?: ImageMedia;
-  thumbnail_half?: ImageMedia;
-  trailer?: AudioVideoMedia;
-  video?: AudioVideoMedia;
+  banner?: Banner;
+  thumbnail?: Thumbnail;
+  thumbnail_half?: ThumbnailHalf;
+  trailer?: Trailer;
+  video?: VideoMedia;
 
   categories_id: Map<string, CategoryId>;
   genres_id: Map<string, GenreId>;
@@ -41,11 +46,11 @@ export type VideoCreateCommand = {
   rating: Rating;
   is_opened: boolean;
 
-  banner?: ImageMedia;
-  thumbnail?: ImageMedia;
-  thumbnail_half?: ImageMedia;
-  trailer?: AudioVideoMedia;
-  video?: AudioVideoMedia;
+  banner?: Banner;
+  thumbnail?: Thumbnail;
+  thumbnail_half?: ThumbnailHalf;
+  trailer?: Trailer;
+  video?: VideoMedia;
 
   categories_id: CategoryId[];
   genres_id: GenreId[];
@@ -63,11 +68,11 @@ export class Video extends AggregateRoot {
   rating: Rating;
   is_opened: boolean;
   is_published: boolean;
-  banner: ImageMedia | null;
-  thumbnail?: ImageMedia | null;
-  thumbnail_half?: ImageMedia | null;
-  trailer?: AudioVideoMedia | null;
-  video?: AudioVideoMedia | null;
+  banner: Banner | null;
+  thumbnail?: Thumbnail | null;
+  thumbnail_half?: ThumbnailHalf | null;
+  trailer?: Trailer | null;
+  video?: VideoMedia | null;
   categories_id: Map<string, CategoryId>;
   genres_id: Map<string, GenreId>;
   cast_members_id: Map<string, CastMemberId>;
@@ -173,26 +178,26 @@ export class Video extends AggregateRoot {
     this.is_opened = false;
   }
 
-  replaceBanner(banner: ImageMedia): void {
+  replaceBanner(banner: Banner): void {
     this.banner = banner;
   }
 
-  replaceThumbnail(thumbnail: ImageMedia): void {
+  replaceThumbnail(thumbnail: Thumbnail): void {
     this.thumbnail = thumbnail;
   }
 
-  replaceThumbnailHalf(thumbnailHalf: ImageMedia): void {
+  replaceThumbnailHalf(thumbnailHalf: ThumbnailHalf): void {
     this.thumbnail_half = thumbnailHalf;
   }
 
-  replaceTrailer(trailer: AudioVideoMedia): void {
+  replaceTrailer(trailer: Trailer): void {
     this.trailer = trailer;
     this.applyEvent(
       new VideoAudioMediaReplacedEvent(this.video_id, trailer, 'trailer'),
     );
   }
 
-  replaceVideo(video: AudioVideoMedia): void {
+  replaceVideo(video: VideoMedia): void {
     this.video = video;
     this.applyEvent(
       new VideoAudioMediaReplacedEvent(this.video_id, video, 'video'),

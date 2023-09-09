@@ -6,6 +6,11 @@ import { ImageMedia } from './image-media.vo';
 import { AudioVideoMedia } from './audio-video-media.vo';
 import { GenreId } from '../../genre/domain/genre.aggregate';
 import { CastMemberId } from '../../cast-member/domain/cast-member.aggregate';
+import { Banner } from './banner.vo';
+import { Thumbnail } from './thumbnail.vo';
+import { ThumbnailHalf } from './thumbnail-half.vo';
+import { Trailer } from './trailer.vo';
+import { VideoMedia } from './video-media.vo';
 
 type PropOrFactory<T> = T | ((index: number) => T);
 
@@ -22,32 +27,30 @@ export class VideoFakeBuilder<TBuild = any> {
     this.chance.integer({ min: 1, max: 100 });
   private _rating: PropOrFactory<Rating> = (_index) => Rating.createRL();
   private _opened: PropOrFactory<boolean> = (_index) => true;
-  private _banner: PropOrFactory<ImageMedia | null> | undefined =
-    new ImageMedia({
-      checksum: 'test checksum banner',
-      name: 'test name banner',
-      location: 'test path banner',
-    });
-  private _thumbnail: PropOrFactory<ImageMedia | null> | undefined =
-    new ImageMedia({
+  private _banner: PropOrFactory<Banner | null> | undefined = new Banner({
+    checksum: 'test checksum banner',
+    name: 'test name banner',
+    location: 'test path banner',
+  });
+  private _thumbnail: PropOrFactory<Thumbnail | null> | undefined =
+    new Thumbnail({
       checksum: 'test checksum thumbnail',
       name: 'test name thumbnail',
       location: 'test path thumbnail',
     });
-  private _thumbnail_half: PropOrFactory<ImageMedia | null> | undefined =
-    new ImageMedia({
+  private _thumbnail_half: PropOrFactory<ThumbnailHalf | null> | undefined =
+    new ThumbnailHalf({
       checksum: 'test checksum thumbnail half',
       name: 'test name thumbnail half',
       location: 'test path thumbnail half',
     });
-  private _trailer: PropOrFactory<AudioVideoMedia | null> | undefined =
-    AudioVideoMedia.create({
-      checksum: 'test checksum trailer',
-      name: 'test name trailer',
-      raw_location: 'test path trailer',
-    });
-  private _video: PropOrFactory<AudioVideoMedia | null> | undefined =
-    AudioVideoMedia.create({
+  private _trailer: PropOrFactory<Trailer | null> | undefined = Trailer.create({
+    checksum: 'test checksum trailer',
+    name: 'test name trailer',
+    raw_location: 'test path trailer',
+  });
+  private _video: PropOrFactory<VideoMedia | null> | undefined =
+    VideoMedia.create({
       checksum: 'test checksum video',
       name: 'test name video',
       raw_location: 'test path video',
@@ -166,13 +169,13 @@ export class VideoFakeBuilder<TBuild = any> {
     return this;
   }
 
-  withTrailer(valueOrFactory: PropOrFactory<AudioVideoMedia | null>) {
+  withTrailer(valueOrFactory: PropOrFactory<Trailer | null>) {
     this._trailer = valueOrFactory;
     return this;
   }
 
   withTrailerComplete() {
-    this._trailer = AudioVideoMedia.create({
+    this._trailer = Trailer.create({
       checksum: 'test checksum trailer',
       name: 'test name trailer',
       raw_location: 'test path trailer',
@@ -185,13 +188,13 @@ export class VideoFakeBuilder<TBuild = any> {
     return this;
   }
 
-  withVideo(valueOrFactory: PropOrFactory<AudioVideoMedia | null>) {
+  withVideo(valueOrFactory: PropOrFactory<VideoMedia | null>) {
     this._video = valueOrFactory;
     return this;
   }
 
   withVideoComplete() {
-    this._video = AudioVideoMedia.create({
+    this._video = VideoMedia.create({
       checksum: 'test checksum video',
       name: 'test name video',
       raw_location: 'test path video',
@@ -306,7 +309,7 @@ export class VideoFakeBuilder<TBuild = any> {
     const banner = this.getValue('banner');
     return (
       banner ??
-      new ImageMedia({
+      new Banner({
         checksum: 'test checksum banner',
         name: 'test name banner',
         location: 'test path banner',
@@ -318,7 +321,7 @@ export class VideoFakeBuilder<TBuild = any> {
     const thumbnail = this.getValue('thumbnail');
     return (
       thumbnail ??
-      new ImageMedia({
+      new Thumbnail({
         checksum: 'test checksum thumbnail',
         name: 'test name thumbnail',
         location: 'test path thumbnail',
@@ -330,7 +333,7 @@ export class VideoFakeBuilder<TBuild = any> {
     const thumbnailHalf = this.getValue('thumbnail_half');
     return (
       thumbnailHalf ??
-      new ImageMedia({
+      new ThumbnailHalf({
         checksum: 'test checksum thumbnail half',
         name: 'test name thumbnail half',
         location: 'test path thumbnail half',
@@ -342,7 +345,7 @@ export class VideoFakeBuilder<TBuild = any> {
     const trailer = this.getValue('trailer');
     return (
       trailer ??
-      AudioVideoMedia.create({
+      Trailer.create({
         checksum: 'test checksum trailer',
         name: 'test name trailer',
         raw_location: 'test path trailer',
@@ -354,7 +357,7 @@ export class VideoFakeBuilder<TBuild = any> {
     const video = this.getValue('video');
     return (
       video ??
-      AudioVideoMedia.create({
+      Trailer.create({
         checksum: 'test checksum video',
         name: 'test name video',
         raw_location: 'test path video',

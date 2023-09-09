@@ -7,6 +7,11 @@ import { GenreId } from '../../../genre/domain/genre.aggregate';
 import { CastMemberId } from '../../../cast-member/domain/cast-member.aggregate';
 import { ImageMedia } from '../image-media.vo';
 import { AudioVideoMedia } from '../audio-video-media.vo';
+import { VideoMedia } from '../video-media.vo';
+import { Trailer } from '../trailer.vo';
+import { ThumbnailHalf } from '../thumbnail-half.vo';
+import { Thumbnail } from '../thumbnail.vo';
+import { Banner } from '../banner.vo';
 
 describe('VideoFakerBuilder Unit Tests', () => {
   describe('video_id prop', () => {
@@ -308,27 +313,27 @@ describe('VideoFakerBuilder Unit Tests', () => {
     const genreId2 = new GenreId();
     const castMemberId1 = new CastMemberId();
     const castMemberId2 = new CastMemberId();
-    const banner = new ImageMedia({
+    const banner = new Banner({
       checksum: 'checksum',
       location: 'location',
       name: 'name',
     });
-    const thumbnail = new ImageMedia({
+    const thumbnail = new Thumbnail({
       checksum: 'checksum',
       location: 'location',
       name: 'name',
     });
-    const thumbnail_half = new ImageMedia({
+    const thumbnail_half = new ThumbnailHalf({
       checksum: 'checksum',
       location: 'location',
       name: 'name',
     });
-    const trailer = AudioVideoMedia.create({
+    const trailer = Trailer.create({
       checksum: 'checksum',
       raw_location: 'raw_location',
       name: 'name',
     });
-    const videoMedia = AudioVideoMedia.create({
+    const videoMedia = VideoMedia.create({
       checksum: 'checksum',
       raw_location: 'raw_location',
       name: 'name',
@@ -504,27 +509,27 @@ describe('VideoFakerBuilder Unit Tests', () => {
     const genreId2 = new GenreId();
     const castMemberId1 = new CastMemberId();
     const castMemberId2 = new CastMemberId();
-    const banner = new ImageMedia({
+    const banner = new Banner({
       checksum: 'checksum',
       location: 'location',
       name: 'name',
     });
-    const thumbnail = new ImageMedia({
+    const thumbnail = new Thumbnail({
       checksum: 'checksum',
       location: 'location',
       name: 'name',
     });
-    const thumbnail_half = new ImageMedia({
+    const thumbnail_half = new ThumbnailHalf({
       checksum: 'checksum',
       location: 'location',
       name: 'name',
     });
-    const trailer = AudioVideoMedia.create({
+    const trailer = Trailer.create({
       checksum: 'checksum',
       raw_location: 'raw_location',
       name: 'name',
     });
-    const videoMedia = AudioVideoMedia.create({
+    const videoMedia = VideoMedia.create({
       checksum: 'checksum',
       raw_location: 'raw_location',
       name: 'name',

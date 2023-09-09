@@ -15,6 +15,11 @@ import {
 } from './video.model';
 import { ImageMediaModel, ImageMediaRelatedField } from './image-media.model';
 import { AudioVideoMediaModel } from './audio-video-media.model';
+import { Banner } from '../../../domain/banner.vo';
+import { Thumbnail } from '../../../domain/thumbnail.vo';
+import { ThumbnailHalf } from '../../../domain/thumbnail-half.vo';
+import { Trailer } from '../../../domain/trailer.vo';
+import { VideoMedia } from '../../../domain/video-media.vo';
 
 export class VideoModelMapper {
   static toAggregate(model: VideoModel) {
@@ -58,7 +63,7 @@ export class VideoModelMapper {
       (i) => i.video_related_field === 'banner',
     );
     const banner = bannerModel
-      ? new ImageMedia({
+      ? new Banner({
           checksum: bannerModel.checksum,
           name: bannerModel.name,
           location: bannerModel.location,
@@ -69,7 +74,7 @@ export class VideoModelMapper {
       (i) => i.video_related_field === 'thumbnail',
     );
     const thumbnail = thumbnailModel
-      ? new ImageMedia({
+      ? new Thumbnail({
           checksum: thumbnailModel.checksum,
           name: thumbnailModel.name,
           location: thumbnailModel.location,
@@ -81,7 +86,7 @@ export class VideoModelMapper {
     );
 
     const thumbnailHalf = thumbnailHalfModel
-      ? new ImageMedia({
+      ? new ThumbnailHalf({
           checksum: thumbnailHalfModel.checksum,
           name: thumbnailHalfModel.name,
           location: thumbnailHalfModel.location,
@@ -93,7 +98,7 @@ export class VideoModelMapper {
     );
 
     const trailer = trailerModel
-      ? new AudioVideoMedia({
+      ? new Trailer({
           checksum: trailerModel.checksum,
           name: trailerModel.name,
           raw_location: trailerModel.raw_location,
@@ -107,7 +112,7 @@ export class VideoModelMapper {
     );
 
     const videoMedia = videoModel
-      ? new AudioVideoMedia({
+      ? new VideoMedia({
           checksum: videoModel.checksum,
           name: videoModel.name,
           raw_location: videoModel.raw_location,

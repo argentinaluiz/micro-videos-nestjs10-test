@@ -1,5 +1,7 @@
 import { ImageMedia } from '../image-media.vo';
 
+class StubImageMedia extends ImageMedia {}
+
 describe('ImageMedia Unit Tests', () => {
   describe('constructor', () => {
     it('should create a valid ImageMedia object', () => {
@@ -9,7 +11,7 @@ describe('ImageMedia Unit Tests', () => {
       const location = 'location';
 
       // Act
-      const imageMedia = new ImageMedia({ checksum, name, location });
+      const imageMedia = new StubImageMedia({ checksum, name, location });
 
       // Assert
       expect(imageMedia).toBeDefined();
@@ -25,7 +27,7 @@ describe('ImageMedia Unit Tests', () => {
       const checksum = 'checksum';
       const name = 'name';
       const location = 'location';
-      const imageMedia = new ImageMedia({ checksum, name, location });
+      const imageMedia = new StubImageMedia({ checksum, name, location });
 
       // Act
       const json = imageMedia.toJSON();

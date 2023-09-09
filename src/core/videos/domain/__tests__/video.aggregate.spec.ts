@@ -1,9 +1,12 @@
 import { CastMemberId } from '../../../cast-member/domain/cast-member.aggregate';
 import { CategoryId } from '../../../category/domain/category.aggregate';
 import { GenreId } from '../../../genre/domain/genre.aggregate';
-import { AudioVideoMedia } from '../audio-video-media.vo';
-import { ImageMedia } from '../image-media.vo';
+import { Banner } from '../banner.vo';
 import { Rating } from '../rating.vo';
+import { ThumbnailHalf } from '../thumbnail-half.vo';
+import { Thumbnail } from '../thumbnail.vo';
+import { Trailer } from '../trailer.vo';
+import { VideoMedia } from '../video-media.vo';
 import { Video, VideoId } from '../video.aggregate';
 
 describe('Video Unit Tests', () => {
@@ -55,31 +58,31 @@ describe('Video Unit Tests', () => {
     expect(video.cast_members_id).toEqual(castMembersId);
     expect(video.created_at).toBeInstanceOf(Date);
 
-    const banner = new ImageMedia({
+    const banner = new Banner({
       checksum: 'test checksum banner',
       name: 'test name banner',
       location: 'test location banner',
     });
 
-    const thumbnail = new ImageMedia({
+    const thumbnail = new Thumbnail({
       checksum: 'test checksum thumbnail',
       name: 'test name thumbnail',
       location: 'test location thumbnail',
     });
 
-    const thumbnailHalf = new ImageMedia({
+    const thumbnailHalf = new ThumbnailHalf({
       checksum: 'test checksum thumbnail half',
       name: 'test name thumbnail half',
       location: 'test location thumbnail half',
     });
 
-    const trailer = AudioVideoMedia.create({
+    const trailer = Trailer.create({
       checksum: 'test checksum trailer',
       name: 'test name trailer',
       raw_location: 'test raw location trailer',
     });
 
-    const videoMedia = AudioVideoMedia.create({
+    const videoMedia = VideoMedia.create({
       checksum: 'test checksum video',
       name: 'test name video',
       raw_location: 'test raw location video',
@@ -200,12 +203,12 @@ describe('Video Unit Tests', () => {
         'markAsPublishedIfAllAudioVideoMediaAreCompleted',
       );
 
-      const trailer = AudioVideoMedia.create({
+      const trailer = Trailer.create({
         checksum: 'test checksum trailer',
         name: 'test name trailer',
         raw_location: 'test raw location trailer',
       }).complete('test encoded_location trailer');
-      const videoMedia = AudioVideoMedia.create({
+      const videoMedia = VideoMedia.create({
         checksum: 'test checksum video',
         name: 'test name video',
         raw_location: 'test raw location video',
@@ -316,7 +319,7 @@ describe('Video Unit Tests', () => {
   describe('replaceBanner method', () => {
     test('should replace banner', () => {
       const video = Video.fake().aVideoWithoutMedias().build();
-      const banner = new ImageMedia({
+      const banner = new Banner({
         checksum: 'test checksum banner',
         name: 'test name banner',
         location: 'test location banner',
@@ -329,7 +332,7 @@ describe('Video Unit Tests', () => {
   describe('replaceThumbnail method', () => {
     test('should replace thumbnail', () => {
       const video = Video.fake().aVideoWithoutMedias().build();
-      const thumbnail = new ImageMedia({
+      const thumbnail = new Thumbnail({
         checksum: 'test checksum thumbnail',
         name: 'test name thumbnail',
         location: 'test location thumbnail',
@@ -342,7 +345,7 @@ describe('Video Unit Tests', () => {
   describe('replaceThumbnailHalf method', () => {
     test('should replace thumbnail half', () => {
       const video = Video.fake().aVideoWithoutMedias().build();
-      const thumbnailHalf = new ImageMedia({
+      const thumbnailHalf = new ThumbnailHalf({
         checksum: 'test checksum thumbnail half',
         name: 'test name thumbnail half',
         location: 'test location thumbnail half',
@@ -355,7 +358,7 @@ describe('Video Unit Tests', () => {
   describe('replaceTrailer method', () => {
     test('should replace trailer', () => {
       const video = Video.fake().aVideoWithoutMedias().build();
-      const trailer = AudioVideoMedia.create({
+      const trailer = Trailer.create({
         checksum: 'test checksum trailer',
         name: 'test name trailer',
         raw_location: 'test raw location trailer',
@@ -368,7 +371,7 @@ describe('Video Unit Tests', () => {
   describe('replaceVideo method', () => {
     test('should replace video', () => {
       const video = Video.fake().aVideoWithoutMedias().build();
-      const videoMedia = AudioVideoMedia.create({
+      const videoMedia = VideoMedia.create({
         checksum: 'test checksum video',
         name: 'test name video',
         raw_location: 'test raw location video',
@@ -392,12 +395,12 @@ describe('Video Unit Tests', () => {
     expect(video.is_published).toBeFalsy();
 
     video = Video.fake().aVideoWithoutMedias().build();
-    const trailer = AudioVideoMedia.create({
+    const trailer = Trailer.create({
       checksum: 'test checksum trailer',
       name: 'test name trailer',
       raw_location: 'test raw location trailer',
     }).complete('test encoded_location trailer');
-    const videoMedia = AudioVideoMedia.create({
+    const videoMedia = VideoMedia.create({
       checksum: 'test checksum video',
       name: 'test name video',
       raw_location: 'test raw location video',
@@ -408,7 +411,6 @@ describe('Video Unit Tests', () => {
     video['markAsPublishedIfAllAudioVideoMediaAreCompleted']();
     expect(video.is_published).toBeTruthy();
   });
-
 });
 
 describe('Video Validator', () => {

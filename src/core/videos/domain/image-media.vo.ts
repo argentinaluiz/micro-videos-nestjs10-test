@@ -1,6 +1,6 @@
 import { ValueObject } from '../../shared/domain/value-object';
 
-export class ImageMedia extends ValueObject {
+export abstract class ImageMedia extends ValueObject {
   readonly checksum: string;
   readonly name: string;
   readonly location: string;
@@ -28,3 +28,4 @@ export class ImageMedia extends ValueObject {
     };
   }
 }
+
