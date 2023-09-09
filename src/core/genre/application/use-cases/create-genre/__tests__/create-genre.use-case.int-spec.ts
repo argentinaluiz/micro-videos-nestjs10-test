@@ -13,6 +13,7 @@ import {
 import { UnitOfWorkSequelize } from '../../../../../shared/infra/db/sequelize/unit-of-work-sequelize';
 import { CategoriesIdsValidator } from '../../../../../category/application/validations/categories-ids.validator';
 import { Category } from '../../../../../category/domain/category.aggregate';
+import { DatabaseError } from 'sequelize';
 
 describe('CreateGenreUseCase Integration Tests', () => {
   let uow: UnitOfWorkSequelize;
@@ -93,7 +94,7 @@ describe('CreateGenreUseCase Integration Tests', () => {
     const categoriesId = categories.map((c) => c.category_id.id);
 
     const genre = Genre.fake().aGenre().build();
-    genre.name = null;
+    genre.name = 't'.repeat(256);
 
     const mockCreate = jest
       .spyOn(Genre, 'create')
@@ -104,7 +105,7 @@ describe('CreateGenreUseCase Integration Tests', () => {
         name: 'test genre',
         categories_id: categoriesId,
       }),
-    ).rejects.toThrow('notNull Violation: GenreModel.name cannot be null');
+    ).rejects.toThrow(DatabaseError);
 
     const genres = await genreRepo.findAll();
     expect(genres.length).toEqual(0);
