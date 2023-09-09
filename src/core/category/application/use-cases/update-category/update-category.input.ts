@@ -1,4 +1,4 @@
-import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsOptional, IsString, validateSync } from 'class-validator';
 
 export type UpdateCategoryInputConstructorProps = {
   id: string;
@@ -32,5 +32,9 @@ export class UpdateCategoryInput {
     props.is_active !== null &&
       props.is_active !== undefined &&
       (this.is_active = props.is_active);
+  }
+
+  validate() {
+    return validateSync(this);
   }
 }

@@ -29,7 +29,7 @@ export class AggregateValidationError extends BaseValidationError {
 }
 
 export class SearchValidationError extends BaseValidationError {
-  constructor(public error: FieldsErrors[]) {
+  constructor(error: FieldsErrors[]) {
     super(error, 'Search Validation Error');
     this.name = 'SearchValidationError';
   }

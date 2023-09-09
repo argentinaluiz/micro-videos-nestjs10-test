@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, IsString } from 'class-validator';
+import { IsInt, IsNotEmpty, IsString, validateSync } from 'class-validator';
 import { CastMemberTypes } from '../../../domain/cast-member-type.vo';
 
 export type CreateCastMemberInputConstructorProps = {
@@ -19,5 +19,9 @@ export class CreateCastMemberInput {
     if (!props) return;
     this.name = props.name;
     this.type = props.type;
+  }
+
+  validate() {
+    return validateSync(this);
   }
 }

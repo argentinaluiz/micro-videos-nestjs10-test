@@ -21,6 +21,7 @@
     "migrate": "node -r ts-node/register/transpile-only ./src/migrate.ts"
   },
   "dependencies": {
+    "@google-cloud/storage": "^7.1.0",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.0.1",
     "@nestjs/core": "^10.0.0",

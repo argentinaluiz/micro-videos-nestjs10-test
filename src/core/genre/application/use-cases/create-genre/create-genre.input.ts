@@ -5,6 +5,7 @@ import {
   IsString,
   IsArray,
   IsUUID,
+  validateSync,
 } from 'class-validator';
 
 export type CreateGenreInputConstructorProps = {
@@ -32,5 +33,9 @@ export class CreateGenreInput {
     this.name = props.name;
     this.categories_id = props.categories_id;
     this.is_active = props.is_active ?? true;
+  }
+
+  validate() {
+    return validateSync(this);
   }
 }

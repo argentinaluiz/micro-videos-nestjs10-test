@@ -8,7 +8,6 @@ export class MediaFileValidator {
 
   validate({
     raw_name,
-    data,
     mime_type,
     size,
   }: {
@@ -27,7 +26,6 @@ export class MediaFileValidator {
     }
 
     return {
-      checksum: this.generateChecksum(data),
       name: this.generateHasName(raw_name),
     };
   }
@@ -41,14 +39,15 @@ export class MediaFileValidator {
   }
 
   protected generateHasName(rawName: string) {
-    return crypto
-      .createHash('sha256')
-      .update(rawName + Date.now() + Math.random())
-      .digest('hex');
-  }
-
-  protected generateChecksum(data: Buffer) {
-    return crypto.createHash('sha256').update(data).digest('hex');
+    const extension = rawName.split('.').pop();
+    return (
+      crypto
+        .createHash('sha256')
+        .update(rawName + Date.now() + Math.random())
+        .digest('hex') +
+      '.' +
+      extension
+    );
   }
 }
 

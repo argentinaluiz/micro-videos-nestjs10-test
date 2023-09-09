@@ -1,7 +1,7 @@
 import { SearchInputDto } from '../../../../shared/application/search-input';
 import { SortDirection } from '../../../../shared/domain/repository/search-params';
 import { CastMemberTypes } from '../../../domain/cast-member-type.vo';
-import { IsInt, ValidateNested } from 'class-validator';
+import { IsInt, ValidateNested, validateSync } from 'class-validator';
 
 export class ListCastMembersFilter {
   name?: string | null;
@@ -18,4 +18,8 @@ export class ListCastMembersInput
   sort_dir?: SortDirection;
   @ValidateNested()
   filter?: ListCastMembersFilter;
+
+  validate() {
+    validateSync(this);
+  }
 }
