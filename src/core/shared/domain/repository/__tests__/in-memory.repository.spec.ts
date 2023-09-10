@@ -1,3 +1,4 @@
+import { UnitOfWorkFakeInMemory } from '../../../infra/db/in-memory/fake-unit-work-in-memory';
 import { AggregateRoot } from '../../aggregate-root';
 import { NotFoundError } from '../../errors/not-found.error';
 import { Uuid } from '../../value-objects/uuid.vo';
@@ -37,7 +38,10 @@ class StubInMemoryRepository extends InMemoryRepository<StubAggregate, Uuid> {
 
 describe('InMemoryRepository Unit Tests', () => {
   let repository: StubInMemoryRepository;
-  beforeEach(() => (repository = new StubInMemoryRepository()));
+  beforeEach(
+    () =>
+      (repository = new StubInMemoryRepository(new UnitOfWorkFakeInMemory())),
+  );
   it('should inserts a new aggregate', async () => {
     const aggregate = new StubAggregate({ name: 'name value', price: 5 });
     await repository.insert(aggregate);

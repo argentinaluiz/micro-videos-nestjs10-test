@@ -1,4 +1,5 @@
 import { NotFoundError } from '../../../shared/domain/errors/not-found.error';
+import { UnitOfWorkFakeInMemory } from '../../../shared/infra/db/in-memory/fake-unit-work-in-memory';
 import { Category, CategoryId } from '../../domain/category.aggregate';
 import { CategoryInMemoryRepository } from '../../infra/db/in-memory/category-in-memory.repository';
 import { CategoriesIdsValidator } from './categories-ids.validator';
@@ -7,7 +8,7 @@ describe('CategoriesIdsValidator Unit Tests', () => {
   let categoryRepo: CategoryInMemoryRepository;
   let validator: CategoriesIdsValidator;
   beforeEach(() => {
-    categoryRepo = new CategoryInMemoryRepository();
+    categoryRepo = new CategoryInMemoryRepository(new UnitOfWorkFakeInMemory());
     validator = new CategoriesIdsValidator(categoryRepo);
   });
 

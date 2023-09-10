@@ -1,11 +1,15 @@
 import { CategoryId } from '../../../../category/domain/category.aggregate';
+import { UnitOfWorkFakeInMemory } from '../../../../shared/infra/db/in-memory/fake-unit-work-in-memory';
 import { Genre } from '../../../domain/genre.aggregate';
 import { GenreInMemoryRepository } from './genre-in-memory.repository';
 
 describe('GenreInMemoryRepository', () => {
   let repository: GenreInMemoryRepository;
 
-  beforeEach(() => (repository = new GenreInMemoryRepository()));
+  beforeEach(
+    () =>
+      (repository = new GenreInMemoryRepository(new UnitOfWorkFakeInMemory())),
+  );
   it('should no filter items when filter object is null', async () => {
     const items = [
       Genre.fake().aGenre().build(),

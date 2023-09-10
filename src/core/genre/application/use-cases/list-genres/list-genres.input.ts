@@ -16,8 +16,10 @@ export class ListGenresInput implements SearchInputDto<ListGenresFilter> {
   sort_dir?: SortDirection;
   @ValidateNested()
   filter?: ListGenresFilter;
+}
 
-  validate() {
-    return validateSync(this);
+export class ValidateListGenresInput {
+  static validate(input: ListGenresInput) {
+    return validateSync(input);
   }
 }

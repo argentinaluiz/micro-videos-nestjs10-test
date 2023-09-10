@@ -4,6 +4,7 @@ import { NotFoundError } from '../errors/not-found.error';
 import { ValueObject } from '../value-object';
 import { IRepository, ISearchableRepository } from './repository-interface';
 import { SearchParams, SearchResult, SortDirection } from './search-params';
+import { IUnitOfWork } from './unit-of-work.interface';
 
 export abstract class InMemoryRepository<
   A extends AggregateRoot,
@@ -12,12 +13,16 @@ export abstract class InMemoryRepository<
 {
   items: A[] = [];
 
+  constructor(private uow: IUnitOfWork) {}
+
   async insert(aggregate: A): Promise<void> {
     this.items.push(aggregate);
+    this.uow.addAggregateRoot(aggregate);
   }
 
   async bulkInsert(aggregates: A[]): Promise<void> {
     this.items.push(...aggregates);
+    aggregates.forEach((aggregate) => this.uow.addAggregateRoot(aggregate));
   }
 
   async findById(aggregateId: ID): Promise<A> {
@@ -70,6 +75,7 @@ export abstract class InMemoryRepository<
       i.entity_id.equals(aggregate.entity_id),
     );
     this.items[indexFound] = aggregate;
+    this.uow.addAggregateRoot(aggregate);
   }
 
   async delete(id: ID): Promise<void> {

@@ -18,8 +18,8 @@ describe('CreateGenreUseCase Unit Tests', () => {
 
   beforeEach(() => {
     uow = new UnitOfWorkFakeInMemory();
-    genreRepo = new GenreInMemoryRepository();
-    categoryRepo = new CategoryInMemoryRepository();
+    genreRepo = new GenreInMemoryRepository(new UnitOfWorkFakeInMemory());
+    categoryRepo = new CategoryInMemoryRepository(new UnitOfWorkFakeInMemory());
     categoriesIdsValidator = new CategoriesIdsValidator(categoryRepo);
     useCase = new CreateGenreUseCase(
       uow,

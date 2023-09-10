@@ -1,7 +1,7 @@
+import { ApplicationService } from '../../../../shared/application/application-service';
 import { IStorage } from '../../../../shared/application/storage.interface';
 import { IUseCase } from '../../../../shared/application/use-case-interface';
 import { NotFoundError } from '../../../../shared/domain/errors/not-found.error';
-import { IUnitOfWork } from '../../../../shared/domain/repository/unit-of-work.interface';
 import { AggregateValidationError } from '../../../../shared/domain/validators/validation.error';
 import { Trailer } from '../../../domain/trailer.vo';
 import { VideoMedia } from '../../../domain/video-media.vo';
@@ -10,17 +10,18 @@ import { IVideoRepository } from '../../../domain/video.repository';
 import { UploadAudioVideoMediaInput } from './upload-audio-video-media.input';
 
 export class UploadAudioVideoMediaUseCase
-  implements IUseCase<UploadAudioVideoMediaInput, UpdateImageMediaOutput>
+  implements IUseCase<UploadAudioVideoMediaInput, UploadAudioVideoMediaOutput>
 {
   constructor(
-    private uow: IUnitOfWork,
+    private application: ApplicationService,
     private videoRepo: IVideoRepository,
     private storage: IStorage,
   ) {}
 
   async execute(
     input: UploadAudioVideoMediaInput,
-  ): Promise<UpdateImageMediaOutput> {
+  ): Promise<UploadAudioVideoMediaOutput> {
+    console.log(input);
     const video = await this.videoRepo.findById(new VideoId(input.video_id));
     if (!video) {
       throw new NotFoundError(input.video_id, Video);
@@ -59,7 +60,7 @@ export class UploadAudioVideoMediaUseCase
     audioVideoMedia instanceof VideoMedia &&
       video.replaceVideo(audioVideoMedia);
 
-    await this.uow.do(async () => {
+    await this.application.run(async () => {
       return this.videoRepo.update(video);
     });
 
@@ -67,4 +68,4 @@ export class UploadAudioVideoMediaUseCase
   }
 }
 
-export type UpdateImageMediaOutput = { id: string };
+export type UploadAudioVideoMediaOutput = { id: string };

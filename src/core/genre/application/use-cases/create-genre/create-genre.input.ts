@@ -34,8 +34,10 @@ export class CreateGenreInput {
     this.categories_id = props.categories_id;
     this.is_active = props.is_active ?? true;
   }
+}
 
-  validate() {
-    return validateSync(this);
+export class ValidateCreateGenreInput {
+  static validate(input: CreateGenreInput) {
+    return validateSync(input);
   }
 }

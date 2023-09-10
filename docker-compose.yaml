@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 
 services:
   app:
@@ -6,11 +6,11 @@ services:
     command: .docker/start.sh
     volumes:
       - .:/home/node/app
-      - "/etc/timezone:/etc/timezone:ro"
-      - "/etc/localtime:/etc/localtime:ro"
+      - '/etc/timezone:/etc/timezone:ro'
+      - '/etc/localtime:/etc/localtime:ro'
     ports:
       - 3000:3000
-  
+
   db:
     image: mysql:8.0.30-debian
     profiles:
@@ -32,3 +32,15 @@ services:
       - /var/lib/mysql
     security_opt:
       - seccomp:unconfined
+
+  redis:
+    image: redis:7.0.8-alpine
+  
+  rabbitmq:
+    image: rabbitmq:3.8-management-alpine
+    hostname: rabbitmq
+    ports:
+      - 15672:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin

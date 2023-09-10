@@ -20,8 +20,10 @@ export class CreateCastMemberInput {
     this.name = props.name;
     this.type = props.type;
   }
+}
 
-  validate() {
-    return validateSync(this);
+export class ValidateCreateCastMemberInput {
+  static validate(input: CreateCastMemberInput) {
+    return validateSync(input);
   }
 }

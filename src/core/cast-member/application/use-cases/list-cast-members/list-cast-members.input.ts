@@ -18,8 +18,10 @@ export class ListCastMembersInput
   sort_dir?: SortDirection;
   @ValidateNested()
   filter?: ListCastMembersFilter;
+}
 
-  validate() {
-    validateSync(this);
+export class ValidateListCastMembersInput {
+  static validate(input: ListCastMembersInput) {
+    return validateSync(input);
   }
 }

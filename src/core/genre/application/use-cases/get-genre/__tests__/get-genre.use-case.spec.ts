@@ -1,6 +1,7 @@
 import { Category } from '../../../../../category/domain/category.aggregate';
 import { CategoryInMemoryRepository } from '../../../../../category/infra/db/in-memory/category-in-memory.repository';
 import { NotFoundError } from '../../../../../shared/domain/errors/not-found.error';
+import { UnitOfWorkFakeInMemory } from '../../../../../shared/infra/db/in-memory/fake-unit-work-in-memory';
 import { Genre, GenreId } from '../../../../domain/genre.aggregate';
 import { GenreInMemoryRepository } from '../../../../infra/db/in-memory/genre-in-memory.repository';
 import { GetGenreUseCase } from '../get-genre.use-case';
@@ -11,8 +12,8 @@ describe('GetGenreUseCase Unit Tests', () => {
   let categoryRepo: CategoryInMemoryRepository;
 
   beforeEach(() => {
-    genreRepo = new GenreInMemoryRepository();
-    categoryRepo = new CategoryInMemoryRepository();
+    genreRepo = new GenreInMemoryRepository(new UnitOfWorkFakeInMemory());
+    categoryRepo = new CategoryInMemoryRepository(new UnitOfWorkFakeInMemory());
     useCase = new GetGenreUseCase(genreRepo, categoryRepo);
   });
 

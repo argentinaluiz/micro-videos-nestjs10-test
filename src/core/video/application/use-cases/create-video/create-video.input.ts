@@ -77,8 +77,10 @@ export class CreateVideoInput {
     this.genres_id = props.genres_id;
     this.cast_members_id = props.cast_members_id;
   }
+}
 
-  validate() {
-    return validateSync(this);
+export class ValidateCreateVideoInput {
+  static validate(input: CreateVideoInput) {
+    return validateSync(input);
   }
 }

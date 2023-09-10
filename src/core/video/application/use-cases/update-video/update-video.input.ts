@@ -91,8 +91,10 @@ export class UpdateVideoInput {
       props.cast_members_id.length > 0 &&
       (this.cast_members_id = props.cast_members_id);
   }
+}
 
-  validate() {
-    return validateSync(this);
+export class ValidateUpdateVideoInput {
+  static validate(input: UpdateVideoInput) {
+    return validateSync(input);
   }
 }

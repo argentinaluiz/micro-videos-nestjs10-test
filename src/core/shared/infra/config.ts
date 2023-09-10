@@ -13,6 +13,18 @@ export class Config {
     };
   }
 
+  static redisUrl() {
+    Config.readEnv();
+
+    return Config.env.REDIS_URL;
+  }
+
+  static rabbitmqUrl() {
+    Config.readEnv();
+
+    return Config.env.RABBITMQ_URL;
+  }
+
   static bucketName() {
     Config.readEnv();
 

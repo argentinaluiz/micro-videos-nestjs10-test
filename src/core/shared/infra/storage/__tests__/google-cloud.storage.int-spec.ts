@@ -27,5 +27,5 @@ describe('GoogleCloudStorage Integration Tests', () => {
     expect(file.data.toString()).toBe('data');
     expect(file.mime_type).toBe('text/plain');
     expect(file.name).toBe('location/1.txt');
-  });
+  }, 10000);
 });

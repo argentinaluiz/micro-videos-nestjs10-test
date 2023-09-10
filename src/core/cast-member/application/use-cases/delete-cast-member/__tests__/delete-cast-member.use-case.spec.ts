@@ -1,4 +1,5 @@
 import { NotFoundError } from '../../../../../shared/domain/errors/not-found.error';
+import { UnitOfWorkFakeInMemory } from '../../../../../shared/infra/db/in-memory/fake-unit-work-in-memory';
 import {
   CastMember,
   CastMemberId,
@@ -11,7 +12,7 @@ describe('DeleteCastMemberUseCase Unit Tests', () => {
   let repository: CastMemberInMemoryRepository;
 
   beforeEach(() => {
-    repository = new CastMemberInMemoryRepository();
+    repository = new CastMemberInMemoryRepository(new UnitOfWorkFakeInMemory());
     useCase = new DeleteCastMemberUseCase(repository);
   });
 

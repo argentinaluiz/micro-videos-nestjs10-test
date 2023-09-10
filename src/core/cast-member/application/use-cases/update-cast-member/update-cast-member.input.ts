@@ -26,8 +26,10 @@ export class UpdateCastMemberInput {
     props.name && (this.name = props.name);
     props.type && (this.type = props.type);
   }
+}
 
-  validate() {
-    return validateSync(this);
+export class ValidateUpdateCastMemberInput {
+  static validate(input: UpdateCastMemberInput) {
+    return validateSync(input);
   }
 }

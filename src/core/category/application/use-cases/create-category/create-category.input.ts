@@ -26,7 +26,10 @@ export class CreateCategoryInput {
     this.is_active = props.is_active ?? true;
   }
 
-  validate() {
-    return validateSync(this);
+}
+
+export class ValidateCreateCategoryInput {
+  static validate(input: CreateCategoryInput) {
+    return validateSync(input);
   }
 }

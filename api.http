@@ -1,0 +1,66 @@
+### a082337d-f9b1-41cd-b13a-8b142df5bdc7
+POST http://localhost:3000/categories
+Content-Type: application/json
+
+{
+    "name": "Category 1",
+    "description": "Description 1"
+}
+
+### 5a006f99-b217-417c-846a-524aa1e78552
+POST http://localhost:3000/cast-members
+Content-Type: application/json
+
+{
+    "name": "Cast Member 1",
+    "type": 1
+}
+
+### 48bfaa1a-8596-4b78-9b01-10a03553f856
+POST http://localhost:3000/genres
+Content-Type: application/json
+
+{
+    "name": "Genre 1",
+    "categories_id": ["a082337d-f9b1-41cd-b13a-8b142df5bdc7"],
+    "is_active": true
+}
+
+### fb19d680-362d-435c-9c7c-0a781e93a33e
+POST http://localhost:3000/videos
+Content-Type: application/json
+
+{
+    "title": "Video 1",
+    "description": "Description 1",
+    "year_launched": 2020,
+    "opened": false,
+    "rating": "L",
+    "duration": 90,
+    "is_opened": true,
+    "categories_id": ["a082337d-f9b1-41cd-b13a-8b142df5bdc7"],
+    "genres_id": ["48bfaa1a-8596-4b78-9b01-10a03553f856"],
+    "cast_members_id": ["5a006f99-b217-417c-846a-524aa1e78552"]
+}
+
+###
+PATCH http://localhost:3000/videos/c1c2d07f-de0d-404a-82bf-60da0dde241c
+Content-Type: application/json
+
+{
+    "year_launched": 2020
+}
+
+###
+
+
+###
+PATCH http://localhost:3000/videos/c1c2d07f-de0d-404a-82bf-60da0dde241c
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary1234
+
+------WebKitFormBoundary1234
+Content-Disposition: form-data; name="video"; filename="video.mp4"
+Content-Type: video/mp4
+
+< ./package.json
+------WebKitFormBoundary1234--

@@ -1,6 +1,6 @@
 import { IsInstance, IsInt, IsNotEmpty, IsString } from 'class-validator';
 
-export class FileMediaDto {
+export class FileMediaInput {
   @IsString()
   @IsNotEmpty()
   raw_name: string;

@@ -6,12 +6,12 @@ import {
   ValidateNested,
   validateSync,
 } from 'class-validator';
-import { FileMediaDto } from '../../dto/file-media.dto';
+import { FileMediaInput } from '../../dto/file-media.input';
 
 export type UploadImageMediaInputConstructorProps = {
   video_id: string;
   field: string;
-  file: FileMediaDto;
+  file: FileMediaInput;
 };
 
 export class UploadImageMediaInput {
@@ -25,7 +25,7 @@ export class UploadImageMediaInput {
   field: string;
 
   @ValidateNested()
-  file: FileMediaDto;
+  file: FileMediaInput;
 
   constructor(props?: UploadImageMediaInputConstructorProps) {
     if (!props) return;
@@ -33,8 +33,10 @@ export class UploadImageMediaInput {
     this.field = props.field;
     this.file = props.file;
   }
+}
 
-  validate() {
-    return validateSync(this);
+export class ValidateUploadImageMediaInput {
+  static validate(input: UploadImageMediaInput) {
+    return validateSync(input);
   }
 }

@@ -11,7 +11,7 @@ describe('DeleteGenreUseCase Unit Tests', () => {
 
   beforeEach(() => {
     uow = new UnitOfWorkFakeInMemory();
-    repository = new GenreInMemoryRepository();
+    repository = new GenreInMemoryRepository(uow);
     useCase = new DeleteGenreUseCase(uow, repository);
   });
 

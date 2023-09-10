@@ -1,4 +1,4 @@
-import { IDomainEvent } from '../../../shared/domain/domain-event.interface';
+import { IDomainEvent } from '../../../shared/domain/events/domain-event.interface';
 import { AudioVideoMedia } from '../audio-video-media.vo';
 import { VideoId } from '../video.aggregate';
 

@@ -44,8 +44,10 @@ export class UpdateGenreInput {
       props.is_active !== undefined &&
       (this.is_active = props.is_active);
   }
+}
 
-  validate() {
-    return validateSync(this);
+export class ValidateUpdateGenreInput {
+  static validate(input: UpdateGenreInput) {
+    return validateSync(input);
   }
 }

@@ -15,6 +15,7 @@ import { IUnitOfWork } from '../../core/shared/domain/repository/unit-of-work.in
 import { ICategoryRepository } from '../../core/category/domain/category.repository';
 import { CategoriesIdsValidator } from '../../core/category/application/validations/categories-ids.validator';
 import { CATEGORY_PROVIDERS } from '../categories-module/categories.providers';
+import { GenresIdsValidator } from '../../core/genre/application/validations/genres-ids.validator';
 
 export const REPOSITORIES = {
   GENRE_REPOSITORY: {
@@ -79,7 +80,7 @@ export const USE_CASES = {
       CATEGORY_PROVIDERS.VALIDATIONS.CATEGORIES_IDS_VALIDATOR.provide,
     ],
   },
-  LIST_CATEGORIES_USE_CASE: {
+  LIST_GENRES_USE_CASE: {
     provide: ListGenresUseCase,
     useFactory: (
       genreRepo: IGenreRepository,
@@ -114,7 +115,18 @@ export const USE_CASES = {
   },
 };
 
+export const VALIDATIONS = {
+  GENRES_IDS_VALIDATOR: {
+    provide: GenresIdsValidator,
+    useFactory: (genreRepo: IGenreRepository) => {
+      return new GenresIdsValidator(genreRepo);
+    },
+    inject: [REPOSITORIES.GENRE_REPOSITORY.provide],
+  },
+};
+
 export const GENRES_PROVIDERS = {
   REPOSITORIES,
   USE_CASES,
+  VALIDATIONS
 };

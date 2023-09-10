@@ -1,3 +1,4 @@
+import { UnitOfWorkFakeInMemory } from '../../../../shared/infra/db/in-memory/fake-unit-work-in-memory';
 import { CastMemberType } from '../../../domain/cast-member-type.vo';
 import { CastMember } from '../../../domain/cast-member.aggregate';
 import { CastMemberInMemoryRepository } from './cast-member-in-memory.repository';
@@ -5,7 +6,12 @@ import { CastMemberInMemoryRepository } from './cast-member-in-memory.repository
 describe('CastMemberInMemoryRepository', () => {
   let repository: CastMemberInMemoryRepository;
 
-  beforeEach(() => (repository = new CastMemberInMemoryRepository()));
+  beforeEach(
+    () =>
+      (repository = new CastMemberInMemoryRepository(
+        new UnitOfWorkFakeInMemory(),
+      )),
+  );
   it('should no filter items when filter object is null', async () => {
     const items = [
       CastMember.fake().anActor().build(),

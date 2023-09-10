@@ -3,8 +3,8 @@ import qs from 'qs';
 import { IGenreRepository } from '../../src/core/genre/domain/genre.repository';
 import { ICategoryRepository } from '../../src/core/category/domain/category.repository';
 import { startApp } from '../../src/nest-modules/shared-module/testing/helpers';
-import { ListGenresFixture } from '../../src/nest-modules/genres-modules/testing/genre-fixture';
-import { GENRES_PROVIDERS } from '../../src/nest-modules/genres-modules/genres.providers';
+import { ListGenresFixture } from '../../src/nest-modules/genres-module/testing/genre-fixture';
+import { GENRES_PROVIDERS } from '../../src/nest-modules/genres-module/genres.providers';
 import { CATEGORY_PROVIDERS } from '../../src/nest-modules/categories-module/categories.providers';
 
 describe('GenresController (e2e)', () => {

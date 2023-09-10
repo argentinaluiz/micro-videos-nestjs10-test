@@ -1,12 +1,16 @@
 import { CategoryId } from '../../../../category/domain/category.aggregate';
 import { GenreId } from '../../../../genre/domain/genre.aggregate';
+import { UnitOfWorkFakeInMemory } from '../../../../shared/infra/db/in-memory/fake-unit-work-in-memory';
 import { Video } from '../../../domain/video.aggregate';
 import { VideoInMemoryRepository } from './video-in-memory.repository';
 
 describe('VideoInMemoryRepository', () => {
   let repository: VideoInMemoryRepository;
 
-  beforeEach(() => (repository = new VideoInMemoryRepository()));
+  beforeEach(
+    () =>
+      (repository = new VideoInMemoryRepository(new UnitOfWorkFakeInMemory())),
+  );
   it('should no filter items when filter object is null', async () => {
     const items = [
       Video.fake().aVideoWithoutMedias().build(),

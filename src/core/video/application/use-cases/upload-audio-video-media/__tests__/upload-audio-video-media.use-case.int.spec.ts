@@ -1,3 +1,4 @@
+import EventEmitter2 from 'eventemitter2';
 import { CastMember } from '../../../../../cast-member/domain/cast-member.aggregate';
 import { ICastMemberRepository } from '../../../../../cast-member/domain/cast-member.repository';
 import {
@@ -16,8 +17,10 @@ import {
   GenreModel,
   GenreSequelizeRepository,
 } from '../../../../../genre/infra/db/sequelize/genre-sequelize';
+import { ApplicationService } from '../../../../../shared/application/application-service';
 import { IStorage } from '../../../../../shared/application/storage.interface';
 import { NotFoundError } from '../../../../../shared/domain/errors/not-found.error';
+import { DomainEventManager } from '../../../../../shared/domain/events/domain-event-manager';
 import { AggregateValidationError } from '../../../../../shared/domain/validators/validation.error';
 import { UnitOfWorkSequelize } from '../../../../../shared/infra/db/sequelize/unit-of-work-sequelize';
 import { InMemoryStorage } from '../../../../../shared/infra/storage/in-memory.storage';
@@ -27,6 +30,10 @@ import { setupSequelizeForVideo } from '../../../../infra/db/sequelize/testing/s
 import { VideoSequelizeRepository } from '../../../../infra/db/sequelize/video-sequelize.repository';
 import { VideoModel } from '../../../../infra/db/sequelize/video.model';
 import { UploadAudioVideoMediaUseCase } from '../upload-audio-video-media.use-case';
+import { VideoAudioMediaReplacedEvent } from '../../../../domain/domain-events/video-audio-media-replaced.event';
+import { PublishUploadVideoMediaHandler } from '../../../handlers/publish-upload-video-media.handler';
+import { IIntegrationEventQueueService } from '../../../../../shared/application/queue-interface';
+import { InMemoryIntegrationEventQueue } from '../../../../../shared/infra/queue/in-memory-integration-event.queue';
 
 describe('UploadAudioVideoMediaUseCase Unit Tests', () => {
   let uploadImageMediaUseCase: UploadAudioVideoMediaUseCase;
@@ -36,10 +43,25 @@ describe('UploadAudioVideoMediaUseCase Unit Tests', () => {
   let castMemberRepo: ICastMemberRepository;
   let uow: UnitOfWorkSequelize;
   let storageService: IStorage;
+  let applicationService: ApplicationService;
+  let domainEventManager: DomainEventManager;
+  let publishUploadVideoMediaHandler: PublishUploadVideoMediaHandler;
+  let integrationEventsQueue: IIntegrationEventQueueService;
   const sequelizeHelper = setupSequelizeForVideo();
 
   beforeEach(() => {
+    integrationEventsQueue = new InMemoryIntegrationEventQueue();
+    publishUploadVideoMediaHandler = new PublishUploadVideoMediaHandler(
+      integrationEventsQueue,
+    );
     uow = new UnitOfWorkSequelize(sequelizeHelper.sequelize);
+    domainEventManager = new DomainEventManager(new EventEmitter2());
+    domainEventManager.registerForIntegrationEvent(
+      VideoAudioMediaReplacedEvent.name,
+      (event: VideoAudioMediaReplacedEvent) =>
+        publishUploadVideoMediaHandler.handle(event),
+    );
+    applicationService = new ApplicationService(uow, domainEventManager);
     categoryRepo = new CategorySequelizeRepository(CategoryModel);
     genreRepo = new GenreSequelizeRepository(GenreModel, uow);
     castMemberRepo = new CastMemberSequelizeRepository(CastMemberModel);
@@ -47,7 +69,7 @@ describe('UploadAudioVideoMediaUseCase Unit Tests', () => {
     storageService = new InMemoryStorage();
 
     uploadImageMediaUseCase = new UploadAudioVideoMediaUseCase(
-      uow,
+      applicationService,
       videoRepo,
       storageService,
     );
@@ -110,6 +132,7 @@ describe('UploadAudioVideoMediaUseCase Unit Tests', () => {
   });
 
   it('should upload banner image', async () => {
+    const queueAddSpy = jest.spyOn(integrationEventsQueue, 'add');
     const storeSpy = jest.spyOn(storageService, 'store');
     const category = Category.fake().aCategory().build();
     await categoryRepo.insert(category);
@@ -151,6 +174,18 @@ describe('UploadAudioVideoMediaUseCase Unit Tests', () => {
       data: Buffer.from('test data'),
       id: videoUpdated.video.destination(),
       mime_type: 'video/mp4',
+    });
+    expect(queueAddSpy).toHaveBeenCalledWith({
+      route: 'video.audio.uploaded',
+      event: {
+        event_name: VideoAudioMediaReplacedEvent.name,
+        payload: {
+          resource_id: videoUpdated.video_id.id,
+          file_path: videoUpdated.video.destination(),
+        },
+        event_version: 1,
+        occurred_on: expect.any(Date),
+      },
     });
   });
 });

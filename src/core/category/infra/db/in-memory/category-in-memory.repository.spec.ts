@@ -1,11 +1,17 @@
 import { Category } from '../../../domain/category.aggregate';
 import { CategoryFakeBuilder } from '../../../domain/category-fake.builder';
 import { CategoryInMemoryRepository } from './category-in-memory.repository';
+import { UnitOfWorkFakeInMemory } from '../../../../shared/infra/db/in-memory/fake-unit-work-in-memory';
 
 describe('CategoryInMemoryRepository', () => {
   let repository: CategoryInMemoryRepository;
 
-  beforeEach(() => (repository = new CategoryInMemoryRepository()));
+  beforeEach(
+    () =>
+      (repository = new CategoryInMemoryRepository(
+        new UnitOfWorkFakeInMemory(),
+      )),
+  );
   it('should no filter items when filter object is null', async () => {
     const items = [CategoryFakeBuilder.aCategory().build()];
     const filterSpy = jest.spyOn(items, 'filter' as any);

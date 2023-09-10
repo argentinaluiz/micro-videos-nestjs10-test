@@ -20,8 +20,8 @@ describe('UpdateGenreUseCase Unit Tests', () => {
 
   beforeEach(() => {
     uow = new UnitOfWorkFakeInMemory();
-    genreRepo = new GenreInMemoryRepository();
-    categoryRepo = new CategoryInMemoryRepository();
+    genreRepo = new GenreInMemoryRepository(uow);
+    categoryRepo = new CategoryInMemoryRepository(uow);
     categoriesIdsValidator = new CategoriesIdsValidator(categoryRepo);
     useCase = new UpdateGenreUseCase(
       uow,
