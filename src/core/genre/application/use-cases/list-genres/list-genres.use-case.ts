@@ -1,7 +1,7 @@
-import { GenreOutput, GenreOutputMapper } from '../../dto/genre-output';
+import { GenreOutput, GenreOutputMapper } from '../common/genre-output';
 import { IUseCase } from '../../../../shared/application/use-case-interface';
 import {
-  PaginationOutputDto,
+  PaginationOutput,
   PaginationOutputMapper,
 } from '../../../../shared/application/pagination-output';
 import {
@@ -47,4 +47,4 @@ export class ListGenresUseCase
   }
 }
 
-export type ListGenresOutput = PaginationOutputDto<GenreOutput>;
+export type ListGenresOutput = PaginationOutput<GenreOutput>;

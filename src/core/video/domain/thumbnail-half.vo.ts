@@ -4,7 +4,7 @@ import {
   InvalidMediaFileSizeError,
   MediaFileValidator,
 } from '../../shared/domain/utils/media-file.validator';
-import { ImageMedia } from './image-media.vo';
+import { ImageMedia } from '../../shared/domain/value-objects/image-media.vo';
 import { VideoId } from './video.aggregate';
 
 export class ThumbnailHalf extends ImageMedia {

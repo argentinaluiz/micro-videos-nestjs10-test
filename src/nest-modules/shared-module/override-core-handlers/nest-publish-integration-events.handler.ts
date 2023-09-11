@@ -4,7 +4,7 @@ import { IIntegrationEvent } from '../../../core/shared/domain/events/integratio
 import { Process, Processor } from '@nestjs/bull';
 
 @Processor('integration-events')
-export class CorePublishIntegrationEventHandler extends PublishIntegrationEventsHandler {
+export class NestPublishIntegrationEventHandler extends PublishIntegrationEventsHandler {
   @Process()
   async handleJob(job: Job<IIntegrationEvent>): Promise<void> {
     this.handle(job.data);

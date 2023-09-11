@@ -5,7 +5,7 @@ import { UnitOfWorkFakeInMemory } from '../../../../../shared/infra/db/in-memory
 import { Genre } from '../../../../domain/genre.aggregate';
 import { GenreSearchResult } from '../../../../domain/genre.repository';
 import { GenreInMemoryRepository } from '../../../../infra/db/in-memory/genre-in-memory.repository';
-import { GenreOutputMapper } from '../../../dto/genre-output';
+import { GenreOutputMapper } from '../../common/genre-output';
 import { ListGenresUseCase } from '../list-genres.use-case';
 
 describe('ListGenresUseCase Unit Tests', () => {

@@ -1,6 +1,6 @@
 import { SearchResult } from '../domain/repository/search-params';
 
-export type PaginationOutputDto<Item = any> = {
+export type PaginationOutput<Item = any> = {
   items: Item[];
   total: number;
   current_page: number;
@@ -12,7 +12,7 @@ export class PaginationOutputMapper {
   static toOutput<Item = any>(
     items: Item[],
     props: SearchResult,
-  ): PaginationOutputDto<Item> {
+  ): PaginationOutput<Item> {
     return {
       items,
       total: props.total,

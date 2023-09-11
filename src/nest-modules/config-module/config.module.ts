@@ -10,7 +10,7 @@ const joiJson = Joi.extend((joi) => {
   return {
     type: 'object',
     base: joi.object(),
-    coerce(value, schema) {
+    coerce(value, _schema) {
       if (value[0] !== '{' && !/^\s*\{/.test(value)) {
         return;
       }

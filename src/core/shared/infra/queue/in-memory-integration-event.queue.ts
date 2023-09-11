@@ -1,4 +1,4 @@
-import { IIntegrationEventQueueService } from '../../application/queue-interface';
+import { IIntegrationEventQueueService } from '../../application/queue.interface';
 import { IIntegrationEvent } from '../../domain/events/integration-event.interface';
 
 export class InMemoryIntegrationEventQueue

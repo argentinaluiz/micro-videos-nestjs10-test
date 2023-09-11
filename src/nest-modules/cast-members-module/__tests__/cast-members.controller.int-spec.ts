@@ -9,7 +9,6 @@ import { GetCastMemberUseCase } from '../../../core/cast-member/application/use-
 import { DeleteCastMemberUseCase } from '../../../core/cast-member/application/use-cases/delete-cast-member/delete-cast-member.use-case';
 import { CastMember } from '../../../core/cast-member/domain/cast-member.aggregate';
 import { Uuid } from '../../../core/shared/domain/value-objects/uuid.vo';
-import { CastMemberOutputMapper } from '../../../core/cast-member/application/dto/cast-member-output';
 import { CastMemberCollectionPresenter } from '../cast-members.presenter';
 import * as CastMemberProviders from '../cast-members.providers';
 import {
@@ -19,6 +18,7 @@ import {
 } from '../testing/cast-member-fixtures';
 import { DatabaseModule } from '../../database-module/database.module';
 import { ConfigModule } from '../../config-module/config.module';
+import { CastMemberOutputMapper } from '../../../core/cast-member/application/use-cases/common/cast-member-output';
 
 describe('CastMembersController Integration Tests', () => {
   let controller: CastMembersController;

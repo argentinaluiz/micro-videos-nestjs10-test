@@ -1,5 +1,5 @@
 import { IIntegrationEvent } from '../../domain/events/integration-event.interface';
-import { IMessageBusService } from '../message-bus-interface';
+import { IMessageBusService } from '../message-bus.interface';
 
 export class PublishIntegrationEventsHandler {
   constructor(private readonly messageBus: IMessageBusService) {}

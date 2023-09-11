@@ -11,7 +11,7 @@ import {
   HttpCode,
   Query,
 } from '@nestjs/common';
-import { CategoryOutput } from '@core/category/application/use-cases/common-output/category-output';
+import { CategoryOutput } from '@core/category/application/use-cases/common/category-output';
 import { SearchCategoriesDto } from './dto/search-categories.dto';
 import {
   CategoryCollectionPresenter,

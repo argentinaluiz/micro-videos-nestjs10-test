@@ -11,7 +11,7 @@ import {
   GenreModel,
   GenreSequelizeRepository,
 } from '../../../../infra/db/sequelize/genre-sequelize';
-import { GenreOutputMapper } from '../../../dto/genre-output';
+import { GenreOutputMapper } from '../../common/genre-output';
 import { ListGenresUseCase } from '../list-genres.use-case';
 
 describe('ListGenresUseCase Integration Tests', () => {

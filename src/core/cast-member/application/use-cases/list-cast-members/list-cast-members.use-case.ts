@@ -1,10 +1,10 @@
 import {
   CastMemberOutput,
   CastMemberOutputMapper,
-} from '../../dto/cast-member-output';
+} from '../common/cast-member-output';
 import { IUseCase } from '../../../../shared/application/use-case-interface';
 import {
-  PaginationOutputDto,
+  PaginationOutput,
   PaginationOutputMapper,
 } from '../../../../shared/application/pagination-output';
 import {
@@ -36,4 +36,4 @@ export class ListCastMembersUseCase
   }
 }
 
-export type ListCastMembersOutput = PaginationOutputDto<CastMemberOutput>;
+export type ListCastMembersOutput = PaginationOutput<CastMemberOutput>;

@@ -2,8 +2,8 @@ import { CastMemberId } from '../../../cast-member/domain/cast-member.aggregate'
 import { CategoryId } from '../../../category/domain/category.aggregate';
 import { GenreId } from '../../../genre/domain/genre.aggregate';
 import { IDomainEvent } from '../../../shared/domain/events/domain-event.interface';
-import { AudioVideoMedia } from '../audio-video-media.vo';
-import { ImageMedia } from '../image-media.vo';
+import { AudioVideoMedia } from '../../../shared/domain/value-objects/audio-video-media.vo';
+import { ImageMedia } from '../../../shared/domain/value-objects/image-media.vo';
 import { Rating } from '../rating.vo';
 import { VideoId } from '../video.aggregate';
 

@@ -1,4 +1,4 @@
-import { SearchInputDto } from '../../../../shared/application/search-input';
+import { SearchInput } from '../../../../shared/application/search-input';
 import { SortDirection } from '../../../../shared/domain/repository/search-params';
 import { IsArray, IsUUID, ValidateNested, validateSync } from 'class-validator';
 
@@ -9,7 +9,7 @@ export class ListGenresFilter {
   categories_id?: string[] | null;
 }
 
-export class ListGenresInput implements SearchInputDto<ListGenresFilter> {
+export class ListGenresInput implements SearchInput<ListGenresFilter> {
   page?: number;
   per_page?: number;
   sort?: string;

@@ -2,7 +2,7 @@ import { AggregateRoot } from '../aggregate-root';
 import { InvalidArgumentError } from '../errors/invalid-argument.error';
 import { NotFoundError } from '../errors/not-found.error';
 import { ValueObject } from '../value-object';
-import { IRepository, ISearchableRepository } from './repository-interface';
+import { IRepository, ISearchableRepository } from './repository.interface';
 import { SearchParams, SearchResult, SortDirection } from './search-params';
 import { IUnitOfWork } from './unit-of-work.interface';
 

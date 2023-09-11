@@ -1,4 +1,4 @@
-import { ApplicationService } from '../../../../shared/application/application-service';
+import { ApplicationService } from '../../../../shared/application/application.service';
 import { IStorage } from '../../../../shared/application/storage.interface';
 import { IUseCase } from '../../../../shared/application/use-case-interface';
 import { NotFoundError } from '../../../../shared/domain/errors/not-found.error';
@@ -9,7 +9,7 @@ import { Video, VideoId } from '../../../domain/video.aggregate';
 import { IVideoRepository } from '../../../domain/video.repository';
 import { UploadAudioVideoMediaInput } from './upload-audio-video-media.input';
 
-export class UploadAudioVideoMediaUseCase
+export class UploadAudioVideoMediasUseCase
   implements IUseCase<UploadAudioVideoMediaInput, UploadAudioVideoMediaOutput>
 {
   constructor(
@@ -21,7 +21,6 @@ export class UploadAudioVideoMediaUseCase
   async execute(
     input: UploadAudioVideoMediaInput,
   ): Promise<UploadAudioVideoMediaOutput> {
-    console.log(input);
     const video = await this.videoRepo.findById(new VideoId(input.video_id));
     if (!video) {
       throw new NotFoundError(input.video_id, Video);

@@ -1,13 +1,13 @@
 import {
   CategoryOutput,
   CategoryOutputMapper,
-} from '../common-output/category-output';
+} from '../common/category-output';
 import { IUseCase } from '../../../../shared/application/use-case-interface';
 import {
-  PaginationOutputDto,
+  PaginationOutput,
   PaginationOutputMapper,
 } from '../../../../shared/application/pagination-output';
-import { SearchInputDto } from '../../../../shared/application/search-input';
+import { SearchInput } from '../../../../shared/application/search-input';
 import {
   ICategoryRepository,
   CategorySearchParams,
@@ -34,6 +34,6 @@ export class ListCategoriesUseCase
   }
 }
 
-export type ListCategoriesInput = SearchInputDto;
+export type ListCategoriesInput = SearchInput;
 
-export type ListCategoriesOutput = PaginationOutputDto<CategoryOutput>;
+export type ListCategoriesOutput = PaginationOutput<CategoryOutput>;

@@ -2,12 +2,12 @@ import request from 'supertest';
 import { instanceToPlain } from 'class-transformer';
 import { CastMember } from '../../src/core/cast-member/domain/cast-member.aggregate';
 import { ICastMemberRepository } from '../../src/core/cast-member/domain/cast-member.repository';
-import { CastMemberOutputMapper } from '../../src/core/cast-member/application/dto/cast-member-output';
 import { Uuid } from '../../src/core/shared/domain/value-objects/uuid.vo';
 import { startApp } from '../../src/nest-modules/shared-module/testing/helpers';
 import { UpdateCastMemberFixture } from '../../src/nest-modules/cast-members-module/testing/cast-member-fixtures';
 import { CastMembersController } from '../../src/nest-modules/cast-members-module/cast-members.controller';
 import { CAST_MEMBERS_PROVIDERS } from '../../src/nest-modules/cast-members-module/cast-members.providers';
+import { CastMemberOutputMapper } from '../../src/core/cast-member/application/use-cases/common/cast-member-output';
 
 describe('CastMembersController (e2e)', () => {
   const uuid = '9366b7dc-2d71-4799-b91c-c64adb205104';

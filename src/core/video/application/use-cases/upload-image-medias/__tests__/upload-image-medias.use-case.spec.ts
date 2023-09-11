@@ -26,10 +26,10 @@ import { IVideoRepository } from '../../../../domain/video.repository';
 import { setupSequelizeForVideo } from '../../../../infra/db/sequelize/testing/setup-sequelize-for-video';
 import { VideoSequelizeRepository } from '../../../../infra/db/sequelize/video-sequelize.repository';
 import { VideoModel } from '../../../../infra/db/sequelize/video.model';
-import { UploadImageMediaUseCase } from '../upload-image-media.use-case';
+import { UploadImageMediasUseCase } from '../upload-image-medias.use-case';
 
-describe('UploadImageMediaUseCase Unit Tests', () => {
-  let uploadImageMediaUseCase: UploadImageMediaUseCase;
+describe('UploadImageMediasUseCase Unit Tests', () => {
+  let uploadImageMediasUseCase: UploadImageMediasUseCase;
   let videoRepo: IVideoRepository;
   let categoryRepo: ICategoryRepository;
   let genreRepo: IGenreRepository;
@@ -46,7 +46,7 @@ describe('UploadImageMediaUseCase Unit Tests', () => {
     videoRepo = new VideoSequelizeRepository(VideoModel, uow);
     storageService = new InMemoryStorage();
 
-    uploadImageMediaUseCase = new UploadImageMediaUseCase(
+    uploadImageMediasUseCase = new UploadImageMediasUseCase(
       uow,
       videoRepo,
       storageService,
@@ -55,7 +55,7 @@ describe('UploadImageMediaUseCase Unit Tests', () => {
 
   it('should throw error when video not found', async () => {
     await expect(
-      uploadImageMediaUseCase.execute({
+      uploadImageMediasUseCase.execute({
         video_id: 'invalid_video_id',
         field: 'banner',
         file: {
@@ -89,7 +89,7 @@ describe('UploadImageMediaUseCase Unit Tests', () => {
     await videoRepo.insert(video);
 
     try {
-      await uploadImageMediaUseCase.execute({
+      await uploadImageMediasUseCase.execute({
         video_id: video.video_id.id,
         field: 'banner',
         file: {
@@ -131,7 +131,7 @@ describe('UploadImageMediaUseCase Unit Tests', () => {
 
     await videoRepo.insert(video);
 
-    const response = await uploadImageMediaUseCase.execute({
+    const response = await uploadImageMediasUseCase.execute({
       video_id: video.video_id.id,
       field: 'banner',
       file: {

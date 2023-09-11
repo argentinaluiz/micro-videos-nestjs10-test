@@ -2,7 +2,7 @@ import { Chance } from 'chance';
 import { Video, VideoId } from './video.aggregate';
 import { CategoryId } from '../../category/domain/category.aggregate';
 import { Rating } from './rating.vo';
-import { ImageMedia } from './image-media.vo';
+import { ImageMedia } from '../../shared/domain/value-objects/image-media.vo';
 import { GenreId } from '../../genre/domain/genre.aggregate';
 import { CastMemberId } from '../../cast-member/domain/cast-member.aggregate';
 import { Banner } from './banner.vo';

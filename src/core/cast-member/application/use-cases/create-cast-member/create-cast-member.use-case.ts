@@ -4,7 +4,7 @@ import { CastMember } from '../../../domain/cast-member.aggregate';
 import {
   CastMemberOutput,
   CastMemberOutputMapper,
-} from '../../dto/cast-member-output';
+} from '../common/cast-member-output';
 import { CastMemberType } from '../../../domain/cast-member-type.vo';
 import { AggregateValidationError } from '../../../../shared/domain/validators/validation.error';
 import { CreateCastMemberInput } from './create-cast-member.input';

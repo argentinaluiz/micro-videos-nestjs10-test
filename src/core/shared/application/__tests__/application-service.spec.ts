@@ -2,7 +2,7 @@ import EventEmitter2 from 'eventemitter2';
 import { DomainEventManager } from '../../domain/events/domain-event-manager';
 import { IUnitOfWork } from '../../domain/repository/unit-of-work.interface';
 import { UnitOfWorkFakeInMemory } from '../../infra/db/in-memory/fake-unit-work-in-memory';
-import { ApplicationService } from '../application-service';
+import { ApplicationService } from '../application.service';
 import { AggregateRoot } from '../../domain/aggregate-root';
 import { ValueObject } from '../../domain/value-object';
 

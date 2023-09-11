@@ -18,8 +18,8 @@ import { ImageMediaModel } from '../../core/video/infra/db/sequelize/image-media
 import { AudioVideoMediaModel } from '../../core/video/infra/db/sequelize/audio-video-media.model';
 import { GenresModule } from '../genres-module/genres.module';
 import { CastMembersModule } from '../cast-members-module/cast-members.module';
-import { CorePublishUploadVideoMediaHandler } from './core-handlers/core-publish-upload-video-media.handler';
-import { IIntegrationEventQueueService } from '../../core/shared/application/queue-interface';
+import { NestAddVideoMediaReplacedToLocalQueueHandler } from './override-core-handlers/nest-add-video-media-replaced-to-local-queue.handler';
+import { IIntegrationEventQueueService } from '../../core/shared/application/queue.interface';
 import { VideosConsumer } from './videos.consumer';
 
 @Module({
@@ -44,9 +44,9 @@ import { VideosConsumer } from './videos.consumer';
     ...Object.values(VIDEOS_PROVIDERS.REPOSITORIES),
     ...Object.values(VIDEOS_PROVIDERS.USE_CASES),
     {
-      provide: CorePublishUploadVideoMediaHandler,
+      provide: NestAddVideoMediaReplacedToLocalQueueHandler,
       useFactory: (queueService: IIntegrationEventQueueService) => {
-        return new CorePublishUploadVideoMediaHandler(queueService);
+        return new NestAddVideoMediaReplacedToLocalQueueHandler(queueService);
       },
       inject: ['IIntegrationEventQueueService'],
     },

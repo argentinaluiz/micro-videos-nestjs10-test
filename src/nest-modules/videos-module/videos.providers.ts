@@ -20,10 +20,10 @@ import { GetVideoUseCase } from '../../core/video/application/use-cases/get-vide
 import { IGenreRepository } from '../../core/genre/domain/genre.repository';
 import { ICastMemberRepository } from '../../core/cast-member/domain/cast-member.repository';
 import { ICategoryRepository } from '../../core/category/domain/category.repository';
-import { UploadAudioVideoMediaUseCase } from '../../core/video/application/use-cases/upload-audio-video-media/upload-audio-video-media.use-case';
-import { ApplicationService } from '../../core/shared/application/application-service';
+import { UploadAudioVideoMediasUseCase } from '../../core/video/application/use-cases/upload-audio-video-medias/upload-audio-video-medias.use-case';
+import { ApplicationService } from '../../core/shared/application/application.service';
 import { IStorage } from '../../core/shared/application/storage.interface';
-import { CompleteProcessAudioVideoMediaUseCase } from '../../core/video/application/use-cases/complete-process-audio-video-media/complete-process-audio-video-media.use-case';
+import { ProcessAudioVideoMediasUseCase } from '../../core/video/application/use-cases/process-audio-video-medias/process-video-media.use-case';
 
 export const REPOSITORIES = {
   VIDEO_REPOSITORY: {
@@ -95,13 +95,13 @@ export const USE_CASES = {
     ],
   },
   UPLOAD_AUDIO_VIDEO_MEDIA_USE_CASE: {
-    provide: UploadAudioVideoMediaUseCase,
+    provide: UploadAudioVideoMediasUseCase,
     useFactory: (
       appService: ApplicationService,
       videoRepo: IVideoRepository,
       storage: IStorage,
     ) => {
-      return new UploadAudioVideoMediaUseCase(appService, videoRepo, storage);
+      return new UploadAudioVideoMediasUseCase(appService, videoRepo, storage);
     },
     inject: [
       ApplicationService,
@@ -145,12 +145,12 @@ export const USE_CASES = {
     ],
   },
   COMPLETE_PROCESS_AUDIO_VIDEO_MEDIA_USE_CASE: {
-    provide: CompleteProcessAudioVideoMediaUseCase,
+    provide: ProcessAudioVideoMediasUseCase,
     useFactory: (
       appService: ApplicationService,
       videoRepo: IVideoRepository,
     ) => {
-      return new CompleteProcessAudioVideoMediaUseCase(appService, videoRepo);
+      return new ProcessAudioVideoMediasUseCase(appService, videoRepo);
     },
     inject: [ApplicationService, REPOSITORIES.VIDEO_REPOSITORY.provide],
   },

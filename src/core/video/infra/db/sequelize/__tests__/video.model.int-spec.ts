@@ -16,7 +16,6 @@ import {
   CategorySequelizeRepository,
 } from '../../../../../category/infra/db/sequelize/category-sequelize';
 import {
-  GenreCategoryModel,
   GenreModel,
   GenreSequelizeRepository,
 } from '../../../../../genre/infra/db/sequelize/genre-sequelize';
@@ -26,7 +25,7 @@ import {
 } from '../../../../../cast-member/infra/db/sequelize/cast-member-sequelize';
 import { RatingValues } from '../../../../domain/rating.vo';
 import { VideoId } from '../../../../domain/video.aggregate';
-import { AudioVideoMediaStatus } from '../../../../domain/audio-video-media.vo';
+import { AudioVideoMediaStatus } from '../../../../../shared/domain/value-objects/audio-video-media.vo';
 import { Category } from '../../../../../category/domain/category.aggregate';
 import { UnitOfWorkFakeInMemory } from '../../../../../shared/infra/db/in-memory/fake-unit-work-in-memory';
 import { Genre } from '../../../../../genre/domain/genre.aggregate';
@@ -593,6 +592,6 @@ describe('VideoModel Unit Tests', () => {
       video_id: video.video_id,
       video_related_field: AudioVideoMediaRelatedField.TRAILER,
       status: AudioVideoMediaStatus.COMPLETED,
-    })
+    });
   });
 });

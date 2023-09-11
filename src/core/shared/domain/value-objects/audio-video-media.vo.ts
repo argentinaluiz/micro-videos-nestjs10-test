@@ -1,4 +1,4 @@
-import { ValueObject } from '../../shared/domain/value-object';
+import { ValueObject } from '../value-object';
 
 export enum AudioVideoMediaStatus {
   PENDING = 'pending',

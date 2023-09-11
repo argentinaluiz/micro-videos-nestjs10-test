@@ -6,7 +6,7 @@ import { ICategoryRepository } from '../../../domain/category.repository';
 import {
   CategoryOutput,
   CategoryOutputMapper,
-} from '../common-output/category-output';
+} from '../common/category-output';
 import { UpdateCategoryInput } from './update-category.input';
 
 export class UpdateCategoryUseCase

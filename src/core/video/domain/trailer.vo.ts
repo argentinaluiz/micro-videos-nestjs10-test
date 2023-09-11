@@ -4,7 +4,10 @@ import {
   InvalidMediaFileSizeError,
   MediaFileValidator,
 } from '../../shared/domain/utils/media-file.validator';
-import { AudioVideoMedia, AudioVideoMediaStatus } from './audio-video-media.vo';
+import {
+  AudioVideoMedia,
+  AudioVideoMediaStatus,
+} from '../../shared/domain/value-objects/audio-video-media.vo';
 import { VideoId } from './video.aggregate';
 
 export class Trailer extends AudioVideoMedia {

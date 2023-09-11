@@ -1,4 +1,3 @@
-import { Channel } from 'amqplib';
 import { Config } from '../../config';
 import { RabbitMQMessaging } from '../rabbitmq.messaging';
 import { IIntegrationEvent } from '../../../domain/events/integration-event.interface';

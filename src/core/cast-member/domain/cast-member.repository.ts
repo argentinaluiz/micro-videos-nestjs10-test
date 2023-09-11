@@ -1,5 +1,5 @@
 import { Either } from '../../shared/domain/either';
-import { ISearchableRepository } from '../../shared/domain/repository/repository-interface';
+import { ISearchableRepository } from '../../shared/domain/repository/repository.interface';
 import {
   SearchParams as DefaultSearchParams,
   SearchResult as DefaultSearchResult,

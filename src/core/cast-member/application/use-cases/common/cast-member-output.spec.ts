@@ -1,5 +1,5 @@
-import { CastMemberType } from '../../domain/cast-member-type.vo';
-import { CastMember } from '../../domain/cast-member.aggregate';
+import { CastMemberType } from '../../../domain/cast-member-type.vo';
+import { CastMember } from '../../../domain/cast-member.aggregate';
 import { CastMemberOutputMapper } from './cast-member-output';
 
 describe('CastMemberOutputMapper Unit Tests', () => {

@@ -1,5 +1,5 @@
 import { Global, Module, Scope } from '@nestjs/common';
-import { ApplicationService } from '../../core/shared/application/application-service';
+import { ApplicationService } from '../../core/shared/application/application.service';
 import { IUnitOfWork } from '../../core/shared/domain/repository/unit-of-work.interface';
 import EventEmitter2 from 'eventemitter2';
 import { DomainEventManager } from '../../core/shared/domain/events/domain-event-manager';
@@ -11,8 +11,8 @@ import { BullIntegrationEventQueue } from '../../core/shared/infra/queue/bull-in
 import { Queue } from 'bull';
 import { RabbitMQMessaging } from '../../core/shared/infra/messaging/rabbitmq.messaging';
 import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
-import { CorePublishIntegrationEventHandler } from './core-handlers/core-publish-integration-events.handler';
-import { IMessageBusService } from '../../core/shared/application/message-bus-interface';
+import { NestPublishIntegrationEventHandler } from './override-core-handlers/nest-publish-integration-events.handler';
+import { IMessageBusService } from '../../core/shared/application/message-bus.interface';
 import { RabbitmqModule } from '../rabbitmq-module/rabbitmq-module';
 
 @Global()
@@ -64,15 +64,14 @@ import { RabbitmqModule } from '../rabbitmq-module/rabbitmq-module';
     {
       provide: 'IMessageBusService',
       useFactory: (amqpConnection: AmqpConnection) => {
-        console.log('amqpConnection', amqpConnection);
         return new RabbitMQMessaging(amqpConnection);
       },
       inject: [AmqpConnection],
     },
     {
-      provide: CorePublishIntegrationEventHandler,
+      provide: NestPublishIntegrationEventHandler,
       useFactory: (messageBus: IMessageBusService) => {
-        return new CorePublishIntegrationEventHandler(messageBus);
+        return new NestPublishIntegrationEventHandler(messageBus);
       },
       inject: ['IMessageBusService'],
     },

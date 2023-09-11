@@ -4,7 +4,7 @@ import { CastMemberTypes } from '../../../../domain/cast-member-type.vo';
 import { CastMember } from '../../../../domain/cast-member.aggregate';
 import { CastMemberSearchResult } from '../../../../domain/cast-member.repository';
 import { CastMemberInMemoryRepository } from '../../../../infra/db/in-memory/cast-member-in-memory.repository';
-import { CastMemberOutputMapper } from '../../../dto/cast-member-output';
+import { CastMemberOutputMapper } from '../../common/cast-member-output';
 import { ListCastMembersUseCase } from '../list-cast-members.use-case';
 
 describe('ListCastMembersUseCase Unit Tests', () => {

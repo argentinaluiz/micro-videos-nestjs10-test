@@ -5,7 +5,7 @@ import { ICategoryRepository } from '../../../domain/category.repository';
 import {
   CategoryOutput,
   CategoryOutputMapper,
-} from '../common-output/category-output';
+} from '../common/category-output';
 
 export class GetCategoryUseCase
   implements IUseCase<GetCategoryInput, GetCategoryOutput>

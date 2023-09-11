@@ -1,5 +1,5 @@
-import { Category } from '../../../category/domain/category.aggregate';
-import { Genre } from '../../domain/genre.aggregate';
+import { Category } from '../../../../category/domain/category.aggregate';
+import { Genre } from '../../../domain/genre.aggregate';
 
 export type GenreCategoryOutput = {
   id: string;

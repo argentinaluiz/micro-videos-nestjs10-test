@@ -1,4 +1,4 @@
-import { CastMember } from '../../domain/cast-member.aggregate';
+import { CastMember } from '../../../domain/cast-member.aggregate';
 
 export type CastMemberOutput = {
   id: string;

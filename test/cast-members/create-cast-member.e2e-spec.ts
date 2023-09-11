@@ -1,12 +1,12 @@
 import request from 'supertest';
 import { instanceToPlain } from 'class-transformer';
 import { ICastMemberRepository } from '../../src/core/cast-member/domain/cast-member.repository';
-import { CastMemberOutputMapper } from '../../src/core/cast-member/application/dto/cast-member-output';
 import { CastMemberId } from '../../src/core/cast-member/domain/cast-member.aggregate';
 import { startApp } from '../../src/nest-modules/shared-module/testing/helpers';
 import { CreateCastMemberFixture } from '../../src/nest-modules/cast-members-module/testing/cast-member-fixtures';
 import { CastMembersController } from '../../src/nest-modules/cast-members-module/cast-members.controller';
 import { CAST_MEMBERS_PROVIDERS } from '../../src/nest-modules/cast-members-module/cast-members.providers';
+import { CastMemberOutputMapper } from '../../src/core/cast-member/application/use-cases/common/cast-member-output';
 
 describe('CastMembersController (e2e)', () => {
   describe('/cast-members (POST)', () => {

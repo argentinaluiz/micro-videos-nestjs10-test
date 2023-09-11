@@ -1,7 +1,6 @@
 import request from 'supertest';
 import { instanceToPlain } from 'class-transformer';
 import { IGenreRepository } from '../../src/core/genre/domain/genre.repository';
-import { GenreOutputMapper } from '../../src/core/genre/application/dto/genre-output';
 import { GenreId } from '../../src/core/genre/domain/genre.aggregate';
 import { startApp } from '../../src/nest-modules/shared-module/testing/helpers';
 import { CreateGenreFixture } from '../../src/nest-modules/genres-module/testing/genre-fixture';
@@ -9,6 +8,7 @@ import { GENRES_PROVIDERS } from '../../src/nest-modules/genres-module/genres.pr
 import { GenresController } from '../../src/nest-modules/genres-module/genres.controller';
 import { ICategoryRepository } from '../../src/core/category/domain/category.repository';
 import { CATEGORY_PROVIDERS } from '../../src/nest-modules/categories-module/categories.providers';
+import { GenreOutputMapper } from '../../src/core/genre/application/use-cases/common/genre-output';
 
 describe('GenresController (e2e)', () => {
   describe('/genres (POST)', () => {

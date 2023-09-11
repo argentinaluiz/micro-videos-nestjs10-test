@@ -18,10 +18,7 @@ import {
 } from '../../../../../genre/infra/db/sequelize/genre-sequelize';
 import { LoadAggregateError } from '../../../../../shared/domain/validators/validation.error';
 import { UnitOfWorkFakeInMemory } from '../../../../../shared/infra/db/in-memory/fake-unit-work-in-memory';
-import {
-  AudioVideoMedia,
-  AudioVideoMediaStatus,
-} from '../../../../domain/audio-video-media.vo';
+import { AudioVideoMediaStatus } from '../../../../../shared/domain/value-objects/audio-video-media.vo';
 import { Banner } from '../../../../domain/banner.vo';
 import { Rating, RatingValues } from '../../../../domain/rating.vo';
 import { ThumbnailHalf } from '../../../../domain/thumbnail-half.vo';

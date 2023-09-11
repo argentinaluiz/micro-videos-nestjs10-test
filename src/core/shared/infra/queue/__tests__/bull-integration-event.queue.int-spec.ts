@@ -1,4 +1,4 @@
-import Queue, { Queue as QueueType, JobStatus } from 'bull';
+import Queue, { Queue as QueueType } from 'bull';
 import { IIntegrationEvent } from '../../../domain/events/integration-event.interface';
 import { BullIntegrationEventQueue } from '../bull-integration-event.queue';
 import { Config } from '../../config';

@@ -10,7 +10,7 @@ import { ICastMemberRepository } from '../../../domain/cast-member.repository';
 import {
   CastMemberOutput,
   CastMemberOutputMapper,
-} from '../../dto/cast-member-output';
+} from '../common/cast-member-output';
 import { UpdateCastMemberInput } from './update-cast-member.input';
 
 export class UpdateCastMemberUseCase

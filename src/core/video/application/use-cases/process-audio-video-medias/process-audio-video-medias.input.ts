@@ -6,13 +6,13 @@ import {
   validateSync,
 } from 'class-validator';
 
-export type CompleteProcessAudioVideoMediaInputConstructorProps = {
+export type ProcessAudioVideoMediasInputConstructorProps = {
   video_id: string;
   encoded_location: string;
   field: 'trailer' | 'video';
 };
 
-export class CompleteProcessAudioVideoMediaInput {
+export class ProcessAudioVideoMediasInput {
   @IsUUID('4')
   @IsString()
   @IsNotEmpty()
@@ -25,7 +25,7 @@ export class CompleteProcessAudioVideoMediaInput {
   @IsNotEmpty()
   field: 'trailer' | 'video';
 
-  constructor(props?: CompleteProcessAudioVideoMediaInputConstructorProps) {
+  constructor(props?: ProcessAudioVideoMediasInputConstructorProps) {
     if (!props) return;
     this.video_id = props.video_id;
     this.encoded_location = props.encoded_location;
@@ -33,8 +33,8 @@ export class CompleteProcessAudioVideoMediaInput {
   }
 }
 
-export class ValidateCompleteProcessAudioVideoMediaInput {
-  static validate(input: CompleteProcessAudioVideoMediaInput) {
+export class ValidateProcessAudioVideoMediasInput {
+  static validate(input: ProcessAudioVideoMediasInput) {
     return validateSync(input);
   }
 }

@@ -1,6 +1,5 @@
 import { InMemorySearchableRepository } from '../../../../shared/domain/repository/in-memory.repository';
 import { SortDirection } from '../../../../shared/domain/repository/search-params';
-import { IUnitOfWork } from '../../../../shared/domain/repository/unit-of-work.interface';
 import { Video, VideoId } from '../../../domain/video.aggregate';
 import {
   IVideoRepository,

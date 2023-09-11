@@ -8,5 +8,5 @@ export const MessageIntegrationEventsMap = {
   ['test']: {
     exchange: 'test-exchange',
     routing_key: 'test-event',
-  }
+  },
 };

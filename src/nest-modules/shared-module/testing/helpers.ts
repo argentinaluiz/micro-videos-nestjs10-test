@@ -1,4 +1,4 @@
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { getConnectionToken } from '@nestjs/sequelize';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -7,6 +7,12 @@ import { AppModule } from '../../../app.module';
 import { migrator } from '../../../core/shared/infra/db/sequelize/migrator';
 import { applyGlobalConfig } from '../../../global-config';
 import { UnitOfWorkSequelize } from '../../../core/shared/infra/db/sequelize/unit-of-work-sequelize';
+import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
+// import { RabbitmqModule } from '../../rabbitmq-module/rabbitmq-module';
+// import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
+
+//@ts-expect-error - this is a mock
+console.warn = jest.fn();
 
 export function startApp({
   beforeInit,
@@ -55,9 +61,7 @@ export function startApp({
   //
 
   afterEach(async () => {
-    if (_app) {
-      await _app.close();
-    }
+    await _app?.close();
   });
 
   return {

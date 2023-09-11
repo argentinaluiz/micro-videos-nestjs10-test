@@ -1,4 +1,4 @@
-import { IQueueService } from '../../application/queue-interface';
+import { IQueueService } from '../../application/queue.interface';
 
 export class InMemoryQueue implements IQueueService {
   private queue: any[] = [];

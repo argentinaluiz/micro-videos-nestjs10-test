@@ -6,5 +6,3 @@ export class UpdateVideoInputWithoutId extends OmitType(UpdateVideoInput, [
 ] as any) {}
 
 export class UpdateVideoDto extends UpdateVideoInputWithoutId {}
-
-

@@ -4,7 +4,7 @@ import { Category } from '../../../domain/category.aggregate';
 import {
   CategoryOutput,
   CategoryOutputMapper,
-} from '../common-output/category-output';
+} from '../common/category-output';
 import { AggregateValidationError } from '../../../../shared/domain/validators/validation.error';
 import { CreateCategoryInput } from './create-category.input';
 

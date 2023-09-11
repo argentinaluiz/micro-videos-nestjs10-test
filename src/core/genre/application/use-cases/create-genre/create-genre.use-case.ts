@@ -5,7 +5,7 @@ import { IUnitOfWork } from '../../../../shared/domain/repository/unit-of-work.i
 import { AggregateValidationError } from '../../../../shared/domain/validators/validation.error';
 import { Genre } from '../../../domain/genre.aggregate';
 import { IGenreRepository } from '../../../domain/genre.repository';
-import { GenreOutput, GenreOutputMapper } from '../../dto/genre-output';
+import { GenreOutput, GenreOutputMapper } from '../common/genre-output';
 import { CreateGenreInput } from './create-genre.input';
 
 export class CreateGenreUseCase

@@ -22,4 +22,3 @@ export class InMemoryStorage implements IStorage {
     return { data, mime_type, name: id };
   }
 }
-

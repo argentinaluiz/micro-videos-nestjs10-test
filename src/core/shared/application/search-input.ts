@@ -1,6 +1,6 @@
 import { SortDirection } from '../domain/repository/search-params';
 
-export type SearchInputDto<Filter = string> = {
+export type SearchInput<Filter = string> = {
   page?: number;
   per_page?: number;
   sort?: string | null;

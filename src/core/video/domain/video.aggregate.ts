@@ -4,11 +4,10 @@ import { AggregateRoot } from '../../shared/domain/aggregate-root';
 import { GenreId } from '../../genre/domain/genre.aggregate';
 import { CastMemberId } from '../../cast-member/domain/cast-member.aggregate';
 import { Rating } from './rating.vo';
-import { ImageMedia } from './image-media.vo';
-import { AudioVideoMedia, AudioVideoMediaStatus } from './audio-video-media.vo';
+import { AudioVideoMediaStatus } from '../../shared/domain/value-objects/audio-video-media.vo';
 import VideoValidatorFactory from './video.validator';
 import { VideoCreatedEvent } from './domain-events/video-created.event';
-import { VideoAudioMediaReplacedEvent } from './domain-events/video-audio-media-replaced.event';
+import { VideoMediaReplacedEvent } from './domain-events/video-audio-media-replaced.event';
 import { VideoFakeBuilder } from './video-fake.builder';
 import { Banner } from './banner.vo';
 import { Thumbnail } from './thumbnail.vo';
@@ -103,7 +102,7 @@ export class Video extends AggregateRoot {
       this.onVideoCreated.bind(this),
     );
     this.registerHandler(
-      VideoAudioMediaReplacedEvent.name,
+      VideoMediaReplacedEvent.name,
       this.onAudioVideoMediaReplaced.bind(this),
     );
   }
@@ -193,15 +192,13 @@ export class Video extends AggregateRoot {
   replaceTrailer(trailer: Trailer): void {
     this.trailer = trailer;
     this.applyEvent(
-      new VideoAudioMediaReplacedEvent(this.video_id, trailer, 'trailer'),
+      new VideoMediaReplacedEvent(this.video_id, trailer, 'trailer'),
     );
   }
 
   replaceVideo(video: VideoMedia): void {
     this.video = video;
-    this.applyEvent(
-      new VideoAudioMediaReplacedEvent(this.video_id, video, 'video'),
-    );
+    this.applyEvent(new VideoMediaReplacedEvent(this.video_id, video, 'video'));
   }
 
   addCategoryId(categoryId: CategoryId): void {
@@ -270,7 +267,7 @@ export class Video extends AggregateRoot {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onAudioVideoMediaReplaced(_event: VideoAudioMediaReplacedEvent): void {
+  onAudioVideoMediaReplaced(_event: VideoMediaReplacedEvent): void {
     if (this.is_published) {
       return;
     }

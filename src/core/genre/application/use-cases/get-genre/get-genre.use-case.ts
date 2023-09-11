@@ -3,7 +3,7 @@ import { IUseCase } from '../../../../shared/application/use-case-interface';
 import { NotFoundError } from '../../../../shared/domain/errors/not-found.error';
 import { Genre, GenreId } from '../../../domain/genre.aggregate';
 import { IGenreRepository } from '../../../domain/genre.repository';
-import { GenreOutput, GenreOutputMapper } from '../../dto/genre-output';
+import { GenreOutput, GenreOutputMapper } from '../common/genre-output';
 
 export class GetGenreUseCase
   implements IUseCase<GetGenreInput, GetGenreOutput>

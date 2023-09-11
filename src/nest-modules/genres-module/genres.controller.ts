@@ -13,7 +13,6 @@ import {
 } from '@nestjs/common';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { UpdateGenreDto } from './dto/update-genre.dto';
-import { GenreOutput } from '@core/genre/application/dto/genre-output';
 import { SearchGenreDto } from './dto/search-genres.dto';
 import { GenreCollectionPresenter, GenrePresenter } from './genres.presenter';
 import { CreateGenreUseCase } from '../../core/genre/application/use-cases/create-genre/create-genre.use-case';
@@ -22,6 +21,7 @@ import { DeleteGenreUseCase } from '../../core/genre/application/use-cases/delet
 import { GetGenreUseCase } from '../../core/genre/application/use-cases/get-genre/get-genre.use-case';
 import { ListGenresUseCase } from '../../core/genre/application/use-cases/list-genres/list-genres.use-case';
 import { UpdateGenreInput } from '../../core/genre/application/use-cases/update-genre/update-genre.input';
+import { GenreOutput } from '../../core/genre/application/use-cases/common/genre-output';
 
 @Controller('genres')
 export class GenresController {

@@ -1,7 +1,7 @@
 import { CastMemberId } from '../../cast-member/domain/cast-member.aggregate';
 import { CategoryId } from '../../category/domain/category.aggregate';
 import { GenreId } from '../../genre/domain/genre.aggregate';
-import { ISearchableRepository } from '../../shared/domain/repository/repository-interface';
+import { ISearchableRepository } from '../../shared/domain/repository/repository.interface';
 import {
   SearchParams as DefaultSearchParams,
   SearchResult as DefaultSearchResult,

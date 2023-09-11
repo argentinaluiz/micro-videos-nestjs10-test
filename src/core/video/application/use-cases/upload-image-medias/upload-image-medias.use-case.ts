@@ -10,8 +10,8 @@ import { Video, VideoId } from '../../../domain/video.aggregate';
 import { IVideoRepository } from '../../../domain/video.repository';
 import { UploadImageMediaInput } from './upload-image-media.input';
 
-export class UploadImageMediaUseCase
-  implements IUseCase<UploadImageMediaInput, UpdateImageMediaOutput>
+export class UploadImageMediasUseCase
+  implements IUseCase<UploadImageMediaInput, UpdateImageMediasOutput>
 {
   constructor(
     private uow: IUnitOfWork,
@@ -19,7 +19,9 @@ export class UploadImageMediaUseCase
     private storage: IStorage,
   ) {}
 
-  async execute(input: UploadImageMediaInput): Promise<UpdateImageMediaOutput> {
+  async execute(
+    input: UploadImageMediaInput,
+  ): Promise<UpdateImageMediasOutput> {
     const video = await this.videoRepo.findById(new VideoId(input.video_id));
     if (!video) {
       throw new NotFoundError(input.video_id, Video);
@@ -68,4 +70,4 @@ export class UploadImageMediaUseCase
   }
 }
 
-export type UpdateImageMediaOutput = { id: string };
+export type UpdateImageMediasOutput = { id: string };

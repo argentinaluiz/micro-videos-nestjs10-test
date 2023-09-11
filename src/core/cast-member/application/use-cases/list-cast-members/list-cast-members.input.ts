@@ -1,4 +1,4 @@
-import { SearchInputDto } from '../../../../shared/application/search-input';
+import { SearchInput } from '../../../../shared/application/search-input';
 import { SortDirection } from '../../../../shared/domain/repository/search-params';
 import { CastMemberTypes } from '../../../domain/cast-member-type.vo';
 import { IsInt, ValidateNested, validateSync } from 'class-validator';
@@ -10,7 +10,7 @@ export class ListCastMembersFilter {
 }
 
 export class ListCastMembersInput
-  implements SearchInputDto<ListCastMembersFilter>
+  implements SearchInput<ListCastMembersFilter>
 {
   page?: number;
   per_page?: number;

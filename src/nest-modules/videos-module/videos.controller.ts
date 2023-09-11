@@ -5,20 +5,15 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
   Inject,
   ParseUUIDPipe,
-  HttpCode,
-  Query,
   ValidationPipe,
   UseInterceptors,
   UploadedFiles,
-  Response,
   BadRequestException,
 } from '@nestjs/common';
 import { CreateVideoDto } from './dto/create-video.dto';
 //import { UpdateVideoDto } from './dto/update-video.dto';
-import { VideoOutput } from '@core/video/application/dto/video-output';
 //import { SearchVideoDto } from './dto/search-videos.dto';
 //import { VideoCollectionPresenter, VideoPresenter } from './videos.presenter';
 import { CreateVideoUseCase } from '../../core/video/application/use-cases/create-video/create-video.use-case';
@@ -27,18 +22,12 @@ import { UpdateVideoUseCase } from '../../core/video/application/use-cases/updat
 import { GetVideoUseCase } from '../../core/video/application/use-cases/get-video/get-video.use-case';
 //import { ListVideosUseCase } from '../../core/video/application/use-cases/list-videos/list-videos.use-case';
 import { UpdateVideoInput } from '../../core/video/application/use-cases/update-video/update-video.input';
-import {
-  FileFieldsInterceptor,
-  FileInterceptor,
-  FilesInterceptor,
-} from '@nestjs/platform-express';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { UpdateVideoDto } from './dto/update-video.dto';
-import { UploadAudioVideoMediaUseCase } from '../../core/video/application/use-cases/upload-audio-video-media/upload-audio-video-media.use-case';
-import {
-  UploadAudioVideoMediaInput,
-  ValidateUploadAudioVideoMediaInput,
-} from '../../core/video/application/use-cases/upload-audio-video-media/upload-audio-video-media.input';
-import { FileMediaInput } from '../../core/video/application/dto/file-media.input';
+import { UploadAudioVideoMediasUseCase } from '../../core/video/application/use-cases/upload-audio-video-medias/upload-audio-video-medias.use-case';
+import { VideoOutput } from '../../core/video/application/use-cases/common/video-output';
+import { UploadAudioVideoMediaInput } from '../../core/video/application/use-cases/upload-audio-video-medias/upload-audio-video-media.input';
+import { ValidateUploadImageMediaInput } from '../../core/video/application/use-cases/upload-image-medias/upload-image-media.input';
 
 @Controller('videos')
 export class VideosController {
@@ -48,8 +37,8 @@ export class VideosController {
   @Inject(UpdateVideoUseCase)
   private updateUseCase: UpdateVideoUseCase;
 
-  @Inject(UploadAudioVideoMediaUseCase)
-  private uploadAudioVideoMedia: UploadAudioVideoMediaUseCase;
+  @Inject(UploadAudioVideoMediasUseCase)
+  private uploadAudioVideoMedia: UploadAudioVideoMediasUseCase;
 
   // @Inject(DeleteVideoUseCase)
   // private deleteUseCase: DeleteVideoUseCase;
@@ -141,7 +130,7 @@ export class VideosController {
     const input = await new ValidationPipe({
       errorHttpStatusCode: 422,
     }).transform(data, {
-      metatype: ValidateUploadAudioVideoMediaInput,
+      metatype: ValidateUploadImageMediaInput,
       type: 'body',
     });
 

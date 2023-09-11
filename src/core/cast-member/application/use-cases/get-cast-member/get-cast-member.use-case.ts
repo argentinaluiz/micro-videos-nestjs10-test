@@ -8,7 +8,7 @@ import { ICastMemberRepository } from '../../../domain/cast-member.repository';
 import {
   CastMemberOutput,
   CastMemberOutputMapper,
-} from '../../dto/cast-member-output';
+} from '../common/cast-member-output';
 
 export class GetCastMemberUseCase
   implements IUseCase<GetCastMemberInput, GetCastMemberOutput>

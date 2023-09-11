@@ -1,5 +1,5 @@
 import { CategoryId } from '../../category/domain/category.aggregate';
-import { ISearchableRepository } from '../../shared/domain/repository/repository-interface';
+import { ISearchableRepository } from '../../shared/domain/repository/repository.interface';
 import {
   SearchParams as DefaultSearchParams,
   SearchResult as DefaultSearchResult,

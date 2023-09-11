@@ -2,7 +2,6 @@ import { Controller, Get, INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundErrorFilter } from './not-found-error.filter';
 import request from 'supertest';
-import { Entity } from '../../../core/shared/domain/entity';
 import { NotFoundError } from '../../../core/shared/domain/errors/not-found.error';
 import { AggregateRoot } from '../../../core/shared/domain/aggregate-root';
 
@@ -37,7 +36,7 @@ describe('NotFoundErrorFilter Unit Tests', () => {
     return request(app.getHttpServer()).get('/stub').expect(404).expect({
       statusCode: 404,
       error: 'Not Found',
-      message: 'StubEntity Not Found using ID fake id',
+      message: 'StubAggregate Not Found using ID fake id',
     });
   });
 });

@@ -1,7 +1,7 @@
 import { ListCategoriesUseCase } from '../list-categories.use-case';
 import { setupSequelize } from '../../../../../shared/infra/testing/helpers';
 import { Category } from '../../../../domain/category.aggregate';
-import { CategoryOutputMapper } from '../../common-output/category-output';
+import { CategoryOutputMapper } from '../../common/category-output';
 import {
   CategoryModel,
   CategorySequelizeRepository,

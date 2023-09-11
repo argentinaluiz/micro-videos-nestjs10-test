@@ -8,7 +8,6 @@ import { ListGenresUseCase } from '../../../core/genre/application/use-cases/lis
 import { GetGenreUseCase } from '../../../core/genre/application/use-cases/get-genre/get-genre.use-case';
 import { DeleteGenreUseCase } from '../../../core/genre/application/use-cases/delete-genre/delete-genre.use-case';
 import { Uuid } from '../../../core/shared/domain/value-objects/uuid.vo';
-import { GenreOutputMapper } from '../../../core/genre/application/dto/genre-output';
 import { GenreCollectionPresenter } from '../genres.presenter';
 import {
   CreateGenreFixture,
@@ -25,6 +24,7 @@ import { Genre, GenreId } from '../../../core/genre/domain/genre.aggregate';
 import { Category } from '../../../core/category/domain/category.aggregate';
 import { GENRES_PROVIDERS } from '../genres.providers';
 import { CATEGORY_PROVIDERS } from '../../categories-module/categories.providers';
+import { GenreOutputMapper } from '../../../core/genre/application/use-cases/common/genre-output';
 
 describe('GenresController Integration Tests', () => {
   let controller: GenresController;

@@ -11,7 +11,6 @@ import {
   HttpCode,
   Query,
 } from '@nestjs/common';
-import { CastMemberOutput } from '@core/cast-member/application/dto/cast-member-output';
 import { SearchCastMemberDto } from './dto/search-cast-members.dto';
 import {
   CastMemberCollectionPresenter,
@@ -25,6 +24,7 @@ import { ListCastMembersUseCase } from '../../core/cast-member/application/use-c
 import { CreateCastMemberDto } from './dto/create-cast-member.dto';
 import { UpdateCastMemberDto } from './dto/update-cast-member.dto';
 import { UpdateCastMemberInput } from '../../core/cast-member/application/use-cases/update-cast-member/update-cast-member.input';
+import { CastMemberOutput } from '../../core/cast-member/application/use-cases/common/cast-member-output';
 
 @Controller('cast-members')
 export class CastMembersController {

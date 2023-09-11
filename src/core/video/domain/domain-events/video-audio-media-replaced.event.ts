@@ -1,14 +1,15 @@
 import { IDomainEvent } from '../../../shared/domain/events/domain-event.interface';
-import { AudioVideoMedia } from '../audio-video-media.vo';
+import { Trailer } from '../trailer.vo';
+import { VideoMedia } from '../video-media.vo';
 import { VideoId } from '../video.aggregate';
 
-export class VideoAudioMediaReplacedEvent implements IDomainEvent {
+export class VideoMediaReplacedEvent implements IDomainEvent {
   occurred_on: Date;
   event_version: number;
 
   constructor(
     readonly aggregate_id: VideoId,
-    readonly media: AudioVideoMedia,
+    readonly media: Trailer | VideoMedia,
     readonly media_type: 'trailer' | 'video',
   ) {
     this.occurred_on = new Date();

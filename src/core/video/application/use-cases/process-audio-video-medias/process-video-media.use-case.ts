@@ -1,16 +1,13 @@
-import { ApplicationService } from '../../../../shared/application/application-service';
+import { ApplicationService } from '../../../../shared/application/application.service';
 import { IUseCase } from '../../../../shared/application/use-case-interface';
 import { NotFoundError } from '../../../../shared/domain/errors/not-found.error';
 import { Video, VideoId } from '../../../domain/video.aggregate';
 import { IVideoRepository } from '../../../domain/video.repository';
-import { CompleteProcessAudioVideoMediaInput } from './complete-process-audio-video-media.input';
+import { ProcessAudioVideoMediasInput } from './process-audio-video-medias.input';
 
-export class CompleteProcessAudioVideoMediaUseCase
+export class ProcessAudioVideoMediasUseCase
   implements
-    IUseCase<
-      CompleteProcessAudioVideoMediaInput,
-      CompleteProcessAudioVideoMediaOutput
-    >
+    IUseCase<ProcessAudioVideoMediasInput, ProcessAudioVideoMediasOutput>
 {
   constructor(
     private application: ApplicationService,
@@ -18,8 +15,8 @@ export class CompleteProcessAudioVideoMediaUseCase
   ) {}
 
   async execute(
-    input: CompleteProcessAudioVideoMediaInput,
-  ): Promise<CompleteProcessAudioVideoMediaOutput> {
+    input: ProcessAudioVideoMediasInput,
+  ): Promise<ProcessAudioVideoMediasOutput> {
     const video = await this.videoRepo.findById(new VideoId(input.video_id));
     if (!video) {
       throw new NotFoundError(input.video_id, Video);
@@ -41,4 +38,4 @@ export class CompleteProcessAudioVideoMediaUseCase
   }
 }
 
-export type CompleteProcessAudioVideoMediaOutput = { id: string };
+export type ProcessAudioVideoMediasOutput = { id: string };

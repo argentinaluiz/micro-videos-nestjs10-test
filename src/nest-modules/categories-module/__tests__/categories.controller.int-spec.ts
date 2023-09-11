@@ -18,7 +18,7 @@ import {
   CategoryCollectionPresenter,
   CategoryPresenter,
 } from '../categories.presenter';
-import { CategoryOutputMapper } from '../../../core/category/application/use-cases/common-output/category-output';
+import { CategoryOutputMapper } from '../../../core/category/application/use-cases/common/category-output';
 import { Category } from '../../../core/category/domain/category.aggregate';
 import { DatabaseModule } from '../../database-module/database.module';
 import { CATEGORY_PROVIDERS } from '../categories.providers';
