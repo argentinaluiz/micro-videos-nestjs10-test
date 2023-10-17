@@ -18,7 +18,7 @@ describe('UpdateCastMemberUseCase Unit Tests', () => {
     useCase = new UpdateCastMemberUseCase(repository);
   });
 
-  it('should throws error when aggregate not found', async () => {
+  it('should throws error when entity not found', async () => {
     const castMemberId = new CastMemberId();
 
     await expect(() =>
@@ -30,21 +30,21 @@ describe('UpdateCastMemberUseCase Unit Tests', () => {
 
   it('should update a cast member', async () => {
     const spyUpdate = jest.spyOn(repository, 'update');
-    const aggregate = CastMember.fake().anActor().build();
-    repository.items = [aggregate];
+    const entity = CastMember.fake().anActor().build();
+    repository.items = [entity];
 
     let output = await useCase.execute(
       new UpdateCastMemberInput({
-        id: aggregate.cast_member_id.id,
+        id: entity.cast_member_id.id,
         name: 'test',
       }),
     );
     expect(spyUpdate).toHaveBeenCalledTimes(1);
     expect(output).toStrictEqual({
-      id: aggregate.cast_member_id.id,
+      id: entity.cast_member_id.id,
       name: 'test',
       type: CastMemberTypes.ACTOR,
-      created_at: aggregate.created_at,
+      created_at: entity.created_at,
     });
 
     type Arrange = {
@@ -63,27 +63,27 @@ describe('UpdateCastMemberUseCase Unit Tests', () => {
     const arrange: Arrange[] = [
       {
         input: {
-          id: aggregate.entity_id.id,
+          id: entity.entity_id.id,
           name: 'test',
           type: CastMemberTypes.DIRECTOR,
         },
         expected: {
-          id: aggregate.entity_id.id,
+          id: entity.entity_id.id,
           name: 'test',
           type: CastMemberTypes.DIRECTOR,
-          created_at: aggregate.created_at,
+          created_at: entity.created_at,
         },
       },
       {
         input: {
-          id: aggregate.entity_id.id,
+          id: entity.entity_id.id,
           type: CastMemberTypes.DIRECTOR,
         },
         expected: {
-          id: aggregate.entity_id.id,
+          id: entity.entity_id.id,
           name: 'test',
           type: CastMemberTypes.DIRECTOR,
-          created_at: aggregate.created_at,
+          created_at: entity.created_at,
         },
       },
     ];
@@ -97,7 +97,7 @@ describe('UpdateCastMemberUseCase Unit Tests', () => {
         }),
       );
       expect(output).toStrictEqual({
-        id: aggregate.entity_id.id,
+        id: entity.entity_id.id,
         name: i.expected.name,
         type: i.expected.type,
         created_at: i.expected.created_at,

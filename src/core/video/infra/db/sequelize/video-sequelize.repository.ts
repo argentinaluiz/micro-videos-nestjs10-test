@@ -34,26 +34,26 @@ export class VideoSequelizeRepository implements IVideoRepository {
     private uow: UnitOfWorkSequelize,
   ) {}
 
-  async insert(aggregate: Video): Promise<void> {
-    await this.videoModel.create(VideoModelMapper.toModelProps(aggregate), {
+  async insert(entity: Video): Promise<void> {
+    await this.videoModel.create(VideoModelMapper.toModelProps(entity), {
       include: this.relations_include,
       transaction: this.uow.getTransaction(),
     });
-    this.uow.addAggregateRoot(aggregate);
+    this.uow.addAggregateRoot(entity);
   }
 
-  async bulkInsert(aggregates: Video[]): Promise<void> {
-    const models = aggregates.map((e) => VideoModelMapper.toModelProps(e));
+  async bulkInsert(entities: Video[]): Promise<void> {
+    const models = entities.map((e) => VideoModelMapper.toModelProps(e));
     await this.videoModel.bulkCreate(models, {
       include: this.relations_include,
       transaction: this.uow.getTransaction(),
     });
-    aggregates.forEach((e) => this.uow.addAggregateRoot(e));
+    entities.forEach((e) => this.uow.addAggregateRoot(e));
   }
 
   async findById(id: VideoId): Promise<Video> {
     const model = await this._get(id.id);
-    return model ? VideoModelMapper.toAggregate(model) : null;
+    return model ? VideoModelMapper.toEntity(model) : null;
   }
 
   async findAll(): Promise<Video[]> {
@@ -61,7 +61,7 @@ export class VideoSequelizeRepository implements IVideoRepository {
       include: this.relations_include,
       transaction: this.uow.getTransaction(),
     });
-    return models.map((m) => VideoModelMapper.toAggregate(m));
+    return models.map((m) => VideoModelMapper.toEntity(m));
   }
 
   async findByIds(ids: VideoId[]): Promise<Video[]> {
@@ -74,7 +74,7 @@ export class VideoSequelizeRepository implements IVideoRepository {
       include: this.relations_include,
       transaction: this.uow.getTransaction(),
     });
-    return models.map((m) => VideoModelMapper.toAggregate(m));
+    return models.map((m) => VideoModelMapper.toEntity(m));
   }
 
   async existsById(
@@ -107,11 +107,11 @@ export class VideoSequelizeRepository implements IVideoRepository {
     };
   }
 
-  async update(aggregate: Video): Promise<void> {
-    const model = await this._get(aggregate.video_id.id);
+  async update(entity: Video): Promise<void> {
+    const model = await this._get(entity.video_id.id);
 
     if (!model) {
-      throw new NotFoundError(aggregate.video_id.id, this.getAggregate());
+      throw new NotFoundError(entity.video_id.id, this.getEntity());
     }
 
     await Promise.all([
@@ -153,9 +153,9 @@ export class VideoSequelizeRepository implements IVideoRepository {
       image_medias,
       audio_video_medias,
       ...props
-    } = VideoModelMapper.toModelProps(aggregate);
+    } = VideoModelMapper.toModelProps(entity);
     await this.videoModel.update(props, {
-      where: { video_id: aggregate.video_id.id },
+      where: { video_id: entity.video_id.id },
       transaction: this.uow.getTransaction(),
     });
 
@@ -192,34 +192,18 @@ export class VideoSequelizeRepository implements IVideoRepository {
         },
       ),
     ]);
-    this.uow.addAggregateRoot(aggregate);
+    this.uow.addAggregateRoot(entity);
   }
   async delete(id: VideoId): Promise<void> {
-    const model = await this._get(id.id);
-    if (!model) {
-      throw new NotFoundError(id.id, this.getAggregate());
-    }
-
-    await Promise.all([
-      ...model.image_medias.map((i) => i.destroy()),
-      ...model.audio_video_medias.map((i) => i.destroy()),
-      model.$remove(
-        'categories',
-        model.categories_id.map((c) => c.category_id),
-      ),
-      model.$remove(
-        'genres',
-        model.categories_id.map((c) => c.category_id),
-      ),
-      model.$remove(
-        'cast_members',
-        model.categories_id.map((c) => c.category_id),
-      ),
-    ]);
-    await this.videoModel.destroy({
+    const affectedRows = await this.videoModel.destroy({
       where: { video_id: id.id },
       transaction: this.uow.getTransaction(),
+      cascade: true
     });
+
+    if (affectedRows !== 1) {
+      throw new NotFoundError(id.id, this.getEntity());
+    }
   }
 
   private async _get(id: string): Promise<VideoModel> {
@@ -373,7 +357,7 @@ export class VideoSequelizeRepository implements IVideoRepository {
     });
 
     return new VideoSearchResult({
-      items: models.map((m) => VideoModelMapper.toAggregate(m)),
+      items: models.map((m) => VideoModelMapper.toEntity(m)),
       current_page: props.page,
       per_page: props.per_page,
       total: count,
@@ -388,7 +372,7 @@ export class VideoSequelizeRepository implements IVideoRepository {
     return `${this.videoModel.name}.\`${sort}\` ${sort_dir}`;
   }
 
-  getAggregate(): new (...args: any[]) => Video {
+  getEntity(): new (...args: any[]) => Video {
     return Video;
   }
 }

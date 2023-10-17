@@ -21,7 +21,7 @@ describe('DeleteCastMemberUseCase Integration Tests', () => {
     useCase = new DeleteCastMemberUseCase(repository);
   });
 
-  it('should throws error when aggregate not found', async () => {
+  it('should throws error when entity not found', async () => {
     const castMemberId = new CastMemberId();
     await expect(() =>
       useCase.execute({ id: castMemberId.id }),

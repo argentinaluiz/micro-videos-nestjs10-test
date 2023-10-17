@@ -4,7 +4,7 @@ import { GenresIdsValidator } from '../../../../genre/application/validations/ge
 import { IUseCase } from '../../../../shared/application/use-case-interface';
 import { NotFoundError } from '../../../../shared/domain/errors/not-found.error';
 import { IUnitOfWork } from '../../../../shared/domain/repository/unit-of-work.interface';
-import { AggregateValidationError } from '../../../../shared/domain/validators/validation.error';
+import { EntityValidationError } from '../../../../shared/domain/validators/validation.error';
 import { Rating } from '../../../domain/rating.vo';
 import { Video, VideoId } from '../../../domain/video.aggregate';
 import { IVideoRepository } from '../../../domain/video.repository';
@@ -94,7 +94,7 @@ export class UpdateVideoUseCase
     }
 
     if (video.notification.hasErrors()) {
-      throw new AggregateValidationError(video.notification.toJSON());
+      throw new EntityValidationError(video.notification.toJSON());
     }
 
     await this.uow.do(async () => {

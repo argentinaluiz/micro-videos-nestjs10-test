@@ -18,7 +18,7 @@ describe('DeleteCategoryUseCase Integration Tests', () => {
     useCase = new DeleteCategoryUseCase(repository);
   });
 
-  it('should throws error when aggregate not found', async () => {
+  it('should throws error when entity not found', async () => {
     const categoryId = new CategoryId();
     await expect(() => useCase.execute({ id: categoryId.id })).rejects.toThrow(
       new NotFoundError(categoryId.id, Category),

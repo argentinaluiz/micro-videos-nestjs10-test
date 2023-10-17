@@ -12,7 +12,7 @@ export class CategoryInMemoryRepository
 {
   sortableFields: string[] = ['name', 'created_at'];
 
-  getAggregate(): new (...args: any[]) => Category {
+  getEntity(): new (...args: any[]) => Category {
     return Category;
   }
 

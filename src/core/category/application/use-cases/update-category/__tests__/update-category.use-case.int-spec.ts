@@ -19,7 +19,7 @@ describe('UpdateCategoryUseCase Integration Tests', () => {
     useCase = new UpdateCategoryUseCase(repository);
   });
 
-  it('should throws error when aggregate not found', async () => {
+  it('should throws error when entity not found', async () => {
     const categoryId = new CategoryId();
     await expect(() =>
       useCase.execute(
@@ -29,21 +29,21 @@ describe('UpdateCategoryUseCase Integration Tests', () => {
   });
 
   it('should update a category', async () => {
-    const aggregate = Category.fake().aCategory().build();
-    repository.insert(aggregate);
+    const entity = Category.fake().aCategory().build();
+    repository.insert(entity);
 
     let output = await useCase.execute(
       new UpdateCategoryInput({
-        id: aggregate.category_id.id,
+        id: entity.category_id.id,
         name: 'test',
       }),
     );
     expect(output).toStrictEqual({
-      id: aggregate.category_id.id,
+      id: entity.category_id.id,
       name: 'test',
-      description: aggregate.description,
+      description: entity.description,
       is_active: true,
-      created_at: aggregate.created_at,
+      created_at: entity.created_at,
     });
 
     type Arrange = {
@@ -64,85 +64,85 @@ describe('UpdateCategoryUseCase Integration Tests', () => {
     const arrange: Arrange[] = [
       {
         input: {
-          id: aggregate.category_id.id,
+          id: entity.category_id.id,
           name: 'test',
           description: 'some description',
         },
         expected: {
-          id: aggregate.category_id.id,
+          id: entity.category_id.id,
           name: 'test',
           description: 'some description',
           is_active: true,
-          created_at: aggregate.created_at,
+          created_at: entity.created_at,
         },
       },
       {
         input: {
-          id: aggregate.category_id.id,
+          id: entity.category_id.id,
           name: 'test',
         },
         expected: {
-          id: aggregate.category_id.id,
+          id: entity.category_id.id,
           name: 'test',
           description: 'some description',
           is_active: true,
-          created_at: aggregate.created_at,
+          created_at: entity.created_at,
         },
       },
       {
         input: {
-          id: aggregate.category_id.id,
+          id: entity.category_id.id,
           name: 'test',
           is_active: false,
         },
         expected: {
-          id: aggregate.category_id.id,
+          id: entity.category_id.id,
           name: 'test',
           description: 'some description',
           is_active: false,
-          created_at: aggregate.created_at,
+          created_at: entity.created_at,
         },
       },
       {
         input: {
-          id: aggregate.category_id.id,
+          id: entity.category_id.id,
           name: 'test',
         },
         expected: {
-          id: aggregate.category_id.id,
+          id: entity.category_id.id,
           name: 'test',
           description: 'some description',
           is_active: false,
-          created_at: aggregate.created_at,
+          created_at: entity.created_at,
         },
       },
       {
         input: {
-          id: aggregate.category_id.id,
+          id: entity.category_id.id,
           name: 'test',
           is_active: true,
         },
         expected: {
-          id: aggregate.category_id.id,
+          id: entity.category_id.id,
           name: 'test',
           description: 'some description',
           is_active: true,
-          created_at: aggregate.created_at,
+          created_at: entity.created_at,
         },
       },
       {
         input: {
-          id: aggregate.category_id.id,
+          id: entity.category_id.id,
           name: 'test',
           description: null,
           is_active: false,
         },
         expected: {
-          id: aggregate.category_id.id,
+          id: entity.category_id.id,
           name: 'test',
           description: null,
           is_active: false,
-          created_at: aggregate.created_at,
+          created_at: entity.created_at,
         },
       },
     ];
@@ -154,22 +154,22 @@ describe('UpdateCategoryUseCase Integration Tests', () => {
         ...('description' in i.input && { description: i.input.description }),
         ...('is_active' in i.input && { is_active: i.input.is_active }),
       });
-      const aggregateUpdated = await repository.findById(
+      const entityUpdated = await repository.findById(
         new CategoryId(i.input.id),
       );
       expect(output).toStrictEqual({
-        id: aggregate.category_id.id,
+        id: entity.category_id.id,
         name: i.expected.name,
         description: i.expected.description,
         is_active: i.expected.is_active,
-        created_at: aggregateUpdated.created_at,
+        created_at: entityUpdated.created_at,
       });
-      expect(aggregateUpdated.toJSON()).toStrictEqual({
-        category_id: aggregate.category_id.id,
+      expect(entityUpdated.toJSON()).toStrictEqual({
+        category_id: entity.category_id.id,
         name: i.expected.name,
         description: i.expected.description,
         is_active: i.expected.is_active,
-        created_at: aggregateUpdated.created_at,
+        created_at: entityUpdated.created_at,
       });
     }
   });

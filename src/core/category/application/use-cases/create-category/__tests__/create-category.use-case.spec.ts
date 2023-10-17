@@ -12,10 +12,10 @@ describe('CreateCategoryUseCase Unit Tests', () => {
     useCase = new CreateCategoryUseCase(repository);
   });
 
-  it('should throw an error when aggregate is not valid', async () => {
+  it('should throw an error when entity is not valid', async () => {
     const input = new CreateCategoryInput({ name: 't'.repeat(256) });
     await expect(() => useCase.execute(input)).rejects.toThrowError(
-      'Aggregate Validation Error',
+      'Entity Validation Error',
     );
   });
 

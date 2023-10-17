@@ -1,4 +1,4 @@
-import { LoadAggregateError } from '../../../../../shared/domain/validators/validation.error';
+import { LoadEntityError } from '../../../../../shared/domain/validators/validation.error';
 import { setupSequelize } from '../../../../../shared/infra/testing/helpers';
 import {
   CastMemberType,
@@ -20,13 +20,13 @@ describe('CastMemberModelMapper Integration Tests', () => {
       cast_member_id: '9366b7dc-2d71-4799-b91c-c64adb205104',
     });
     try {
-      CastMemberModelMapper.toAggregate(model);
+      CastMemberModelMapper.toEntity(model);
       fail(
-        'The cast member is valid, but it needs throws a LoadAggregateError',
+        'The cast member is valid, but it needs throws a LoadEntityError',
       );
     } catch (e) {
-      expect(e).toBeInstanceOf(LoadAggregateError);
-      expect((e as LoadAggregateError).error).toMatchObject([
+      expect(e).toBeInstanceOf(LoadEntityError);
+      expect((e as LoadEntityError).error).toMatchObject([
         {
           name: ['name must be shorter than or equal to 255 characters'],
         },
@@ -35,7 +35,7 @@ describe('CastMemberModelMapper Integration Tests', () => {
     }
   });
 
-  it('should convert a cast member model to a cast member aggregate', () => {
+  it('should convert a cast member model to a cast member entity', () => {
     const created_at = new Date();
     const model = CastMemberModel.build({
       cast_member_id: '5490020a-e866-4229-9adc-aa44b83234c4',
@@ -43,8 +43,8 @@ describe('CastMemberModelMapper Integration Tests', () => {
       type: CastMemberTypes.ACTOR,
       created_at,
     });
-    const aggregate = CastMemberModelMapper.toAggregate(model);
-    expect(aggregate.toJSON()).toStrictEqual(
+    const entity = CastMemberModelMapper.toEntity(model);
+    expect(entity.toJSON()).toStrictEqual(
       new CastMember({
         cast_member_id: new CastMemberId(
           '5490020a-e866-4229-9adc-aa44b83234c4',

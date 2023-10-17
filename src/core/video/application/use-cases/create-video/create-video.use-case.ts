@@ -3,7 +3,7 @@ import { CategoriesIdsValidator } from '../../../../category/application/validat
 import { GenresIdsValidator } from '../../../../genre/application/validations/genres-ids.validator';
 import { IUseCase } from '../../../../shared/application/use-case-interface';
 import { IUnitOfWork } from '../../../../shared/domain/repository/unit-of-work.interface';
-import { AggregateValidationError } from '../../../../shared/domain/validators/validation.error';
+import { EntityValidationError } from '../../../../shared/domain/validators/validation.error';
 import { Rating } from '../../../domain/rating.vo';
 import { Video } from '../../../domain/video.aggregate';
 import { IVideoRepository } from '../../../domain/video.repository';
@@ -70,7 +70,7 @@ export class CreateVideoUseCase
     }
 
     if (notification.hasErrors()) {
-      throw new AggregateValidationError(notification.toJSON());
+      throw new EntityValidationError(notification.toJSON());
     }
 
     await this.uow.do(async () => {

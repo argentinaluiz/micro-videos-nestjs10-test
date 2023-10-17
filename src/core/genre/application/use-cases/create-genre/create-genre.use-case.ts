@@ -2,7 +2,7 @@ import { CategoriesIdsValidator } from '../../../../category/application/validat
 import { ICategoryRepository } from '../../../../category/domain/category.repository';
 import { IUseCase } from '../../../../shared/application/use-case-interface';
 import { IUnitOfWork } from '../../../../shared/domain/repository/unit-of-work.interface';
-import { AggregateValidationError } from '../../../../shared/domain/validators/validation.error';
+import { EntityValidationError } from '../../../../shared/domain/validators/validation.error';
 import { Genre } from '../../../domain/genre.aggregate';
 import { IGenreRepository } from '../../../domain/genre.repository';
 import { GenreOutput, GenreOutputMapper } from '../common/genre-output';
@@ -40,7 +40,7 @@ export class CreateGenreUseCase
     }
 
     if (notification.hasErrors()) {
-      throw new AggregateValidationError(notification.toJSON());
+      throw new EntityValidationError(notification.toJSON());
     }
 
     await this.uow.do(async () => {

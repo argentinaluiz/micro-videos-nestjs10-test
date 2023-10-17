@@ -3,7 +3,7 @@ import { ICategoryRepository } from '../../../../category/domain/category.reposi
 import { IUseCase } from '../../../../shared/application/use-case-interface';
 import { NotFoundError } from '../../../../shared/domain/errors/not-found.error';
 import { IUnitOfWork } from '../../../../shared/domain/repository/unit-of-work.interface';
-import { AggregateValidationError } from '../../../../shared/domain/validators/validation.error';
+import { EntityValidationError } from '../../../../shared/domain/validators/validation.error';
 import { Genre, GenreId } from '../../../domain/genre.aggregate';
 import { IGenreRepository } from '../../../domain/genre.repository';
 import { GenreOutput, GenreOutputMapper } from '../common/genre-output';
@@ -54,7 +54,7 @@ export class UpdateGenreUseCase
     }
 
     if (genre.notification.hasErrors()) {
-      throw new AggregateValidationError(genre.notification.toJSON());
+      throw new EntityValidationError(genre.notification.toJSON());
     }
 
     await this.uow.do(async () => {

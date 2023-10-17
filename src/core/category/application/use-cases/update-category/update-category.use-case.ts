@@ -1,6 +1,6 @@
 import { IUseCase } from '../../../../shared/application/use-case-interface';
 import { NotFoundError } from '../../../../shared/domain/errors/not-found.error';
-import { AggregateValidationError } from '../../../../shared/domain/validators/validation.error';
+import { EntityValidationError } from '../../../../shared/domain/validators/validation.error';
 import { Category, CategoryId } from '../../../domain/category.aggregate';
 import { ICategoryRepository } from '../../../domain/category.repository';
 import {
@@ -36,7 +36,7 @@ export class UpdateCategoryUseCase
     }
 
     if (category.notification.hasErrors()) {
-      throw new AggregateValidationError(category.notification.toJSON());
+      throw new EntityValidationError(category.notification.toJSON());
     }
 
     await this.categoryRepo.update(category);

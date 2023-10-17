@@ -12,7 +12,7 @@ export class GenreInMemoryRepository
 {
   sortableFields: string[] = ['name', 'created_at'];
 
-  getAggregate(): new (...args: any[]) => Genre {
+  getEntity(): new (...args: any[]) => Genre {
     return Genre;
   }
 

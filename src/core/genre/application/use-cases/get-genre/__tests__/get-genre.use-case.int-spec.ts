@@ -31,7 +31,7 @@ describe('GetGenreUseCase Integration Tests', () => {
     useCase = new GetGenreUseCase(genreRepo, categoryRepo);
   });
 
-  it('should throws error when aggregate not found', async () => {
+  it('should throws error when entity not found', async () => {
     const genreId = new GenreId();
     await expect(() => useCase.execute({ id: genreId.id })).rejects.toThrow(
       new NotFoundError(genreId.id, Genre),

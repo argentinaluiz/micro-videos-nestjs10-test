@@ -12,7 +12,7 @@ export class VideoInMemoryRepository
 {
   sortableFields: string[] = ['title', 'created_at'];
 
-  getAggregate(): new (...args: any[]) => Video {
+  getEntity(): new (...args: any[]) => Video {
     return Video;
   }
 

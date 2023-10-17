@@ -3,20 +3,20 @@ import { CategoryOutputMapper } from './category-output';
 
 describe('CategoryOutputMapper Unit Tests', () => {
   it('should convert a category in output', () => {
-    const aggregate = Category.create({
+    const entity = Category.create({
       name: 'Movie',
       description: 'some description',
       is_active: true,
     });
-    const spyToJSON = jest.spyOn(aggregate, 'toJSON');
-    const output = CategoryOutputMapper.toOutput(aggregate);
+    const spyToJSON = jest.spyOn(entity, 'toJSON');
+    const output = CategoryOutputMapper.toOutput(entity);
     expect(spyToJSON).toHaveBeenCalled();
     expect(output).toStrictEqual({
-      id: aggregate.category_id.id,
+      id: entity.category_id.id,
       name: 'Movie',
       description: 'some description',
       is_active: true,
-      created_at: aggregate.created_at,
+      created_at: entity.created_at,
     });
   });
 });

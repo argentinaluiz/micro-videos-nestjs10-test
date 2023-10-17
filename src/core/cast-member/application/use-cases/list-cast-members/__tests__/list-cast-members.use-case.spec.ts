@@ -32,9 +32,9 @@ describe('ListCastMembersUseCase Unit Tests', () => {
       last_page: 1,
     });
 
-    const aggregate = CastMember.fake().anActor().build();
+    const entity = CastMember.fake().anActor().build();
     result = new CastMemberSearchResult({
-      items: [aggregate],
+      items: [entity],
       total: 1,
       current_page: 1,
       per_page: 2,
@@ -42,7 +42,7 @@ describe('ListCastMembersUseCase Unit Tests', () => {
 
     output = useCase['toOutput'](result);
     expect(output).toStrictEqual({
-      items: [aggregate].map(CastMemberOutputMapper.toOutput),
+      items: [entity].map(CastMemberOutputMapper.toOutput),
       total: 1,
       current_page: 1,
       per_page: 2,

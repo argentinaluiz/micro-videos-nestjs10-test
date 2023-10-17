@@ -7,8 +7,8 @@ export class GenreRules {
   @MaxLength(255, { groups: ['name'] })
   name: string;
 
-  constructor(aggregate: Genre) {
-    Object.assign(this, aggregate);
+  constructor(entity: Genre) {
+    Object.assign(this, entity);
   }
 }
 

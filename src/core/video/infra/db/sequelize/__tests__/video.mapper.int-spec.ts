@@ -16,7 +16,7 @@ import {
   GenreModel,
   GenreSequelizeRepository,
 } from '../../../../../genre/infra/db/sequelize/genre-sequelize';
-import { LoadAggregateError } from '../../../../../shared/domain/validators/validation.error';
+import { LoadEntityError } from '../../../../../shared/domain/validators/validation.error';
 import { UnitOfWorkFakeInMemory } from '../../../../../shared/infra/db/in-memory/fake-unit-work-in-memory';
 import { AudioVideoMediaStatus } from '../../../../../shared/domain/value-objects/audio-video-media.vo';
 import { Banner } from '../../../../domain/banner.vo';
@@ -86,16 +86,16 @@ describe('VideoModelMapper Unit Tests', () => {
 
     for (const item of arrange) {
       try {
-        VideoModelMapper.toAggregate(item.makeModel());
+        VideoModelMapper.toEntity(item.makeModel());
         fail('The genre is valid, but it needs throws a LoadEntityError');
       } catch (e) {
-        expect(e).toBeInstanceOf(LoadAggregateError);
+        expect(e).toBeInstanceOf(LoadEntityError);
         expect(e.error).toMatchObject(item.expectedErrors);
       }
     }
   });
 
-  it('should convert a video model to a video aggregate', async () => {
+  it('should convert a video model to a video entity', async () => {
     const category1 = Category.fake().aCategory().build();
     await categoryRepo.bulkInsert([category1]);
     const genre1 = Genre.fake()
@@ -142,8 +142,8 @@ describe('VideoModelMapper Unit Tests', () => {
       },
       { include: ['categories_id', 'genres_id', 'cast_members_id'] },
     );
-    let aggregate = VideoModelMapper.toAggregate(model);
-    expect(aggregate.toJSON()).toEqual(
+    let entity = VideoModelMapper.toEntity(model);
+    expect(entity.toJSON()).toEqual(
       new Video({
         video_id: new VideoId(model.video_id),
         title: videoProps.title,
@@ -236,8 +236,8 @@ describe('VideoModelMapper Unit Tests', () => {
       },
     );
 
-    aggregate = VideoModelMapper.toAggregate(model);
-    expect(aggregate.toJSON()).toEqual(
+    entity = VideoModelMapper.toEntity(model);
+    expect(entity.toJSON()).toEqual(
       new Video({
         video_id: new VideoId(model.video_id),
         title: videoProps.title,
@@ -283,7 +283,7 @@ describe('VideoModelMapper Unit Tests', () => {
     );
   });
 
-  it('should convert a video aggregate to a video model', async () => {
+  it('should convert a video entity to a video model', async () => {
     const category1 = Category.fake().aCategory().build();
     await categoryRepo.bulkInsert([category1]);
     const genre1 = Genre.fake()
@@ -306,7 +306,7 @@ describe('VideoModelMapper Unit Tests', () => {
       created_at: new Date(),
     };
 
-    let aggregate = new Video({
+    let entity = new Video({
       ...videoProps,
       categories_id: new Map([
         [category1.category_id.id, category1.category_id],
@@ -317,7 +317,7 @@ describe('VideoModelMapper Unit Tests', () => {
       ]),
     });
 
-    const model = VideoModelMapper.toModelProps(aggregate);
+    const model = VideoModelMapper.toModelProps(entity);
     expect(model).toEqual({
       video_id: videoProps.video_id.id,
       title: videoProps.title,
@@ -350,7 +350,7 @@ describe('VideoModelMapper Unit Tests', () => {
       ],
     });
 
-    aggregate = new Video({
+    entity = new Video({
       ...videoProps,
       banner: new Banner({
         location: 'location banner',
@@ -385,7 +385,7 @@ describe('VideoModelMapper Unit Tests', () => {
       ]),
     });
 
-    const model2 = VideoModelMapper.toModelProps(aggregate);
+    const model2 = VideoModelMapper.toModelProps(entity);
     expect(model2.video_id).toEqual(videoProps.video_id.id);
     expect(model2.title).toEqual(videoProps.title);
     expect(model2.description).toEqual(videoProps.description);

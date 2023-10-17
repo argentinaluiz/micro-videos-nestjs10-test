@@ -2,7 +2,7 @@ import { IStorage } from '../../../../shared/application/storage.interface';
 import { IUseCase } from '../../../../shared/application/use-case-interface';
 import { NotFoundError } from '../../../../shared/domain/errors/not-found.error';
 import { IUnitOfWork } from '../../../../shared/domain/repository/unit-of-work.interface';
-import { AggregateValidationError } from '../../../../shared/domain/validators/validation.error';
+import { EntityValidationError } from '../../../../shared/domain/validators/validation.error';
 import { Banner } from '../../../domain/banner.vo';
 import { ThumbnailHalf } from '../../../domain/thumbnail-half.vo';
 import { Thumbnail } from '../../../domain/thumbnail.vo';
@@ -45,7 +45,7 @@ export class UploadImageMediasUseCase
       .asArray();
 
     if (errorImage) {
-      throw new AggregateValidationError([
+      throw new EntityValidationError([
         {
           [input.field]: [errorImage.message],
         },

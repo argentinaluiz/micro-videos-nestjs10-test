@@ -295,10 +295,10 @@ describe('VideoSequelizeRepository Integration Tests', () => {
         .addCastMemberId(castMember.cast_member_id)
         .build();
       await videoRepo.bulkInsert(videos);
-      const spyToAggregate = jest.spyOn(VideoModelMapper, 'toAggregate');
+      const spyToEntity = jest.spyOn(VideoModelMapper, 'toEntity');
       const searchOutput = await videoRepo.search(VideoSearchParams.create());
       expect(searchOutput).toBeInstanceOf(VideoSearchResult);
-      expect(spyToAggregate).toHaveBeenCalledTimes(15);
+      expect(spyToEntity).toHaveBeenCalledTimes(15);
       expect(searchOutput.toJSON()).toMatchObject({
         total: 16,
         current_page: 1,

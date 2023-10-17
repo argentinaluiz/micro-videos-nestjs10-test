@@ -36,7 +36,7 @@ class StubInMemorySearchableRepository extends InMemorySearchableRepository<
 > {
   sortableFields: string[] = ['name'];
 
-  getAggregate(): new (...args: any[]) => StubAggregate {
+  getEntity(): new (...args: any[]) => StubAggregate {
     return StubAggregate;
   }
 

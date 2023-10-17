@@ -5,7 +5,7 @@ import {
   CategoryOutput,
   CategoryOutputMapper,
 } from '../common/category-output';
-import { AggregateValidationError } from '../../../../shared/domain/validators/validation.error';
+import { EntityValidationError } from '../../../../shared/domain/validators/validation.error';
 import { CreateCategoryInput } from './create-category.input';
 
 export class CreateCategoryUseCase
@@ -14,12 +14,12 @@ export class CreateCategoryUseCase
   constructor(private categoryRepo: ICategoryRepository) {}
 
   async execute(input: CreateCategoryInput): Promise<CategoryOutput> {
-    const aggregate = Category.create(input);
-    if (aggregate.notification.hasErrors()) {
-      throw new AggregateValidationError(aggregate.notification.toJSON());
+    const entity = Category.create(input);
+    if (entity.notification.hasErrors()) {
+      throw new EntityValidationError(entity.notification.toJSON());
     }
-    await this.categoryRepo.insert(aggregate);
-    return CategoryOutputMapper.toOutput(aggregate);
+    await this.categoryRepo.insert(entity);
+    return CategoryOutputMapper.toOutput(entity);
   }
 }
 

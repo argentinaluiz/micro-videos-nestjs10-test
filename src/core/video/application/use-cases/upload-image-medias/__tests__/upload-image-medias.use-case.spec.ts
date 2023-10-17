@@ -18,7 +18,7 @@ import {
 } from '../../../../../genre/infra/db/sequelize/genre-sequelize';
 import { IStorage } from '../../../../../shared/application/storage.interface';
 import { NotFoundError } from '../../../../../shared/domain/errors/not-found.error';
-import { AggregateValidationError } from '../../../../../shared/domain/validators/validation.error';
+import { EntityValidationError } from '../../../../../shared/domain/validators/validation.error';
 import { UnitOfWorkSequelize } from '../../../../../shared/infra/db/sequelize/unit-of-work-sequelize';
 import { InMemoryStorage } from '../../../../../shared/infra/storage/in-memory.storage';
 import { Video, VideoId } from '../../../../domain/video.aggregate';
@@ -100,7 +100,7 @@ describe('UploadImageMediasUseCase Unit Tests', () => {
         },
       });
     } catch (error) {
-      expect(error).toBeInstanceOf(AggregateValidationError);
+      expect(error).toBeInstanceOf(EntityValidationError);
       expect(error.error).toEqual([
         {
           banner: [

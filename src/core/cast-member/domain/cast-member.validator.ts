@@ -7,8 +7,8 @@ export class CastMemberRules {
   @MaxLength(255, { groups: ['name'] })
   name: string;
 
-  constructor(aggregate: CastMember) {
-    Object.assign(this, aggregate);
+  constructor(entity: CastMember) {
+    Object.assign(this, entity);
   }
 }
 

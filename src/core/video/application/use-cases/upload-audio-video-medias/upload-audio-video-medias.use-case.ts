@@ -2,7 +2,7 @@ import { ApplicationService } from '../../../../shared/application/application.s
 import { IStorage } from '../../../../shared/application/storage.interface';
 import { IUseCase } from '../../../../shared/application/use-case-interface';
 import { NotFoundError } from '../../../../shared/domain/errors/not-found.error';
-import { AggregateValidationError } from '../../../../shared/domain/validators/validation.error';
+import { EntityValidationError } from '../../../../shared/domain/validators/validation.error';
 import { Trailer } from '../../../domain/trailer.vo';
 import { VideoMedia } from '../../../domain/video-media.vo';
 import { Video, VideoId } from '../../../domain/video.aggregate';
@@ -42,7 +42,7 @@ export class UploadAudioVideoMediasUseCase
       .asArray();
 
     if (errorAudioMedia) {
-      throw new AggregateValidationError([
+      throw new EntityValidationError([
         {
           [input.field]: [errorAudioMedia.message],
         },

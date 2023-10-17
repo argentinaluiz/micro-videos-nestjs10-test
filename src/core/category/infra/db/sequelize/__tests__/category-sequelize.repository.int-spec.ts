@@ -19,11 +19,11 @@ describe('CategorySequelizeRepository Integration Tests', () => {
     repository = new CategorySequelizeRepository(CategoryModel);
   });
 
-  it('should inserts a new aggregate', async () => {
+  it('should inserts a new entity', async () => {
     let category = Category.create({ name: 'Movie' });
     await repository.insert(category);
-    let aggregate = await repository.findById(category.category_id);
-    expect(aggregate.toJSON()).toStrictEqual(category.toJSON());
+    let entity = await repository.findById(category.category_id);
+    expect(entity.toJSON()).toStrictEqual(category.toJSON());
 
     category = Category.create({
       name: 'Movie',
@@ -31,62 +31,60 @@ describe('CategorySequelizeRepository Integration Tests', () => {
       is_active: false,
     });
     await repository.insert(category);
-    aggregate = await repository.findById(category.category_id);
-    expect(aggregate.toJSON()).toStrictEqual(category.toJSON());
+    entity = await repository.findById(category.category_id);
+    expect(entity.toJSON()).toStrictEqual(category.toJSON());
   });
 
-  it('should finds a aggregate by id', async () => {
-    let aggregateFound = await repository.findById(new CategoryId());
-    expect(aggregateFound).toBeNull();
+  it('should finds a entity by id', async () => {
+    let entityFound = await repository.findById(new CategoryId());
+    expect(entityFound).toBeNull();
 
-    const aggregate = Category.create({ name: 'Movie' });
-    await repository.insert(aggregate);
-    aggregateFound = await repository.findById(aggregate.category_id);
-    expect(aggregate.toJSON()).toStrictEqual(aggregateFound.toJSON());
+    const entity = Category.create({ name: 'Movie' });
+    await repository.insert(entity);
+    entityFound = await repository.findById(entity.category_id);
+    expect(entity.toJSON()).toStrictEqual(entityFound.toJSON());
   });
 
   it('should return all categories', async () => {
-    const aggregate = new Category({ name: 'Movie' });
-    await repository.insert(aggregate);
+    const entity = new Category({ name: 'Movie' });
+    await repository.insert(entity);
     const entities = await repository.findAll();
     expect(entities).toHaveLength(1);
-    expect(JSON.stringify(entities)).toBe(JSON.stringify([aggregate]));
+    expect(JSON.stringify(entities)).toBe(JSON.stringify([entity]));
   });
 
-  it('should throw error on update when a aggregate not found', async () => {
-    const aggregate = Category.create({ name: 'Movie' });
-    await expect(repository.update(aggregate)).rejects.toThrow(
-      new NotFoundError(aggregate.category_id.id, Category),
+  it('should throw error on update when a entity not found', async () => {
+    const entity = Category.create({ name: 'Movie' });
+    await expect(repository.update(entity)).rejects.toThrow(
+      new NotFoundError(entity.category_id.id, Category),
     );
   });
 
-  it('should update a aggregate', async () => {
-    const aggregate = new Category({ name: 'Movie' });
-    await repository.insert(aggregate);
+  it('should update a entity', async () => {
+    const entity = new Category({ name: 'Movie' });
+    await repository.insert(entity);
 
-    aggregate.changeName('Movie updated');
-    await repository.update(aggregate);
+    entity.changeName('Movie updated');
+    await repository.update(entity);
 
-    const aggregateFound = await repository.findById(aggregate.category_id);
-    expect(aggregate.toJSON()).toStrictEqual(aggregateFound.toJSON());
+    const entityFound = await repository.findById(entity.category_id);
+    expect(entity.toJSON()).toStrictEqual(entityFound.toJSON());
   });
 
-  it('should throw error on delete when a aggregate not found', async () => {
+  it('should throw error on delete when a entity not found', async () => {
     const categoryId = new CategoryId();
     await expect(repository.delete(categoryId)).rejects.toThrow(
       new NotFoundError(categoryId.id, Category),
     );
   });
 
-  it('should delete a aggregate', async () => {
-    const aggregate = new Category({ name: 'Movie' });
-    await repository.insert(aggregate);
+  it('should delete a entity', async () => {
+    const entity = new Category({ name: 'Movie' });
+    await repository.insert(entity);
 
-    await repository.delete(aggregate.category_id);
+    await repository.delete(entity.category_id);
 
-    await expect(
-      repository.findById(aggregate.category_id),
-    ).resolves.toBeNull();
+    await expect(repository.findById(entity.category_id)).resolves.toBeNull();
   });
 
   describe('search method tests', () => {
@@ -99,11 +97,11 @@ describe('CategorySequelizeRepository Integration Tests', () => {
         .withCreatedAt(created_at)
         .build();
       await repository.bulkInsert(categories);
-      const spyToAggregate = jest.spyOn(CategoryModelMapper, 'toAggregate');
+      const spyToEntity = jest.spyOn(CategoryModelMapper, 'toEntity');
 
       const searchOutput = await repository.search(new CategorySearchParams());
       expect(searchOutput).toBeInstanceOf(CategorySearchResult);
-      expect(spyToAggregate).toHaveBeenCalledTimes(15);
+      expect(spyToEntity).toHaveBeenCalledTimes(15);
       expect(searchOutput.toJSON()).toMatchObject({
         total: 16,
         current_page: 1,

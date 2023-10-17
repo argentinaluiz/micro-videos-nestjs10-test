@@ -15,18 +15,18 @@ export abstract class InMemoryRepository<
 
   constructor(private uow: IUnitOfWork) {}
 
-  async insert(aggregate: A): Promise<void> {
-    this.items.push(aggregate);
-    this.uow.addAggregateRoot(aggregate);
+  async insert(entity: A): Promise<void> {
+    this.items.push(entity);
+    this.uow.addAggregateRoot(entity);
   }
 
-  async bulkInsert(aggregates: A[]): Promise<void> {
-    this.items.push(...aggregates);
-    aggregates.forEach((aggregate) => this.uow.addAggregateRoot(aggregate));
+  async bulkInsert(entities: A[]): Promise<void> {
+    this.items.push(...entities);
+    entities.forEach((entity) => this.uow.addAggregateRoot(entity));
   }
 
-  async findById(aggregateId: ID): Promise<A> {
-    return this._get(aggregateId);
+  async findById(entityId: ID): Promise<A> {
+    return this._get(entityId);
   }
 
   async findAll(): Promise<A[]> {
@@ -66,23 +66,23 @@ export abstract class InMemoryRepository<
     };
   }
 
-  async update(aggregate: A): Promise<void> {
-    const hasFound = await this._get(aggregate.entity_id as ID);
+  async update(entity: A): Promise<void> {
+    const hasFound = await this._get(entity.entity_id as ID);
     if (!hasFound) {
-      throw new NotFoundError(aggregate.entity_id, this.getAggregate());
+      throw new NotFoundError(entity.entity_id, this.getEntity());
     }
     const indexFound = this.items.findIndex((i) =>
-      i.entity_id.equals(aggregate.entity_id),
+      i.entity_id.equals(entity.entity_id),
     );
-    this.items[indexFound] = aggregate;
-    this.uow.addAggregateRoot(aggregate);
+    this.items[indexFound] = entity;
+    this.uow.addAggregateRoot(entity);
   }
 
   async delete(id: ID): Promise<void> {
     await this._get(id);
     const indexFound = this.items.findIndex((i) => i.entity_id.equals(id));
     if (indexFound < 0) {
-      throw new NotFoundError(id, this.getAggregate());
+      throw new NotFoundError(id, this.getEntity());
     }
     this.items.splice(indexFound, 1);
   }
@@ -92,7 +92,7 @@ export abstract class InMemoryRepository<
     return typeof item === 'undefined' ? null : item;
   }
 
-  abstract getAggregate(): new (...args: any[]) => A;
+  abstract getEntity(): new (...args: any[]) => A;
 }
 
 export abstract class InMemorySearchableRepository<

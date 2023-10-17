@@ -3,8 +3,8 @@ import { ValueObject } from '../value-object';
 import { SearchParams, SearchResult } from './search-params';
 
 export interface IRepository<A extends AggregateRoot, ID extends ValueObject> {
-  insert(aggregate: A): Promise<void>;
-  bulkInsert(aggregates: A[]): Promise<void>;
+  insert(entity: A): Promise<void>;
+  bulkInsert(entities: A[]): Promise<void>;
   findById(id: ID): Promise<A>;
   findAll(): Promise<A[]>;
   findByIds(ids: ID[]): Promise<A[]>;
@@ -12,9 +12,9 @@ export interface IRepository<A extends AggregateRoot, ID extends ValueObject> {
     exists: ID[];
     not_exists: ID[];
   }>;
-  update(aggregate: A): Promise<void>;
+  update(entity: A): Promise<void>;
   delete(id: ID): Promise<void>;
-  getAggregate(): new (...args: any[]) => A;
+  getEntity(): new (...args: any[]) => A;
 }
 
 //category.props.name

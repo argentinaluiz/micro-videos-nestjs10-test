@@ -14,7 +14,7 @@ describe('UpdateCategoryUseCase Unit Tests', () => {
     useCase = new UpdateCategoryUseCase(repository);
   });
 
-  it('should throws error when aggregate not found', async () => {
+  it('should throws error when entity not found', async () => {
     const categoryId = new CategoryId();
 
     await expect(() =>
@@ -24,37 +24,37 @@ describe('UpdateCategoryUseCase Unit Tests', () => {
     ).rejects.toThrow(new NotFoundError(categoryId.id, Category));
   });
 
-  it('should throw an error when aggregate is not valid', async () => {
-    const aggregate = new Category({ name: 'Movie' });
-    repository.items = [aggregate];
+  it('should throw an error when entity is not valid', async () => {
+    const entity = new Category({ name: 'Movie' });
+    repository.items = [entity];
     await expect(() =>
       useCase.execute(
         new UpdateCategoryInput({
-          id: aggregate.category_id.id,
+          id: entity.category_id.id,
           name: 't'.repeat(256),
         }),
       ),
-    ).rejects.toThrowError('Aggregate Validation Error');
+    ).rejects.toThrowError('Entity Validation Error');
   });
 
   it('should update a category', async () => {
     const spyUpdate = jest.spyOn(repository, 'update');
-    const aggregate = new Category({ name: 'Movie' });
-    repository.items = [aggregate];
+    const entity = new Category({ name: 'Movie' });
+    repository.items = [entity];
 
     let output = await useCase.execute(
       new UpdateCategoryInput({
-        id: aggregate.category_id.id,
+        id: entity.category_id.id,
         name: 'test',
       }),
     );
     expect(spyUpdate).toHaveBeenCalledTimes(1);
     expect(output).toStrictEqual({
-      id: aggregate.category_id.id,
+      id: entity.category_id.id,
       name: 'test',
       description: null,
       is_active: true,
-      created_at: aggregate.created_at,
+      created_at: entity.created_at,
     });
 
     type Arrange = {
@@ -75,85 +75,85 @@ describe('UpdateCategoryUseCase Unit Tests', () => {
     const arrange: Arrange[] = [
       {
         input: {
-          id: aggregate.entity_id.id,
+          id: entity.entity_id.id,
           name: 'test',
           description: 'some description',
         },
         expected: {
-          id: aggregate.entity_id.id,
+          id: entity.entity_id.id,
           name: 'test',
           description: 'some description',
           is_active: true,
-          created_at: aggregate.created_at,
+          created_at: entity.created_at,
         },
       },
       {
         input: {
-          id: aggregate.category_id.id,
+          id: entity.category_id.id,
           name: 'test',
         },
         expected: {
-          id: aggregate.category_id.id,
+          id: entity.category_id.id,
           name: 'test',
           description: 'some description',
           is_active: true,
-          created_at: aggregate.created_at,
+          created_at: entity.created_at,
         },
       },
       {
         input: {
-          id: aggregate.category_id.id,
+          id: entity.category_id.id,
           name: 'test',
           is_active: false,
         },
         expected: {
-          id: aggregate.category_id.id,
+          id: entity.category_id.id,
           name: 'test',
           description: 'some description',
           is_active: false,
-          created_at: aggregate.created_at,
+          created_at: entity.created_at,
         },
       },
       {
         input: {
-          id: aggregate.category_id.id,
+          id: entity.category_id.id,
           name: 'test',
         },
         expected: {
-          id: aggregate.category_id.id,
+          id: entity.category_id.id,
           name: 'test',
           description: 'some description',
           is_active: false,
-          created_at: aggregate.created_at,
+          created_at: entity.created_at,
         },
       },
       {
         input: {
-          id: aggregate.category_id.id,
+          id: entity.category_id.id,
           name: 'test',
           is_active: true,
         },
         expected: {
-          id: aggregate.category_id.id,
+          id: entity.category_id.id,
           name: 'test',
           description: 'some description',
           is_active: true,
-          created_at: aggregate.created_at,
+          created_at: entity.created_at,
         },
       },
       {
         input: {
-          id: aggregate.category_id.id,
+          id: entity.category_id.id,
           name: 'test',
           description: 'some description',
           is_active: false,
         },
         expected: {
-          id: aggregate.category_id.id,
+          id: entity.category_id.id,
           name: 'test',
           description: 'some description',
           is_active: false,
-          created_at: aggregate.created_at,
+          created_at: entity.created_at,
         },
       },
     ];
@@ -168,7 +168,7 @@ describe('UpdateCategoryUseCase Unit Tests', () => {
         }),
       );
       expect(output).toStrictEqual({
-        id: aggregate.category_id.id,
+        id: entity.category_id.id,
         name: i.expected.name,
         description: i.expected.description,
         is_active: i.expected.is_active,

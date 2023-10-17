@@ -22,13 +22,13 @@ describe('CreateCategoryUseCase Integration Tests', () => {
     let output = await useCase.execute(
       new CreateCategoryInput({ name: 'test' }),
     );
-    let aggregate = await repository.findById(new CategoryId(output.id));
+    let entity = await repository.findById(new CategoryId(output.id));
     expect(output).toStrictEqual({
-      id: aggregate.category_id.id,
+      id: entity.category_id.id,
       name: 'test',
       description: null,
       is_active: true,
-      created_at: aggregate.created_at,
+      created_at: entity.created_at,
     });
 
     output = await useCase.execute(
@@ -37,13 +37,13 @@ describe('CreateCategoryUseCase Integration Tests', () => {
         description: 'some description',
       }),
     );
-    aggregate = await repository.findById(new CategoryId(output.id));
+    entity = await repository.findById(new CategoryId(output.id));
     expect(output).toStrictEqual({
-      id: aggregate.category_id.id,
+      id: entity.category_id.id,
       name: 'test',
       description: 'some description',
       is_active: true,
-      created_at: aggregate.created_at,
+      created_at: entity.created_at,
     });
 
     output = await useCase.execute({
@@ -51,13 +51,13 @@ describe('CreateCategoryUseCase Integration Tests', () => {
       description: 'some description',
       is_active: true,
     });
-    aggregate = await repository.findById(new CategoryId(output.id));
+    entity = await repository.findById(new CategoryId(output.id));
     expect(output).toStrictEqual({
-      id: aggregate.category_id.id,
+      id: entity.category_id.id,
       name: 'test',
       description: 'some description',
       is_active: true,
-      created_at: aggregate.created_at,
+      created_at: entity.created_at,
     });
 
     output = await useCase.execute({
@@ -65,13 +65,13 @@ describe('CreateCategoryUseCase Integration Tests', () => {
       description: 'some description',
       is_active: false,
     });
-    aggregate = await repository.findById(new CategoryId(output.id));
+    entity = await repository.findById(new CategoryId(output.id));
     expect(output).toStrictEqual({
-      id: aggregate.category_id.id,
+      id: entity.category_id.id,
       name: 'test',
       description: 'some description',
       is_active: false,
-      created_at: aggregate.created_at,
+      created_at: entity.created_at,
     });
   });
 });

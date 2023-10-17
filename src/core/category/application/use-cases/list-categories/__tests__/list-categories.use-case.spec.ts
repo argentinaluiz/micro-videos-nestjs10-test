@@ -30,9 +30,9 @@ describe('ListCategoriesUseCase Unit Tests', () => {
       last_page: 1,
     });
 
-    const aggregate = Category.create({ name: 'Movie' });
+    const entity = Category.create({ name: 'Movie' });
     result = new CategorySearchResult({
-      items: [aggregate],
+      items: [entity],
       total: 1,
       current_page: 1,
       per_page: 2,
@@ -40,7 +40,7 @@ describe('ListCategoriesUseCase Unit Tests', () => {
 
     output = useCase['toOutput'](result);
     expect(output).toStrictEqual({
-      items: [aggregate].map(CategoryOutputMapper.toOutput),
+      items: [entity].map(CategoryOutputMapper.toOutput),
       total: 1,
       current_page: 1,
       per_page: 2,

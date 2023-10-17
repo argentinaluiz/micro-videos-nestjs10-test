@@ -19,7 +19,7 @@ export class CastMemberInMemoryRepository
 {
   sortableFields: string[] = ['name', 'created_at'];
 
-  getAggregate(): new (...args: any[]) => CastMember {
+  getEntity(): new (...args: any[]) => CastMember {
     return CastMember;
   }
 

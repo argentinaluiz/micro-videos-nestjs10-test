@@ -6,7 +6,7 @@ import {
   CastMemberOutputMapper,
 } from '../common/cast-member-output';
 import { CastMemberType } from '../../../domain/cast-member-type.vo';
-import { AggregateValidationError } from '../../../../shared/domain/validators/validation.error';
+import { EntityValidationError } from '../../../../shared/domain/validators/validation.error';
 import { CreateCastMemberInput } from './create-cast-member.input';
 
 export class CreateCastMemberUseCase
@@ -18,21 +18,21 @@ export class CreateCastMemberUseCase
     const [type, errorCastMemberType] = CastMemberType.create(
       input.type,
     ).asArray();
-    const aggregate = CastMember.create({
+    const entity = CastMember.create({
       ...input,
       type,
     });
-    const notification = aggregate.notification;
+    const notification = entity.notification;
     if (errorCastMemberType) {
       notification.setError(errorCastMemberType.message, 'type');
     }
 
     if (notification.hasErrors()) {
-      throw new AggregateValidationError(notification.toJSON());
+      throw new EntityValidationError(notification.toJSON());
     }
 
-    await this.castMemberRepo.insert(aggregate);
-    return CastMemberOutputMapper.toOutput(aggregate);
+    await this.castMemberRepo.insert(entity);
+    return CastMemberOutputMapper.toOutput(entity);
   }
 }
 

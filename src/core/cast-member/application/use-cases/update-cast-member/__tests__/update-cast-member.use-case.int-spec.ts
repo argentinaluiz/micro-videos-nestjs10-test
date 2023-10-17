@@ -23,7 +23,7 @@ describe('UpdateCastMemberUseCase Integration Tests', () => {
     useCase = new UpdateCastMemberUseCase(repository);
   });
 
-  it('should throws error when aggregate not found', async () => {
+  it('should throws error when entity not found', async () => {
     const castMemberId = new CastMemberId();
     await expect(() =>
       useCase.execute(
@@ -33,21 +33,21 @@ describe('UpdateCastMemberUseCase Integration Tests', () => {
   });
 
   it('should update a cast member', async () => {
-    const aggregate = CastMember.fake().anActor().build();
-    await repository.insert(aggregate);
+    const entity = CastMember.fake().anActor().build();
+    await repository.insert(entity);
 
     let output = await useCase.execute(
       new UpdateCastMemberInput({
-        id: aggregate.cast_member_id.id,
+        id: entity.cast_member_id.id,
         name: 'test',
         type: CastMemberTypes.ACTOR,
       }),
     );
     expect(output).toStrictEqual({
-      id: aggregate.cast_member_id.id,
+      id: entity.cast_member_id.id,
       name: 'test',
       type: CastMemberTypes.ACTOR,
-      created_at: aggregate.created_at,
+      created_at: entity.created_at,
     });
 
     type Arrange = {
@@ -66,15 +66,15 @@ describe('UpdateCastMemberUseCase Integration Tests', () => {
     const arrange: Arrange[] = [
       {
         input: {
-          id: aggregate.cast_member_id.id,
+          id: entity.cast_member_id.id,
           name: 'test',
           type: CastMemberTypes.DIRECTOR,
         },
         expected: {
-          id: aggregate.cast_member_id.id,
+          id: entity.cast_member_id.id,
           name: 'test',
           type: CastMemberTypes.DIRECTOR,
-          created_at: aggregate.created_at,
+          created_at: entity.created_at,
         },
       },
     ];
@@ -85,17 +85,17 @@ describe('UpdateCastMemberUseCase Integration Tests', () => {
         name: i.input.name,
         type: i.input.type,
       });
-      const aggregateUpdated = await repository.findById(
+      const entityUpdated = await repository.findById(
         new CastMemberId(i.input.id),
       );
       expect(output).toStrictEqual({
-        id: aggregate.cast_member_id.id,
+        id: entity.cast_member_id.id,
         name: i.expected.name,
         type: i.expected.type,
         created_at: i.expected.created_at,
       });
-      expect(aggregateUpdated.toJSON()).toStrictEqual({
-        cast_member_id: aggregate.cast_member_id.id,
+      expect(entityUpdated.toJSON()).toStrictEqual({
+        cast_member_id: entity.cast_member_id.id,
         name: i.expected.name,
         type: i.expected.type,
         created_at: i.expected.created_at,

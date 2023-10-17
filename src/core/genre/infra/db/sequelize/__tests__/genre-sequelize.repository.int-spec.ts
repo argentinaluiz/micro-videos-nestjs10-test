@@ -180,10 +180,10 @@ describe('GenreSequelizeRepository Integration Tests', () => {
         .addCategoryId(categories[2].category_id)
         .build();
       await genreRepo.bulkInsert(genres);
-      const spyToAggregate = jest.spyOn(GenreModelMapper, 'toAggregate');
+      const spyToEntity = jest.spyOn(GenreModelMapper, 'toEntity');
       const searchOutput = await genreRepo.search(GenreSearchParams.create());
       expect(searchOutput).toBeInstanceOf(GenreSearchResult);
-      expect(spyToAggregate).toHaveBeenCalledTimes(15);
+      expect(spyToEntity).toHaveBeenCalledTimes(15);
       expect(searchOutput.toJSON()).toMatchObject({
         total: 16,
         current_page: 1,

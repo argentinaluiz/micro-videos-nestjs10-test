@@ -12,7 +12,7 @@ import {
 import { literal, Op } from 'sequelize';
 import { Genre, GenreId } from '../../../domain/genre.aggregate';
 import { SortDirection } from '../../../../shared/domain/repository/search-params';
-import { LoadAggregateError } from '../../../../shared/domain/validators/validation.error';
+import { LoadEntityError } from '../../../../shared/domain/validators/validation.error';
 import { NotFoundError } from '../../../../shared/domain/errors/not-found.error';
 import {
   IGenreRepository,
@@ -87,15 +87,15 @@ export class GenreSequelizeRepository implements IGenreRepository {
     private uow: UnitOfWorkSequelize,
   ) {}
 
-  async insert(aggregate: Genre): Promise<void> {
-    await this.genreModel.create(GenreModelMapper.toModelProps(aggregate), {
+  async insert(entity: Genre): Promise<void> {
+    await this.genreModel.create(GenreModelMapper.toModelProps(entity), {
       include: ['categories_id'],
       transaction: this.uow.getTransaction(),
     });
   }
 
-  async bulkInsert(aggregates: Genre[]): Promise<void> {
-    const models = aggregates.map((e) => GenreModelMapper.toModelProps(e));
+  async bulkInsert(entities: Genre[]): Promise<void> {
+    const models = entities.map((e) => GenreModelMapper.toModelProps(e));
     await this.genreModel.bulkCreate(models, {
       include: ['categories_id'],
       transaction: this.uow.getTransaction(),
@@ -104,7 +104,7 @@ export class GenreSequelizeRepository implements IGenreRepository {
 
   async findById(id: GenreId): Promise<Genre> {
     const model = await this._get(id.id);
-    return model ? GenreModelMapper.toAggregate(model) : null;
+    return model ? GenreModelMapper.toEntity(model) : null;
   }
 
   async findAll(): Promise<Genre[]> {
@@ -112,7 +112,7 @@ export class GenreSequelizeRepository implements IGenreRepository {
       include: ['categories_id'],
       transaction: this.uow.getTransaction(),
     });
-    return models.map((m) => GenreModelMapper.toAggregate(m));
+    return models.map((m) => GenreModelMapper.toEntity(m));
   }
 
   async findByIds(ids: GenreId[]): Promise<Genre[]> {
@@ -125,7 +125,7 @@ export class GenreSequelizeRepository implements IGenreRepository {
       include: ['categories_id'],
       transaction: this.uow.getTransaction(),
     });
-    return models.map((m) => GenreModelMapper.toAggregate(m));
+    return models.map((m) => GenreModelMapper.toEntity(m));
   }
 
   async existsById(
@@ -162,7 +162,7 @@ export class GenreSequelizeRepository implements IGenreRepository {
     const model = await this._get(aggregate.genre_id.id);
 
     if (!model) {
-      throw new NotFoundError(aggregate.genre_id.id, this.getAggregate());
+      throw new NotFoundError(aggregate.genre_id.id, this.getEntity());
     }
 
     await model.$remove(
@@ -187,22 +187,16 @@ export class GenreSequelizeRepository implements IGenreRepository {
     );
   }
   async delete(id: GenreId): Promise<void> {
-    const model = await this._get(id.id);
-    if (!model) {
-      throw new NotFoundError(id.id, this.getAggregate());
-    }
-    await model.$remove(
-      'categories',
-      model.categories_id.map((c) => c.category_id),
-      {
-        transaction: this.uow.getTransaction(),
-      },
-    );
-    await this.genreModel.destroy({
+    const affectedRows = await this.genreModel.destroy({
       where: { genre_id: id.id },
       transaction: this.uow.getTransaction(),
+      cascade: true,
       //      cascade: true,
     });
+
+    if (affectedRows !== 1) {
+      throw new NotFoundError(id.id, this.getEntity());
+    }
   }
 
   private async _get(id: string): Promise<GenreModel> {
@@ -307,7 +301,7 @@ export class GenreSequelizeRepository implements IGenreRepository {
     });
 
     return new GenreSearchResult({
-      items: models.map((m) => GenreModelMapper.toAggregate(m)),
+      items: models.map((m) => GenreModelMapper.toEntity(m)),
       current_page: props.page,
       per_page: props.per_page,
       total: count,
@@ -322,13 +316,13 @@ export class GenreSequelizeRepository implements IGenreRepository {
     return `${this.genreModel.name}.\`${sort}\` ${sort_dir}`;
   }
 
-  getAggregate(): new (...args: any[]) => Genre {
+  getEntity(): new (...args: any[]) => Genre {
     return Genre;
   }
 }
 
 export class GenreModelMapper {
-  static toAggregate(model: GenreModel) {
+  static toEntity(model: GenreModel) {
     const { genre_id: id, categories_id = [], ...otherData } = model.toJSON();
     const categoriesId = categories_id.map(
       (c) => new CategoryId(c.category_id),
@@ -353,7 +347,7 @@ export class GenreModelMapper {
     notification.copyErrors(genre.notification);
 
     if (notification.hasErrors()) {
-      throw new LoadAggregateError(notification.toJSON());
+      throw new LoadEntityError(notification.toJSON());
     }
 
     return genre;

@@ -1,4 +1,4 @@
-import { AggregateValidationError } from '../../../../../shared/domain/validators/validation.error';
+import { EntityValidationError } from '../../../../../shared/domain/validators/validation.error';
 import { UnitOfWorkFakeInMemory } from '../../../../../shared/infra/db/in-memory/fake-unit-work-in-memory';
 import { CastMemberTypes } from '../../../../domain/cast-member-type.vo';
 import { CastMemberInMemoryRepository } from '../../../../infra/db/in-memory/cast-member-in-memory.repository';
@@ -27,7 +27,7 @@ describe('CreateCastMemberUseCase Unit Tests', () => {
       ).rejects.toThrowError(expectedError);
     });
 
-    it('should throw an aggregate validation error', async () => {
+    it('should throw an entity validation error', async () => {
       try {
         await useCase.execute(
           new CreateCastMemberInput({
@@ -36,7 +36,7 @@ describe('CreateCastMemberUseCase Unit Tests', () => {
           }),
         );
       } catch (e) {
-        expect(e).toBeInstanceOf(AggregateValidationError);
+        expect(e).toBeInstanceOf(EntityValidationError);
         expect(e.error).toStrictEqual([
           {
             type: ['Invalid cast member type: a'],

@@ -1,5 +1,5 @@
 import { Video, VideoId } from '../../../domain/video.aggregate';
-import { LoadAggregateError } from '../../../../shared/domain/validators/validation.error';
+import { LoadEntityError } from '../../../../shared/domain/validators/validation.error';
 import { CategoryId } from '../../../../category/domain/category.aggregate';
 import { Notification } from '../../../../shared/domain/validators/notification';
 import { GenreId } from '../../../../genre/domain/genre.aggregate';
@@ -20,7 +20,7 @@ import { Trailer } from '../../../domain/trailer.vo';
 import { VideoMedia } from '../../../domain/video-media.vo';
 
 export class VideoModelMapper {
-  static toAggregate(model: VideoModel) {
+  static toEntity(model: VideoModel) {
     const {
       video_id: id,
       categories_id = [],
@@ -135,13 +135,13 @@ export class VideoModelMapper {
     notification.copyErrors(videoEntity.notification);
 
     if (notification.hasErrors()) {
-      throw new LoadAggregateError(notification.toJSON());
+      throw new LoadEntityError(notification.toJSON());
     }
 
     return videoEntity;
   }
 
-  static toModelProps(aggregate: Video) {
+  static toModelProps(entity: Video) {
     const {
       banner,
       thumbnail,
@@ -152,7 +152,7 @@ export class VideoModelMapper {
       genres_id,
       cast_members_id,
       ...otherData
-    } = aggregate.toJSON();
+    } = entity.toJSON();
     return {
       ...otherData,
       image_medias: [
@@ -172,7 +172,7 @@ export class VideoModelMapper {
         .map((item) => {
           return item.media
             ? ImageMediaModel.build({
-                video_id: aggregate.video_id.id,
+                video_id: entity.video_id.id,
                 name: item.media.name,
                 location: item.media.location,
                 video_related_field: item.video_related_field as any,
@@ -185,7 +185,7 @@ export class VideoModelMapper {
         .map((audio_video_media, index) => {
           return audio_video_media
             ? AudioVideoMediaModel.build({
-                video_id: aggregate.video_id.id,
+                video_id: entity.video_id.id,
                 name: audio_video_media.name,
                 raw_location: audio_video_media.raw_location,
                 encoded_location: audio_video_media.encoded_location,
@@ -197,19 +197,19 @@ export class VideoModelMapper {
         .filter(Boolean),
       categories_id: categories_id.map((category_id) =>
         VideoCategoryModel.build({
-          video_id: aggregate.video_id.id,
+          video_id: entity.video_id.id,
           category_id: category_id,
         }),
       ),
       genres_id: genres_id.map((category_id) =>
         VideoGenreModel.build({
-          video_id: aggregate.video_id.id,
+          video_id: entity.video_id.id,
           genre_id: category_id,
         }),
       ),
       cast_members_id: cast_members_id.map((cast_member_id) =>
         VideoCastMemberModel.build({
-          video_id: aggregate.video_id.id,
+          video_id: entity.video_id.id,
           cast_member_id: cast_member_id,
         }),
       ),

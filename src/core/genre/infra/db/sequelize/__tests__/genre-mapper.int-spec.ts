@@ -4,7 +4,7 @@ import {
   CategoryModel,
   CategorySequelizeRepository,
 } from '../../../../../category/infra/db/sequelize/category-sequelize';
-import { LoadAggregateError } from '../../../../../shared/domain/validators/validation.error';
+import { LoadEntityError } from '../../../../../shared/domain/validators/validation.error';
 import { setupSequelize } from '../../../../../shared/infra/testing/helpers';
 import { Genre, GenreId } from '../../../../domain/genre.aggregate';
 import {
@@ -44,16 +44,16 @@ describe('GenreModelMapper Unit Tests', () => {
 
     for (const item of arrange) {
       try {
-        GenreModelMapper.toAggregate(item.makeModel());
+        GenreModelMapper.toEntity(item.makeModel());
         fail('The genre is valid, but it needs throws a LoadEntityError');
       } catch (e) {
-        expect(e).toBeInstanceOf(LoadAggregateError);
+        expect(e).toBeInstanceOf(LoadEntityError);
         expect(e.error).toMatchObject(item.expectedErrors);
       }
     }
   });
 
-  it('should convert a genre model to a genre aggregate', async () => {
+  it('should convert a genre model to a genre entity', async () => {
     const category1 = Category.fake().aCategory().build();
     const category2 = Category.fake().aCategory().build();
     await categoryRepo.bulkInsert([category1, category2]);
@@ -77,8 +77,8 @@ describe('GenreModelMapper Unit Tests', () => {
       },
       { include: ['categories_id'] },
     );
-    const aggregate = GenreModelMapper.toAggregate(model);
-    expect(aggregate.toJSON()).toEqual(
+    const entity = GenreModelMapper.toEntity(model);
+    expect(entity.toJSON()).toEqual(
       new Genre({
         genre_id: new GenreId('5490020a-e866-4229-9adc-aa44b83234c4'),
         name: 'some value',

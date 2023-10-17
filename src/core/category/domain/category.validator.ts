@@ -7,8 +7,8 @@ export class CategoryRules {
   @MaxLength(255, { groups: ['name'] })
   name: string;
 
-  constructor(aggregate: Category) {
-    Object.assign(this, aggregate);
+  constructor(entity: Category) {
+    Object.assign(this, entity);
   }
 }
 

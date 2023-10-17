@@ -1,6 +1,6 @@
 import { IUseCase } from '../../../../shared/application/use-case-interface';
 import { NotFoundError } from '../../../../shared/domain/errors/not-found.error';
-import { AggregateValidationError } from '../../../../shared/domain/validators/validation.error';
+import { EntityValidationError } from '../../../../shared/domain/validators/validation.error';
 import { CastMemberType } from '../../../domain/cast-member-type.vo';
 import {
   CastMember,
@@ -40,7 +40,7 @@ export class UpdateCastMemberUseCase
     }
 
     if (castMember.notification.hasErrors()) {
-      throw new AggregateValidationError(castMember.notification.toJSON());
+      throw new EntityValidationError(castMember.notification.toJSON());
     }
 
     await this.castMemberRepo.update(castMember);

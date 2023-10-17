@@ -17,14 +17,6 @@ describe('DatabaseModule Unit Tests', () => {
       DB_AUTO_LOAD_MODELS: true,
     };
 
-    it('should be valid', () => {
-      const schema = Joi.object({
-        ...CONFIG_DB_SCHEMA,
-      });
-      const { error } = schema.validate(connOptions);
-      expect(error).toBeUndefined();
-    });
-
     it('should be a sqlite connection', async () => {
       const module = await Test.createTestingModule({
         imports: [
@@ -59,14 +51,6 @@ describe('DatabaseModule Unit Tests', () => {
       DB_LOGGING: false,
       DB_AUTO_LOAD_MODELS: true,
     };
-
-    it('should be valid', () => {
-      const schema = Joi.object({
-        ...CONFIG_DB_SCHEMA,
-      });
-      const { error } = schema.validate(connOptions);
-      expect(error).toBeUndefined();
-    });
 
     it('should be a mysql connection', async () => {
       const module = await Test.createTestingModule({

@@ -4,18 +4,18 @@ import { CastMemberOutputMapper } from './cast-member-output';
 
 describe('CastMemberOutputMapper Unit Tests', () => {
   it('should convert a cast member in output', () => {
-    const aggregate = CastMember.create({
+    const entity = CastMember.create({
       name: 'Movie',
       type: CastMemberType.createAnActor(),
     });
-    const spyToJSON = jest.spyOn(aggregate, 'toJSON');
-    const output = CastMemberOutputMapper.toOutput(aggregate);
+    const spyToJSON = jest.spyOn(entity, 'toJSON');
+    const output = CastMemberOutputMapper.toOutput(entity);
     expect(spyToJSON).toHaveBeenCalled();
     expect(output).toStrictEqual({
-      id: aggregate.cast_member_id.id,
+      id: entity.cast_member_id.id,
       name: 'Movie',
       type: CastMemberType.createAnActor().type,
-      created_at: aggregate.created_at,
+      created_at: entity.created_at,
     });
   });
 });

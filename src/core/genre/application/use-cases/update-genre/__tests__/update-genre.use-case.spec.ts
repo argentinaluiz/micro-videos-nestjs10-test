@@ -4,7 +4,7 @@ import {
   CategoryId,
 } from '../../../../../category/domain/category.aggregate';
 import { CategoryInMemoryRepository } from '../../../../../category/infra/db/in-memory/category-in-memory.repository';
-import { AggregateValidationError } from '../../../../../shared/domain/validators/validation.error';
+import { EntityValidationError } from '../../../../../shared/domain/validators/validation.error';
 import { UnitOfWorkFakeInMemory } from '../../../../../shared/infra/db/in-memory/fake-unit-work-in-memory';
 import { Genre } from '../../../../domain/genre.aggregate';
 import { GenreInMemoryRepository } from '../../../../infra/db/in-memory/genre-in-memory.repository';
@@ -50,7 +50,7 @@ describe('UpdateGenreUseCase Unit Tests', () => {
         );
       } catch (e) {
         expect(spyValidateCategoriesId).toHaveBeenCalledWith(['1', '2']);
-        expect(e).toBeInstanceOf(AggregateValidationError);
+        expect(e).toBeInstanceOf(EntityValidationError);
         expect(e.error).toStrictEqual([
           {
             categories_id: [
@@ -85,7 +85,7 @@ describe('UpdateGenreUseCase Unit Tests', () => {
           categoryId1.id,
           categoryId2.id,
         ]);
-        expect(e).toBeInstanceOf(AggregateValidationError);
+        expect(e).toBeInstanceOf(EntityValidationError);
         expect(e.error).toStrictEqual([
           {
             categories_id: [

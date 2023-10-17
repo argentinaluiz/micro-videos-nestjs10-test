@@ -9,7 +9,7 @@ import {
 import { literal, Op } from 'sequelize';
 import { Category, CategoryId } from '../../../domain/category.aggregate';
 import { SortDirection } from '../../../../shared/domain/repository/search-params';
-import { LoadAggregateError } from '../../../../shared/domain/validators/validation.error';
+import { LoadEntityError } from '../../../../shared/domain/validators/validation.error';
 import { NotFoundError } from '../../../../shared/domain/errors/not-found.error';
 import {
   ICategoryRepository,
@@ -54,22 +54,22 @@ export class CategorySequelizeRepository implements ICategoryRepository {
   };
   constructor(private categoryModel: typeof CategoryModel) {}
 
-  async insert(aggregate: Category): Promise<void> {
-    await this.categoryModel.create(aggregate.toJSON());
+  async insert(entity: Category): Promise<void> {
+    await this.categoryModel.create(entity.toJSON());
   }
 
-  async bulkInsert(aggregates: Category[]): Promise<void> {
-    await this.categoryModel.bulkCreate(aggregates.map((e) => e.toJSON()));
+  async bulkInsert(entities: Category[]): Promise<void> {
+    await this.categoryModel.bulkCreate(entities.map((e) => e.toJSON()));
   }
 
   async findById(id: CategoryId): Promise<Category> {
     const model = await this._get(id.id);
-    return model ? CategoryModelMapper.toAggregate(model) : null;
+    return model ? CategoryModelMapper.toEntity(model) : null;
   }
 
   async findAll(): Promise<Category[]> {
     const models = await this.categoryModel.findAll();
-    return models.map((m) => CategoryModelMapper.toAggregate(m));
+    return models.map((m) => CategoryModelMapper.toEntity(m));
   }
 
   async findByIds(ids: CategoryId[]): Promise<Category[]> {
@@ -80,7 +80,7 @@ export class CategorySequelizeRepository implements ICategoryRepository {
         },
       },
     });
-    return models.map((m) => CategoryModelMapper.toAggregate(m));
+    return models.map((m) => CategoryModelMapper.toEntity(m));
   }
 
   async existsById(
@@ -112,19 +112,19 @@ export class CategorySequelizeRepository implements ICategoryRepository {
     };
   }
 
-  async update(aggregate: Category): Promise<void> {
-    const model = await this._get(aggregate.category_id.id);
+  async update(entity: Category): Promise<void> {
+    const model = await this._get(entity.category_id.id);
     if (!model) {
-      throw new NotFoundError(aggregate.category_id.id, this.getAggregate());
+      throw new NotFoundError(entity.category_id.id, this.getEntity());
     }
-    await this.categoryModel.update(aggregate.toJSON(), {
-      where: { category_id: aggregate.category_id.id },
+    await this.categoryModel.update(entity.toJSON(), {
+      where: { category_id: entity.category_id.id },
     });
   }
   async delete(id: CategoryId): Promise<void> {
     const model = await this._get(id.id);
     if (!model) {
-      throw new NotFoundError(id.id, this.getAggregate());
+      throw new NotFoundError(id.id, this.getEntity());
     }
     this.categoryModel.destroy({ where: { category_id: id.id } });
   }
@@ -147,7 +147,7 @@ export class CategorySequelizeRepository implements ICategoryRepository {
       limit,
     });
     return new CategorySearchResult({
-      items: models.map((m) => CategoryModelMapper.toAggregate(m)),
+      items: models.map((m) => CategoryModelMapper.toEntity(m)),
       current_page: props.page,
       per_page: props.per_page,
       total: count,
@@ -162,13 +162,13 @@ export class CategorySequelizeRepository implements ICategoryRepository {
     return [[sort, sort_dir]];
   }
 
-  getAggregate(): new (...args: any[]) => Category {
+  getEntity(): new (...args: any[]) => Category {
     return Category;
   }
 }
 
 export class CategoryModelMapper {
-  static toAggregate(model: CategoryModel) {
+  static toEntity(model: CategoryModel) {
     const { category_id: id, ...otherData } = model.toJSON();
     const category = new Category({
       ...otherData,
@@ -176,7 +176,7 @@ export class CategoryModelMapper {
     });
     category.validate();
     if (category.notification.hasErrors()) {
-      throw new LoadAggregateError(category.notification.toJSON());
+      throw new LoadEntityError(category.notification.toJSON());
     }
     return category;
   }
