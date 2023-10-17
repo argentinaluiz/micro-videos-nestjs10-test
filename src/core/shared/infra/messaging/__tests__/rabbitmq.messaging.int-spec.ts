@@ -31,7 +31,7 @@ describe('RabbitMQMessaging Integration Tests', () => {
 
   afterEach(async () => {
     try {
-      await connection.connection.close();
+      await connection.managedConnection.close();
     } catch (err) {}
   });
 

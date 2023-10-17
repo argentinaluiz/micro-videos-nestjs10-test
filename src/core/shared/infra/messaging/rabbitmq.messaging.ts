@@ -7,6 +7,7 @@ import { MessageIntegrationEventsMap } from './messaging-integration-events-map'
 export class RabbitMQMessaging implements IMessageBusService {
   constructor(private connection: AmqpConnection) {}
   async publish(event: IIntegrationEvent) {
+    console.log(event);
     const config = MessageIntegrationEventsMap[event.event_name];
     await this.connection.publish(config.exchange, config.routing_key, event);
   }

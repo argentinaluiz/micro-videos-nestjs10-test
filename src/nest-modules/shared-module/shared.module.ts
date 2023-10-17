@@ -55,21 +55,21 @@ import { RabbitmqModule } from '../rabbitmq-module/rabbitmq-module';
       scope: Scope.REQUEST,
     },
     {
-      provide: 'IIntegrationEventQueueService',
+      provide: 'IIntegrationEventQueueService', //queue-module
       useFactory: (queue: Queue) => {
         return new BullIntegrationEventQueue(queue);
       },
       inject: [getQueueToken('integration-events')],
     },
     {
-      provide: 'IMessageBusService',
+      provide: 'IMessageBusService', //rabbitmq-module
       useFactory: (amqpConnection: AmqpConnection) => {
         return new RabbitMQMessaging(amqpConnection);
       },
       inject: [AmqpConnection],
     },
     {
-      provide: NestPublishIntegrationEventHandler,
+      provide: NestPublishIntegrationEventHandler, //queue-module (depends RabbitMQ)
       useFactory: (messageBus: IMessageBusService) => {
         return new NestPublishIntegrationEventHandler(messageBus);
       },

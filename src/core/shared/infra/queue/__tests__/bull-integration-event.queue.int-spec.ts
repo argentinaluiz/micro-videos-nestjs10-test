@@ -12,6 +12,10 @@ describe('BullIntegrationEventQueue', () => {
     queueService = new BullIntegrationEventQueue(integrationQueue);
   });
 
+  afterEach(async () => {
+    await integrationQueue.close(true);
+  });
+
   describe('add', () => {
     it('should add the integration event to the queue', async () => {
       const integrationEvent: IIntegrationEvent = {

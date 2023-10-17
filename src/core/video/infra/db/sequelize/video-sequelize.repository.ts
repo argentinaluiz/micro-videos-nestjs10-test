@@ -195,10 +195,28 @@ export class VideoSequelizeRepository implements IVideoRepository {
     this.uow.addAggregateRoot(entity);
   }
   async delete(id: VideoId): Promise<void> {
+    const videoCategoryRelation =
+      this.videoModel.associations.categories_id.target;
+    const videoGenreRelation = this.videoModel.associations.genres_id.target;
+    const videoCastMemberRelation =
+      this.videoModel.associations.cast_members_id.target;
+    await Promise.all([
+      videoCategoryRelation.destroy({
+        where: { video_id: id.id },
+        transaction: this.uow.getTransaction(),
+      }),
+      videoGenreRelation.destroy({
+        where: { video_id: id.id },
+        transaction: this.uow.getTransaction(),
+      }),
+      videoCastMemberRelation.destroy({
+        where: { video_id: id.id },
+        transaction: this.uow.getTransaction(),
+      }),
+    ]);
     const affectedRows = await this.videoModel.destroy({
       where: { video_id: id.id },
       transaction: this.uow.getTransaction(),
-      cascade: true
     });
 
     if (affectedRows !== 1) {

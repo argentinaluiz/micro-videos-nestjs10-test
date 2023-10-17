@@ -187,11 +187,15 @@ export class GenreSequelizeRepository implements IGenreRepository {
     );
   }
   async delete(id: GenreId): Promise<void> {
+    const genreCategoryRelation =
+      this.genreModel.associations.categories_id.target;
+    await genreCategoryRelation.destroy({
+      where: { genre_id: id.id },
+      transaction: this.uow.getTransaction(),
+    });
     const affectedRows = await this.genreModel.destroy({
       where: { genre_id: id.id },
       transaction: this.uow.getTransaction(),
-      cascade: true,
-      //      cascade: true,
     });
 
     if (affectedRows !== 1) {

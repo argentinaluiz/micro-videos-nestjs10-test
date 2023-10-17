@@ -8,6 +8,7 @@ import { ConfigService } from '@nestjs/config';
       useFactory: (configService: ConfigService) => ({
         uri: configService.get('RABBITMQ_URL'),
         connectionInitOptions: { wait: false },
+        registerHandlers: configService.get('RABBITMQ_REGISTER_HANDLERS'),
       }),
       inject: [ConfigService],
     }),

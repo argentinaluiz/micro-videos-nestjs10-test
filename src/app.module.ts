@@ -9,18 +9,12 @@ import { CastMembersModule } from './nest-modules/cast-members-module/cast-membe
 import { GenresModule } from './nest-modules/genres-module/genres.module';
 import { VideosModule } from './nest-modules/videos-module/videos.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { BullModule } from '@nestjs/bull';
-import { ConfigService } from '@nestjs/config';
+import { QueueModule } from './nest-modules/queue-module/queue.module';
 
 @Module({
   imports: [
     EventEmitterModule.forRoot(),
-    BullModule.forRootAsync({
-      useFactory: (configService: ConfigService) => ({
-        url: configService.get('REDIS_URL'),
-      }),
-      inject: [ConfigService],
-    }),
+    QueueModule,
     ConfigModule.forRoot(),
     SharedModule,
     DatabaseModule,

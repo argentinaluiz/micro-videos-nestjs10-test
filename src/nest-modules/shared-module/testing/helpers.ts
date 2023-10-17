@@ -18,7 +18,6 @@ export function startApp({
   beforeInit,
 }: { beforeInit?: (app: INestApplication) => void } = {}) {
   let _app: INestApplication;
-  let canRunMigrations: boolean;
 
   beforeEach(async () => {
     const moduleBuilder: TestingModule = await Test.createTestingModule({
@@ -33,25 +32,9 @@ export function startApp({
       })
       .compile();
 
-    canRunMigrations = !moduleBuilder
-      .get(ConfigService)
-      .get('DB_AUTO_LOAD_MODELS');
-
     const sequelize = moduleBuilder.get<Sequelize>(getConnectionToken());
 
-    try {
-      if (canRunMigrations) {
-        const umzug = migrator(sequelize, { logger: undefined });
-        await sequelize.drop();
-        //await umzug.down({ to: 0 as any });
-        await umzug.up();
-      } else {
-        await sequelize.sync({ force: true });
-      }
-    } catch (e) {
-      console.error(e);
-      throw e;
-    }
+    await sequelize.sync({ force: true });
 
     _app = moduleBuilder.createNestApplication();
     applyGlobalConfig(_app);
