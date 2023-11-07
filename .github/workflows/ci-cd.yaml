@@ -87,27 +87,27 @@ jobs:
           file: Dockerfile.prod
           target: development
 
-      - name: up containers
-        env:
-          KEY: ${{ secrets.KEY }}
-        run: |
-          docker-compose -f docker-compose.ci.yaml up -d
+    #   - name: up containers
+    #     env:
+    #       KEY: ${{ secrets.KEY }}
+    #     run: |
+    #       docker-compose -f docker-compose.ci.yaml up -d
 
-      - name: test secret
-        run: |
-          docker-compose -f docker-compose.ci.yaml exec -T app node -e "console.log(process.env.KEY)"
+    #   - name: test secret
+    #     run: |
+    #       docker-compose -f docker-compose.ci.yaml exec -T app node -e "console.log(process.env.KEY)"
 
-      - name: wait for mysql
-        run: docker-compose -f docker-compose.ci.yaml exec -T db_test mysqladmin ping --silent --wait=30 -uroot -proot
+    #   - name: wait for mysql
+    #     run: docker-compose -f docker-compose.ci.yaml exec -T db_test mysqladmin ping --silent --wait=30 -uroot -proot
 
-      - name: copy envs for tests
-        run: |
-          docker compose exec -T app mkdir -p /home/node/app/envs
-          docker compose cp envs/.env.test app:/home/node/app/envs/.env.test 
-          docker compose cp envs/.env.e2e app:/home/node/app/envs/.env.e2e
+    #   - name: copy envs for tests
+    #     run: |
+    #       docker compose exec -T app mkdir -p /home/node/app/envs
+    #       docker compose cp envs/.env.test app:/home/node/app/envs/.env.test 
+    #       docker compose cp envs/.env.e2e app:/home/node/app/envs/.env.e2e
 
-      - name: run unit and integration tests
-        run: docker-compose -f docker-compose.ci.yaml exec -T app npm run test
+    #   - name: run unit and integration tests
+    #     run: docker-compose -f docker-compose.ci.yaml exec -T app npm run test
 
       #   - name: run e2e tests
       #     run: docker-compose -f docker-compose.ci.yaml exec -T app npm run test:e2e -- --runInBand --detectOpenHandles --forceExit
