@@ -34,7 +34,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Install the cosign tool except on PR
+      # Install the cosign tool e1xcept on PR
       # https://github.com/sigstore/cosign-installer
       - name: Install cosign
         if: github.event_name != 'pull_request'
@@ -83,8 +83,8 @@ jobs:
           file: Dockerfile.prod
           target: development
       
-      - name: copy envs for tests
-        run: cp envs/.env.test envs/.env.test && cp envs/.env.e2e envs/.env.e2e
+    #   - name: copy envs for tests
+    #     run: cp envs/.env.test envs/.env.test && cp envs/.env.e2e envs/.env.e2e
     
       - name: up docker-compose
         run: docker-compose -f docker-compose.ci.yaml up -d
