@@ -97,6 +97,9 @@ jobs:
       
       - name: run unit and integration tests
         run: docker-compose -f docker-compose.ci.yaml exec -T app npm run test
+    
+      - name: run e2e tests
+        run: docker-compose -f docker-compose.ci.yaml exec -T app npm run test:e2e -- --runInBand --detectOpenHandles --forceExit
       
 #   build:
 
