@@ -90,7 +90,9 @@ jobs:
     
       - name: wait for mysql
         run: docker-compose -f docker-compose.ci.yaml exec -T db_test mysqladmin ping --silent --wait=30 -uroot -proot
-            
+    
+      - name: test
+        run: docker image ls
       
 #   build:
 
