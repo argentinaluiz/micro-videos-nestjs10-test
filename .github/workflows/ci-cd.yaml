@@ -82,16 +82,16 @@ jobs:
           load: true
           file: Dockerfile.prod
           target: development
-      
-    #   - name: copy envs for tests
-    #     run: cp envs/.env.test envs/.env.test && cp envs/.env.e2e envs/.env.e2e
     
       - name: up docker-compose
         run: docker-compose -f docker-compose.ci.yaml up -d
     
       - name: wait for mysql
         run: docker-compose -f docker-compose.ci.yaml exec -T db_test mysqladmin ping --silent --wait=30 -uroot -proot
-    
+      
+      - name: copy envs for tests
+        run: docker compose cp .env.test app:/home/node/app/envs/.env.test && docker compose cp .env.e2e app:/home/node/app/.env.e2e
+      
       - name: run unit and integration tests
         run: docker-compose -f docker-compose.ci.yaml exec -T app npm run test
       
