@@ -89,7 +89,7 @@ jobs:
         run: docker-compose -f docker-compose.ci.yml up -d
     
       - name: wait for mysql
-        run: docker-compose -f docker-compose.ci.yml exec -T db mysqladmin ping -h localhost
+        run: docker-compose -f docker-compose.ci.yml exec -T mysql mysqladmin ping --silent --wait=30 -uroot -proot
             
       
 #   build:
