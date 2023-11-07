@@ -83,14 +83,14 @@ jobs:
           file: Dockerfile.prod
           target: development
       
-    #   - name: copy envs for tests
-    #     run: cp envs/.env.test envs/.env.test && cp envs/.env.e2e envs/.env.e2e
+      - name: copy envs for tests
+        run: cp envs/.env.test envs/.env.test && cp envs/.env.e2e envs/.env.e2e
     
-    #   - name: up docker-compose
-    #     run: docker-compose -f docker-compose.ci.yaml up -d
+      - name: up docker-compose
+        run: docker-compose -f docker-compose.ci.yaml up -d
     
-    #   - name: wait for mysql
-    #     run: docker-compose -f docker-compose.ci.yaml exec -T db_test mysqladmin ping --silent --wait=30 -uroot -proot
+      - name: wait for mysql
+        run: docker-compose -f docker-compose.ci.yaml exec -T db_test mysqladmin ping --silent --wait=30 -uroot -proot
     
       - name: test
         run: docker image ls
