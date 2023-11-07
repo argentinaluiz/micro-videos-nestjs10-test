@@ -90,7 +90,10 @@ jobs:
         run: docker-compose -f docker-compose.ci.yaml exec -T db_test mysqladmin ping --silent --wait=30 -uroot -proot
       
       - name: copy envs for tests
-        run: docker compose cp envs/.env.test app:/home/node/app/envs/.env.test && docker compose cp envs/.env.e2e app:/home/node/app/.env.e2e
+        run: |
+            docker compose exec -T app mkdir -p /home/node/app/envs
+            docker compose cp envs/.env.test app:/home/node/app/envs/.env.test 
+            docker compose cp envs/.env.e2e app:/home/node/app/envs/.env.e2e
       
       - name: run unit and integration tests
         run: docker-compose -f docker-compose.ci.yaml exec -T app npm run test
