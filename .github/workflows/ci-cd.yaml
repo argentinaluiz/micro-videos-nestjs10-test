@@ -80,7 +80,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           file: Dockerfile.prod
-          target: builder
+          target: development
       
     #   - name: copy envs for tests
     #     run: cp envs/.env.test envs/.env.test && cp envs/.env.e2e envs/.env.e2e
