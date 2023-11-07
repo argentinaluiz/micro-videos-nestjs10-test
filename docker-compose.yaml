@@ -3,13 +3,15 @@ version: '3'
 services:
   app:
     build: .
-    command: .docker/start.sh
+    command: .docker/start.dev.sh
     volumes:
       - .:/home/node/app
       - '/etc/timezone:/etc/timezone:ro'
       - '/etc/localtime:/etc/localtime:ro'
     ports:
       - 3000:3000
+    labels:
+      filebeat_collector: true
 
   db:
     image: mysql:8.0.30-debian
@@ -35,7 +37,7 @@ services:
 
   redis:
     image: redis:7.0.8-alpine
-  
+
   rabbitmq:
     image: rabbitmq:3.8-management-alpine
     hostname: rabbitmq
@@ -44,14 +46,3 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=admin
       - RABBITMQ_DEFAULT_PASS=admin
-  
-  keycloak:
-    image: quay.io/keycloak/keycloak:21.1
-    profiles:
-      - dev
-    command: start-dev
-    ports:
-      - 8080:8080
-    environment:
-      - KEYCLOAK_ADMIN=admin
-      - KEYCLOAK_ADMIN_PASSWORD=admin
