@@ -1,5 +1,6 @@
 .devcontainer/
 .git/
+.github/
 .docker/dbdata
 .docker/filebeatdata
 node_modules/
