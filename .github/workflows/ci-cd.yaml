@@ -87,7 +87,6 @@ jobs:
         env:
           KEY: ${{ secrets.KEY }}
         run: |
-            export KEY=$env:KEY
             docker-compose -f docker-compose.ci.yaml up -d
       - name: test secret
         run: |
