@@ -22,6 +22,7 @@ import { CategoryOutputMapper } from '../../../core/category/application/use-cas
 import { Category } from '../../../core/category/domain/category.aggregate';
 import { DatabaseModule } from '../../database-module/database.module';
 import { CATEGORY_PROVIDERS } from '../categories.providers';
+import { AuthModule } from '../../auth-module/auth.module';
 
 describe('CategoriesController Integration Tests', () => {
   let controller: CategoriesController;
@@ -29,7 +30,12 @@ describe('CategoriesController Integration Tests', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [ConfigModule.forRoot(), DatabaseModule, CategoriesModule],
+      imports: [
+        ConfigModule.forRoot(),
+        DatabaseModule,
+        AuthModule,
+        CategoriesModule,
+      ],
     }).compile();
 
     controller = module.get(CategoriesController);

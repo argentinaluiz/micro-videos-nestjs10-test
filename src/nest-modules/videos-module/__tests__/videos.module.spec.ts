@@ -12,6 +12,8 @@ import { SharedModule } from '../../shared-module/shared.module';
 import { QueueModule } from '../../queue-module/queue.module';
 import { VideoMediaReplacedEvent } from '../../../core/video/domain/domain-events/video-audio-media-replaced.event';
 import { EventModule } from '../../event-module/event.module';
+import { AuthModule } from '../../auth-module/auth.module';
+import { RabbitmqModule } from '../../rabbitmq-module/rabbitmq-module';
 
 describe('VideosModule Unit Tests', () => {
   let module: TestingModule;
@@ -22,7 +24,9 @@ describe('VideosModule Unit Tests', () => {
         QueueModule,
         SharedModule,
         EventModule.register({ enableQueueConsumers: false }),
+        RabbitmqModule.forRoot(),
         DatabaseModule,
+        AuthModule,
         VideosModule,
       ],
     })

@@ -12,6 +12,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { QueueModule } from './nest-modules/queue-module/queue.module';
 import { RabbitmqModule } from './nest-modules/rabbitmq-module/rabbitmq-module';
 import { EventModule } from './nest-modules/event-module/event.module';
+import { AuthModule } from './nest-modules/auth-module/auth.module';
 
 @Module({
   imports: [
@@ -22,10 +23,12 @@ import { EventModule } from './nest-modules/event-module/event.module';
     EventModule.registerAsyncWithConfig(),
     SharedModule,
     DatabaseModule,
+    AuthModule,
     CategoriesModule,
     CastMembersModule,
     GenresModule,
     VideosModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

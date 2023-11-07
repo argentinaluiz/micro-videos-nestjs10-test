@@ -1,5 +1,10 @@
+@token = eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsiYWRtaW4tY2F0YWxvZyJdfSwiaWF0IjoxNjk5MzQxNTc1LCJleHAiOjE2OTkzNDUxNzV9.mvUPKNnc7oVsFDJ085i3qIxMnUYxI1ErJ_hvW0gW30IRpydgur0qwSGsXnLIkr0s-UsqmpKxEAzsG2pYeovzf-qg3TXDkt9Vy4IqOHJZl0s_wxgv0VGqhHWJtPxrU7-lVa1L3DQvLIfj3hom3IZbsVJIBiHA9Us_WNKlOv4zn-4kTB5TIBhlBZ99qeCqciDDZJw7pynHa5gOHuP2R7HfFGKSqZ2AR_yWGmpW1sOPnWczijJjtNt4oW35z1qzrh9JLLlUETOz3U1R8rc_xFYWvtSknn7PEXFFTJTy6me1MVKrjiRfbo8rxyrS8c7iWx9vvRGM4Udr2fZ7lKSAjs1bOg
+
+###
+
 # @name createCategory
 POST http://localhost:3000/categories
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -83,6 +88,13 @@ Content-Type: application/json
 
 ###
 
+POST http://localhost:8080/realms/master/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+username=admin
+&password=admin
+&grant_type=password
+&client_id=admin-videos
 
 ###
 PATCH http://localhost:3000/videos/{{videoId}}
@@ -94,3 +106,9 @@ Content-Type: video/mp4
 
 < ./package.json
 ------WebKitFormBoundary1234--
+
+###
+
+###
+
+

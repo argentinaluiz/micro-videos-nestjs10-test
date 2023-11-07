@@ -100,6 +100,17 @@ export const CONFIG_QUEUE_SCHEMA: Joi.StrictSchemaMap<CONFIG_QUEUE_SCHEMA_TYPE> 
     QUEUE_CONSUMERS_ENABLED: Joi.boolean().required(),
   };
 
+type CONFIG_AUTH_SCHEMA_TYPE = {
+  JWT_PUBLIC_KEY: string;
+  JWT_PRIVATE_KEY: string;
+};
+
+export const CONFIG_AUTH_SCHEMA: Joi.StrictSchemaMap<CONFIG_AUTH_SCHEMA_TYPE> =
+  {
+    JWT_PUBLIC_KEY: Joi.string().required(),
+    JWT_PRIVATE_KEY: Joi.string().optional(),
+  };
+
 @Module({})
 export class ConfigModule extends NestConfigModule {
   static forRoot(options: ConfigModuleOptions = {}): DynamicModule {
@@ -120,6 +131,7 @@ export class ConfigModule extends NestConfigModule {
         ...CONFIG_REDIS_SCHEMA,
         ...CONFIG_RABBITMQ_SCHEMA,
         ...CONFIG_QUEUE_SCHEMA,
+        ...CONFIG_AUTH_SCHEMA,
       }),
       ...otherOptions,
     });

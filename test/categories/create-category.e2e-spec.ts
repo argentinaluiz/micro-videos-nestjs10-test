@@ -4,12 +4,34 @@ import { ICategoryRepository } from '../../src/core/category/domain/category.rep
 import { CategoryOutputMapper } from '../../src/core/category/application/use-cases/common/category-output';
 import * as CategoryProviders from '../../src/nest-modules/categories-module/categories.providers';
 import { Uuid } from '../../src/core/shared/domain/value-objects/uuid.vo';
-import { startApp } from '../../src/nest-modules/shared-module/testing/helpers';
+import {
+  generateAuthBearer,
+  startApp,
+} from '../../src/nest-modules/shared-module/testing/helpers';
 import { CreateCategoryFixture } from '../../src/nest-modules/categories-module/testing/category-fixtures';
 import { CategoriesController } from '../../src/nest-modules/categories-module/categories.controller';
 
 describe('CategoriesController (e2e)', () => {
   describe('/categories (POST)', () => {
+    describe.only('unauthenticated', () => {
+      const app = startApp();
+
+      test('should return 401 when not authenticated', () => {
+        return request(app.app.getHttpServer())
+          .post('/categories')
+          .send({})
+          .expect(401);
+      });
+
+      test('should return 403 when not authenticated as admin', () => {
+        return request(app.app.getHttpServer())
+          .post('/categories')
+          .set('Authorization', generateAuthBearer(app.app, false))
+          .send({})
+          .expect(403);
+      });
+    });
+
     describe('should a response error with 422 when request body is invalid', () => {
       const app = startApp();
       const invalidRequest = CreateCategoryFixture.arrangeInvalidRequest();
@@ -20,6 +42,7 @@ describe('CategoriesController (e2e)', () => {
       test.each(arrange)('when body is $label', ({ value }) => {
         return request(app.app.getHttpServer())
           .post('/categories')
+          .set('Authorization', generateAuthBearer(app.app))
           .send(value.send_data)
           .expect(422)
           .expect(value.expected);

@@ -8,6 +8,8 @@ import { migrator } from '../../../core/shared/infra/db/sequelize/migrator';
 import { applyGlobalConfig } from '../../../global-config';
 import { UnitOfWorkSequelize } from '../../../core/shared/infra/db/sequelize/unit-of-work-sequelize';
 import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
+import { JwtService } from '@nestjs/jwt';
+import request from 'supertest';
 // import { RabbitmqModule } from '../../rabbitmq-module/rabbitmq-module';
 // import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
 
@@ -51,4 +53,21 @@ export function startApp({
       return _app;
     },
   };
+}
+
+export function generateToken(nestApp: INestApplication, isAdmin = true) {
+  const jwtService = nestApp.get(JwtService);
+  return jwtService.sign(
+    isAdmin
+      ? {
+          realm_access: {
+            roles: ['admin-catalog'],
+          },
+        }
+      : {},
+  );
+}
+
+export function generateAuthBearer(nestApp: INestApplication, isAdmin = true) {
+  return `Bearer ${generateToken(nestApp, isAdmin)}`;
 }
