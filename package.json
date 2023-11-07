@@ -18,7 +18,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "node --expose-gc node_modules/jest/bin/jest.js --config ./test/jest-e2e.config.ts",
-    "migrate": "node -r ts-node/register/transpile-only ./src/migrate.ts"
+    "migrate:ts": "node -r ts-node/register/transpile-only ./src/cmd/migrate.ts",
+    "migrate:js": "node ./dist/cmd/migrate.js"
   },
   "dependencies": {
     "@golevelup/nestjs-rabbitmq": "^4.0.0",

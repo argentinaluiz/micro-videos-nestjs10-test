@@ -1,0 +1,11 @@
+.devcontainer/
+.git/
+.docker/dbdata
+.docker/filebeatdata
+node_modules/
+coverage/
+dist/
+envs/
+*.sqlite
+docker-compose*.yaml
+docker-compose*.yml
