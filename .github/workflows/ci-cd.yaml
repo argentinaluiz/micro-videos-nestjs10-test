@@ -82,8 +82,8 @@ jobs:
           file: Dockerfile.prod
           target: builder
       
-      - name: copy .envs for tests
-        run: cp envs/.env.test envs/.env.test && cp envs/.env.e2e envs/.env.e2e
+    #   - name: copy envs for tests
+    #     run: cp envs/.env.test envs/.env.test && cp envs/.env.e2e envs/.env.e2e
     
       - name: up docker-compose
         run: docker-compose -f docker-compose.ci.yml up -d
