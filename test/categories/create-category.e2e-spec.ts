@@ -13,7 +13,7 @@ import { CategoriesController } from '../../src/nest-modules/categories-module/c
 
 describe('CategoriesController (e2e)', () => {
   describe('/categories (POST)', () => {
-    describe.only('unauthenticated', () => {
+    describe('unauthenticated', () => {
       const app = startApp();
 
       test('should return 401 when not authenticated', () => {

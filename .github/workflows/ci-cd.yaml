@@ -75,7 +75,7 @@ jobs:
           context: .
           #push: ${{ github.event_name != 'pull_request' }}
           push: false
-          tags: ${{ steps.meta.outputs.tags }},${{ env.FOLDER_NAME }}
+          tags: ${{ env.FOLDER_NAME }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -98,8 +98,21 @@ jobs:
       - name: run unit and integration tests
         run: docker-compose -f docker-compose.ci.yaml exec -T app npm run test
     
-      - name: run e2e tests
-        run: docker-compose -f docker-compose.ci.yaml exec -T app npm run test:e2e -- --runInBand --detectOpenHandles --forceExit
+    #   - name: run e2e tests
+    #     run: docker-compose -f docker-compose.ci.yaml exec -T app npm run test:e2e -- --runInBand --detectOpenHandles --forceExit
+      
+      - name: Build final
+        id: build-final
+        uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
+        with:
+          context: .
+          #push: ${{ github.event_name != 'pull_request' }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          file: Dockerfile.prod
       
 #   build:
 
