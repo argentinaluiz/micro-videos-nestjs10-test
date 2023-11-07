@@ -34,6 +34,7 @@ describe('BullIntegrationEventQueue', () => {
         ...integrationEvent,
         occurred_on: integrationEvent.occurred_on.toISOString(),
       });
+      await integrationQueue.clean(0, 'wait');
     });
   });
 });

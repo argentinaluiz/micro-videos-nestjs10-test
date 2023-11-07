@@ -31,7 +31,7 @@ import { VideoSequelizeRepository } from '../../../../infra/db/sequelize/video-s
 import { VideoModel } from '../../../../infra/db/sequelize/video.model';
 import { UploadAudioVideoMediasUseCase } from '../upload-audio-video-medias.use-case';
 import { VideoMediaReplacedEvent } from '../../../../domain/domain-events/video-audio-media-replaced.event';
-import { AddVideoMediaReplacedToLocalQueueHandler } from '../../../handlers/add-video-media-replaced-to-local-queue.handler';
+import { PublishVideoMediaReplacedInLocalQueueHandler } from '../../../handlers/publish-video-media-replaced-in-local-queue.handler';
 import { IIntegrationEventQueueService } from '../../../../../shared/application/queue.interface';
 import { InMemoryIntegrationEventQueue } from '../../../../../shared/infra/queue/in-memory-integration-event.queue';
 import { VideoAudioUploadedIntegrationEvents } from '../../../../domain/integration-events/video-audio-uploaded.int-event';
@@ -46,14 +46,14 @@ describe('UploadAudioVideoMediasUseCase Unit Tests', () => {
   let storageService: IStorage;
   let applicationService: ApplicationService;
   let domainEventManager: DomainEventManager;
-  let publishUploadVideoMediaHandler: AddVideoMediaReplacedToLocalQueueHandler;
+  let publishUploadVideoMediaHandler: PublishVideoMediaReplacedInLocalQueueHandler;
   let intEventsQueue: IIntegrationEventQueueService;
   const sequelizeHelper = setupSequelizeForVideo();
 
   beforeEach(() => {
     intEventsQueue = new InMemoryIntegrationEventQueue();
     publishUploadVideoMediaHandler =
-      new AddVideoMediaReplacedToLocalQueueHandler(intEventsQueue);
+      new PublishVideoMediaReplacedInLocalQueueHandler(intEventsQueue);
     uow = new UnitOfWorkSequelize(sequelizeHelper.sequelize);
     domainEventManager = new DomainEventManager(new EventEmitter2());
     domainEventManager.registerForIntegrationEvent(

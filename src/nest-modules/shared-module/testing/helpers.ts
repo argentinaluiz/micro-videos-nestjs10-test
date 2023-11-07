@@ -11,7 +11,6 @@ import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
 // import { RabbitmqModule } from '../../rabbitmq-module/rabbitmq-module';
 // import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
 
-//@ts-expect-error - this is a mock
 console.warn = jest.fn();
 
 export function startApp({

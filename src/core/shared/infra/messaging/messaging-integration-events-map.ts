@@ -3,7 +3,7 @@ import { VideoAudioUploadedIntegrationEvents } from '../../../video/domain/integ
 export const MessageIntegrationEventsMap = {
   [VideoAudioUploadedIntegrationEvents.name]: {
     exchange: 'amq.direct',
-    routing_key: 'video.audio.uploaded',
+    routing_key: VideoAudioUploadedIntegrationEvents.name,
   },
   ['test']: {
     exchange: 'test-exchange',

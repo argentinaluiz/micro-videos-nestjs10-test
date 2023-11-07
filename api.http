@@ -1,4 +1,4 @@
-### a082337d-f9b1-41cd-b13a-8b142df5bdc7
+# @name createCategory
 POST http://localhost:3000/categories
 Content-Type: application/json
 
@@ -7,7 +7,13 @@ Content-Type: application/json
     "description": "Description 1"
 }
 
-### 5a006f99-b217-417c-846a-524aa1e78552
+###
+
+@categoryId = {{createCategory.response.body.data.id}}
+
+### 
+
+# @name createCastMember
 POST http://localhost:3000/cast-members
 Content-Type: application/json
 
@@ -16,17 +22,31 @@ Content-Type: application/json
     "type": 1
 }
 
-### 48bfaa1a-8596-4b78-9b01-10a03553f856
+###
+
+@castMemberId = {{createCastMember.response.body.data.id}}
+
+### 
+
+# @name createGenre
 POST http://localhost:3000/genres
 Content-Type: application/json
 
 {
     "name": "Genre 1",
-    "categories_id": ["a082337d-f9b1-41cd-b13a-8b142df5bdc7"],
+    "categories_id": [
+        "{{categoryId}}"
+    ],
     "is_active": true
 }
 
-### fb19d680-362d-435c-9c7c-0a781e93a33e
+### 
+
+@genreId = {{createGenre.response.body.data.id}}
+
+###
+
+# @name createVideo
 POST http://localhost:3000/videos
 Content-Type: application/json
 
@@ -38,13 +58,23 @@ Content-Type: application/json
     "rating": "L",
     "duration": 90,
     "is_opened": true,
-    "categories_id": ["a082337d-f9b1-41cd-b13a-8b142df5bdc7"],
-    "genres_id": ["48bfaa1a-8596-4b78-9b01-10a03553f856"],
-    "cast_members_id": ["5a006f99-b217-417c-846a-524aa1e78552"]
+    "categories_id": [
+        "{{categoryId}}"
+    ],
+    "genres_id": [
+        "{{genreId}}"
+    ],
+    "cast_members_id": [
+        "{{castMemberId}}"
+    ]
 }
 
 ###
-PATCH http://localhost:3000/videos/c1c2d07f-de0d-404a-82bf-60da0dde241c
+
+@videoId = {{createVideo.response.body.data.id}}
+
+###
+PATCH http://localhost:3000/videos/{{videoId}}
 Content-Type: application/json
 
 {
@@ -55,7 +85,7 @@ Content-Type: application/json
 
 
 ###
-PATCH http://localhost:3000/videos/c1c2d07f-de0d-404a-82bf-60da0dde241c
+PATCH http://localhost:3000/videos/{{videoId}}
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary1234
 
 ------WebKitFormBoundary1234

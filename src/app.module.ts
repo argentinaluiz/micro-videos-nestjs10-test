@@ -10,12 +10,16 @@ import { GenresModule } from './nest-modules/genres-module/genres.module';
 import { VideosModule } from './nest-modules/videos-module/videos.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { QueueModule } from './nest-modules/queue-module/queue.module';
+import { RabbitmqModule } from './nest-modules/rabbitmq-module/rabbitmq-module';
+import { EventModule } from './nest-modules/event-module/event.module';
 
 @Module({
   imports: [
     EventEmitterModule.forRoot(),
     QueueModule,
     ConfigModule.forRoot(),
+    RabbitmqModule.forRoot(),
+    EventModule.registerAsyncWithConfig(),
     SharedModule,
     DatabaseModule,
     CategoriesModule,

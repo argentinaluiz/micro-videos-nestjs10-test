@@ -91,6 +91,15 @@ export const CONFIG_RABBITMQ_SCHEMA: Joi.StrictSchemaMap<CONFIG_RABBITMQ_SCHEMA_
     RABBITMQ_REGISTER_HANDLERS: Joi.boolean().required(),
   };
 
+type CONFIG_QUEUE_SCHEMA_TYPE = {
+  QUEUE_CONSUMERS_ENABLED: boolean;
+};
+
+export const CONFIG_QUEUE_SCHEMA: Joi.StrictSchemaMap<CONFIG_QUEUE_SCHEMA_TYPE> =
+  {
+    QUEUE_CONSUMERS_ENABLED: Joi.boolean().required(),
+  };
+
 @Module({})
 export class ConfigModule extends NestConfigModule {
   static forRoot(options: ConfigModuleOptions = {}): DynamicModule {
@@ -110,6 +119,7 @@ export class ConfigModule extends NestConfigModule {
         ...CONFIG_GOOGLE_SCHEMA,
         ...CONFIG_REDIS_SCHEMA,
         ...CONFIG_RABBITMQ_SCHEMA,
+        ...CONFIG_QUEUE_SCHEMA,
       }),
       ...otherOptions,
     });

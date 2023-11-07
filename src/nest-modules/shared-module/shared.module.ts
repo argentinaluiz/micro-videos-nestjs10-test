@@ -9,20 +9,13 @@ import { Storage } from '@google-cloud/storage';
 import { BullModule, getQueueToken } from '@nestjs/bull';
 import { BullIntegrationEventQueue } from '../../core/shared/infra/queue/bull-integration-event.queue';
 import { Queue } from 'bull';
-import { RabbitMQMessaging } from '../../core/shared/infra/messaging/rabbitmq.messaging';
-import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
-import { NestPublishIntegrationEventHandler } from './override-core-handlers/nest-publish-integration-events.handler';
+import { PublishIntegrationEventJob } from '../event-module/override-core-handlers/publish-integration-events.job';
 import { IMessageBusService } from '../../core/shared/application/message-bus.interface';
 import { RabbitmqModule } from '../rabbitmq-module/rabbitmq-module';
 
 @Global()
 @Module({
-  imports: [
-    BullModule.registerQueue({
-      name: 'integration-events',
-    }),
-    RabbitmqModule,
-  ],
+  imports: [],
   providers: [
     {
       provide: 'IStorage',
@@ -54,33 +47,7 @@ import { RabbitmqModule } from '../rabbitmq-module/rabbitmq-module';
       inject: ['UnitOfWork', DomainEventManager],
       scope: Scope.REQUEST,
     },
-    {
-      provide: 'IIntegrationEventQueueService', //queue-module
-      useFactory: (queue: Queue) => {
-        return new BullIntegrationEventQueue(queue);
-      },
-      inject: [getQueueToken('integration-events')],
-    },
-    {
-      provide: 'IMessageBusService', //rabbitmq-module
-      useFactory: (amqpConnection: AmqpConnection) => {
-        return new RabbitMQMessaging(amqpConnection);
-      },
-      inject: [AmqpConnection],
-    },
-    {
-      provide: NestPublishIntegrationEventHandler, //queue-module (depends RabbitMQ)
-      useFactory: (messageBus: IMessageBusService) => {
-        return new NestPublishIntegrationEventHandler(messageBus);
-      },
-      inject: ['IMessageBusService'],
-    },
   ],
-  exports: [
-    ApplicationService,
-    DomainEventManager,
-    'IStorage',
-    'IIntegrationEventQueueService',
-  ],
+  exports: [ApplicationService, DomainEventManager, 'IStorage'],
 })
 export class SharedModule {}

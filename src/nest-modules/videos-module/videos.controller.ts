@@ -92,7 +92,7 @@ export class VideosController {
     },
     @Body() updateVideoDto: any,
   ) {
-    const hasFiles = Object.keys(files).length;
+    const hasFiles = files ? Object.keys(files).length : false;
     const hasData = Object.keys(updateVideoDto).length;
     if (hasFiles && hasData) {
       throw new BadRequestException('Files and data cannot be sent together');
