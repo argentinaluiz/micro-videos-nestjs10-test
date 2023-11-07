@@ -89,7 +89,10 @@ jobs:
         run: |
             export KEY=$env:KEY
             docker-compose -f docker-compose.ci.yaml up -d
-    
+      - name: test secret
+        run: |
+            docker-compose -f docker-compose.ci.yaml exec -T app echo $KEY
+
       - name: wait for mysql
         run: docker-compose -f docker-compose.ci.yaml exec -T db_test mysqladmin ping --silent --wait=30 -uroot -proot
       
