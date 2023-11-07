@@ -18,7 +18,7 @@ env:
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
-  FOLDER_NAME: ${{ github.event.repository.name }}_app:latest
+  FOLDER_NAME: ${{ github.event.repository.name }}_app
 
 jobs:
   ci:
@@ -79,6 +79,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          load: true
           file: Dockerfile.prod
           target: development
       
