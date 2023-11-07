@@ -91,7 +91,7 @@ jobs:
             docker-compose -f docker-compose.ci.yaml up -d
       - name: test secret
         run: |
-            docker-compose -f docker-compose.ci.yaml exec -T app printenv
+            docker-compose -f docker-compose.ci.yaml exec -T app node -e "console.log(process.env.KEY)"
 
       - name: wait for mysql
         run: docker-compose -f docker-compose.ci.yaml exec -T db_test mysqladmin ping --silent --wait=30 -uroot -proot
