@@ -4,6 +4,9 @@ import { NotFoundError } from '../../../core/shared/domain/errors/not-found.erro
 @Catch(NotFoundError)
 export class NotFoundErrorFilter implements ExceptionFilter {
   catch(exception: NotFoundError, host: ArgumentsHost) {
+    if (host.getType() !== 'http') {
+      return;
+    }
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
 

@@ -18,6 +18,7 @@ import { RabbitmqModule } from '../../rabbitmq-module/rabbitmq-module';
 describe('VideosModule Unit Tests', () => {
   let module: TestingModule;
   beforeEach(async () => {
+    console.warn = jest.fn();
     module = await Test.createTestingModule({
       imports: [
         ConfigModule.forRoot(),
@@ -48,6 +49,7 @@ describe('VideosModule Unit Tests', () => {
         inject: ['UnitOfWork', DomainEventManager],
       })
       .compile();
+    await module.init();
   });
 
   afterEach(async () => {
@@ -55,7 +57,6 @@ describe('VideosModule Unit Tests', () => {
   });
 
   it('should register events', async () => {
-    await module.init();
     const eventemitter2 = module.get<EventEmitter2>(EventEmitter2);
     expect(eventemitter2.listeners(VideoMediaReplacedEvent.name)).toHaveLength(
       1,

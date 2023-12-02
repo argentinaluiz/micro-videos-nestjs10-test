@@ -1,4 +1,4 @@
-@token = eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsiYWRtaW4tY2F0YWxvZyJdfSwiaWF0IjoxNjk5MzQxNTc1LCJleHAiOjE2OTkzNDUxNzV9.mvUPKNnc7oVsFDJ085i3qIxMnUYxI1ErJ_hvW0gW30IRpydgur0qwSGsXnLIkr0s-UsqmpKxEAzsG2pYeovzf-qg3TXDkt9Vy4IqOHJZl0s_wxgv0VGqhHWJtPxrU7-lVa1L3DQvLIfj3hom3IZbsVJIBiHA9Us_WNKlOv4zn-4kTB5TIBhlBZ99qeCqciDDZJw7pynHa5gOHuP2R7HfFGKSqZ2AR_yWGmpW1sOPnWczijJjtNt4oW35z1qzrh9JLLlUETOz3U1R8rc_xFYWvtSknn7PEXFFTJTy6me1MVKrjiRfbo8rxyrS8c7iWx9vvRGM4Udr2fZ7lKSAjs1bOg
+@token = eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsiYWRtaW4tY2F0YWxvZyJdfSwiaWF0IjoxNzAwNDEzNjM1LCJleHAiOjE3MDA1MDAwMzV9.cLdnhW3TwT8J6J6UtIX7mUaSGb0OLgHF7R74MNOvElK58fZYSSZ7nCEpEqt63r71yzsrP9vKsUMoTrK3cEagEN6zmviL6rgFlFNtQ61Y054UDuY7w_yZFaaf-FVecalnOT3l1XdIIiy9zaUyIhY8agct1aEh6Om-DSY4hqoOZAxJv7mzk0l3qQm4bbb8BNmMoQe9S8nx45vPzkMJJEUgRax9f7Q6pj1YO-WeDrIarm0f6BtGdMPimM2Bc-JNtsfc2aNzMrZc9YKy-akbi4_nunW4Q5e3q9qCU_jm21KfCkzetXzASTUYuUQfqhBKgZQDrhPR2yfxHpblhrChCWj5sg
 
 ###
 
@@ -36,11 +36,14 @@ Content-Type: application/json
 # @name createGenre
 POST http://localhost:3000/genres
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
     "name": "Genre 1",
     "categories_id": [
-        "{{categoryId}}"
+        //"{{categoryId}}"
+        "9c160d9b-9f07-40d6-aa31-7b5db313d7d5",
+        "7e9bf76c-d5a5-4a87-84b2-890ff3e9bbf4"
     ],
     "is_active": true
 }
@@ -48,6 +51,23 @@ Content-Type: application/json
 ### 
 
 @genreId = {{createGenre.response.body.data.id}}
+
+###
+
+# @name updateGenre
+PATCH http://localhost:3000/genres/{{genreId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "name": "Genre 1 updated 13",
+    "categories_id": [
+        //"{{categoryId}}"
+        "9c160d9b-9f07-40d6-aa31-7b5db313d7d5",
+        "7e9bf76c-d5a5-4a87-84b2-890ff3e9bbf4"
+    ],
+    "is_active": true
+}
 
 ###
 

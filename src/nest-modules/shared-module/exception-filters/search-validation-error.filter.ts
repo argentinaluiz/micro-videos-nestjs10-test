@@ -6,6 +6,9 @@ import { SearchValidationError } from '../../../core/shared/domain/validators/va
 @Catch(SearchValidationError)
 export class SearchValidationErrorFilter implements ExceptionFilter {
   catch(exception: SearchValidationError, host: ArgumentsHost) {
+    if (host.getType() !== 'http') {
+      return;
+    }
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
 

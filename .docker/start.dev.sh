@@ -1,6 +1,7 @@
 #!/bin/bash
 
 npm install
+npm run migrate:ts up
 
 tail -f /dev/null
 

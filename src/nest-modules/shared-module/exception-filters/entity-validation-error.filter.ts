@@ -6,6 +6,9 @@ import { EntityValidationError } from '../../../core/shared/domain/validators/va
 @Catch(EntityValidationError)
 export class EntityValidationErrorFilter implements ExceptionFilter {
   catch(exception: EntityValidationError, host: ArgumentsHost) {
+    if (host.getType() !== 'http') {
+      return;
+    }
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     response.status(422).json({

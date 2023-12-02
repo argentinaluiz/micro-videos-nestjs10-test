@@ -13,6 +13,8 @@ import { QueueModule } from './nest-modules/queue-module/queue.module';
 import { RabbitmqModule } from './nest-modules/rabbitmq-module/rabbitmq-module';
 import { EventModule } from './nest-modules/event-module/event.module';
 import { AuthModule } from './nest-modules/auth-module/auth.module';
+import { APP_FILTER } from '@nestjs/core';
+import { TestFilter } from './test.filter';
 
 @Module({
   imports: [
@@ -31,6 +33,12 @@ import { AuthModule } from './nest-modules/auth-module/auth.module';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    // {
+    //   provide: APP_FILTER,
+    //   useClass: TestFilter,
+    // },
+  ],
 })
 export class AppModule {}

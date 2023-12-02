@@ -13,14 +13,13 @@ import request from 'supertest';
 // import { RabbitmqModule } from '../../rabbitmq-module/rabbitmq-module';
 // import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
 
-console.warn = jest.fn();
-
 export function startApp({
   beforeInit,
 }: { beforeInit?: (app: INestApplication) => void } = {}) {
   let _app: INestApplication;
 
   beforeEach(async () => {
+    console.warn = jest.fn();
     const moduleBuilder: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     })

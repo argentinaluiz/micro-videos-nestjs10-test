@@ -10,6 +10,9 @@ import { Request } from 'express';
 @Injectable()
 export class CheckIsAdminGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    if (context.getType() !== 'http') {
+      return true;
+    }
     const request: Request = context.switchToHttp().getRequest();
     if (!('user' in request)) {
       throw new UnauthorizedException();
